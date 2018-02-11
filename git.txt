@@ -1,1 +1,11 @@
-git checkout 版本号
+git checkout 版本号        回到该版本号
+git checkout -             回到上一版本
+git log                    查看版本信息     --online   显示在一行
+git log -p                 查看具体修改信息
+git tag -a                 设置版本标签
+git tag -a v1 -m "1"       添加v1版版本描述是1   git tag -a v1 -m "1" 版本号  根据版本号添加版本
+git branch 分支名          创建分支
+git chechout 分支名        切换分支     git chechout -b 分支名   创建并切换到新分支
+git merge 分支名           将该分支合并到当前分支
+git remote add 仓库名 地址 添加远程仓库
+git push -u 仓库名 分支名  将代码推送到远程仓库
