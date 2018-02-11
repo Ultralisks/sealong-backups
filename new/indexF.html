@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="static/layui/css/layui.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="static/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="static/layui/layui.js"></script>
+</head>
+<style>
+    *{}
+    html{font-size: 14px;color:#484751;}
+    .indexF-body .main{background-image: url("static/img/backF.jpg");background-size:100% 100%;background-repeat:no-repeat;clear: both;}
+    .indexF-body  .foot{width:100%;position: fixed;line-height: 25px;text-align: center;bottom:0;padding:10px 0;background-color:#fff;}
+    .foot span{margin-left:20px;}
+    .indexF-body .main .cont{width:80%;margin:auto;}
+    .indexF-body .main .cont .title{padding-top:45px;text-shadow:2px 2px 4px #000;}
+    .indexF-body .main .cont .title .b-text{font-size:45px;margin-bottom:10px;}
+    .indexF-body .main .cont .title .s-text{font-size:25px;padding-left:100px;}
+    .indexF-body .main .cont{height:100%;}
+    .indexF-body .main .cont .introduce{width:100%; bottom:10%;)}
+    .indexF-body .main .cont .introduce .li1{width:50%;font-size:16px;}
+    .indexF-body .main .cont .introduce .li2{width:25%;font-size:16px;}
+    .indexF-body .main .cont .introduce li section{padding:5px;line-height: 30px;}
+    .indexF-body .main .cont .introduce li section div{padding:15px;background-color:rgba(0,0,0,0.7);border-radius: 6px;}
+    .indexF-body .main .cont .introduce li section .right-div{line-height: 35px;}
+    .indexF-body .main .cont .introduce li section .right-div .font-NUM{font-family:"Impact"}
+
+
+
+</style>
+<body class="indexF-body">
+<div id="index">
+    <div class="head">
+        <div class="fl"><img src="static/img/logo.png"></div>
+
+        <div class="fl ">
+            <div class="layui-form-item fl">
+                <div class="fl ">
+                    <label class="layui-form-label">起运港</label>
+                    <div class="layui-input-inline pos-rel">
+                        <input type="" placeholder="请输入" class="layui-input"
+                               v-model="pol" @input="inputChange" @click="inputClick(this,1)"
+                               @keyup="keyChoiceLi($event)" @blur="falseBlur()">
+                        <ul class="pos-abs drop-down" v-if="dropDownShowPol">
+                            <drop-down v-for="item in dropDownData" v-bind:item="item" v-bind:key="item.id"
+                                       class="pointer" @click.native="choiceLi(item,1)":class="{'curr':item.id==liClass}">
+                            </drop-down>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="fl">
+                    <label class="layui-form-label">目的港</label>
+                    <div class="layui-input-inline pos-rel">
+                        <input type="" placeholder="请输入" class="layui-input"
+                               v-model="pod" @input="inputChange" @click="inputClick(this,2)"
+                               @keyup="keyChoiceLi($event)"  @blur="falseBlur()">
+                        <ul class="pos-abs drop-down"  v-if="dropDownShowPod">
+                            <drop-down v-for="item in dropDownData" v-bind:item="item" v-bind:key="item.id"
+                                       class="pointer"  @click.native="choiceLi(item,2)" :class="{'curr':item.id==liClass}">
+                            </drop-down>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="layui-btn layui-btn-normal" @click="findHref()"><i class="layui-icon">&#xe615;</i>运价查询</div>
+        </div>
+        <div class="fr button">
+            <span>登录</span>
+            <span>注册</span>
+            <span>退出</span>
+            <span></span>
+        </div>
+
+
+    </div>
+    <div class="main">
+        <div class="cont pos-rel">
+            <div class="title">
+                <div class="b-text color-F">港捷国际货运</div>
+                <span class="s-text color-F">致力为您量身打造一级的物流结局方案</span>
+            </div>
+            <ul class="introduce pos-abs">
+                <li class="fr color-F li2">
+                    <section>
+                        <div class="right-div d-h-r">
+                            <p>
+                                联系我们 CONTACT US
+                            </p>
+                            <p class="font-NUM">
+                                0532-5566-5111
+                            </p>
+                            <p>
+                                地址：青岛市香港中路18号福泰广场B座15层
+                            </p>
+                            <p>
+                                邮编：266071
+                            </p>
+                        </div>
+                    </section>
+                </li>
+                <li class="color-F fr li1">
+                    <section>
+                        <div class="d-h">
+                            <p> 关于我们 ABOUT US</p>
+                            <p>
+                                远景目标;
+                            <p>
+                                我们矢志成为一家可靠、专业、实力雄厚的全球货运代理及物流服务供应商。致力成为深受客户、供应商和员工尊重、
+                                新来及引以为傲的长期合作伙伴。
+                            <p>
+                            </p>
+                            <p>
+                                使命宣言
+                            <p>
+                                为客户提供稳健可靠、具成本效益的货运及物流解决方案，以满足客户瞬息万变的物流需求。
+                            <p>
+                            </p>
+                        </div>
+                    </section>
+                </li>
+                <li class="color-F fr li2">
+                    <section>
+                        <div class="d-h-img over-hide " style="padding:0;background: none">
+                            <img class="img-h" src="static/img/default.png">
+                        </div>
+
+                    </section>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="foot">
+        <div>Copyright © 2014-2016 Qingdao Sealong Soft Co..Ltd. All right reserved</div>
+        青岛世隆软件有限公司 版权所有 <span>TEL:83835477</span>
+    </div>
+</div>
+
+<script>
+
+
+
+    var app = new Vue({
+        el: "#index",
+        data: {
+            dropDownData: [],
+            pol:"",
+            pod:"",
+            polId:0,
+            podId:0,
+            dropDownShowPol: false,
+            dropDownShowPod: false,
+            itemLi: "-1",
+            liClass: 0,
+            n: -1
+
+        },
+        methods: {
+            actionH: {},
+            inputChange: {},
+            inputClick: {},
+            keyChoiceLi: {},
+            choiceLi: {},
+            findHref:{},
+            falseBlur:{}
+        }
+    });
+
+    app.actionH = function () {
+        var h = $(window).outerHeight();
+        $(".main").css("height", h - 79 - 70);
+        var dH = $(".d-h").outerHeight();
+        $(".d-h-r").css("height", dH - 30);
+        $(".d-h-img").css("height", dH);
+    };
+    app.dropDownData = [
+        {id: 1, ENAME: "青岛"},
+        {id: 2, ENAME: "美国"},
+        {id: 3, ENAME: "香港"},
+        {id: 4, ENAME: "澳大利亚"},
+        {id: 5, ENAME: "阿富汗"}
+    ];
+    app.inputClick = function (obj,num) {
+        app.liClass = 0;
+        app.n = -1;
+        if(num==1){
+            app.dropDownShowPol = true;
+            app.dropDownShowPod = false;
+        }else{
+            app.dropDownShowPod = true;
+            app.dropDownShowPol = false;
+        }
+
+    };
+
+    app.keyChoiceLi = function (e) {
+        var dowData = app.dropDownData;
+        var length = dowData.length;
+        if (e.keyCode == 40) {
+            if(app.n >= length-1){
+                app.n = -1;
+            }
+            app.n = app.n + 1;
+            app.liClass = dowData[app.n].id;
+        }
+        if (e.keyCode == 38) {
+            if(app.n <= 0){
+                app.n = length;
+            }
+            app.n=app.n-1;
+            app.liClass = dowData[app.n].id;
+        }
+        if (e.keyCode == 13) {
+            if(!dowData[app.n]){
+
+            }else{
+                if(app.dropDownShowPod){
+                    app.pod = dowData[app.n].ENAME;
+                    app.podId = dowData[app.n].id
+                }else if(app.dropDownShowPol){
+                    app.pol = dowData[app.n].ENAME;
+                    app.polId = dowData[app.n].id
+                }
+            }
+            app.dropDownShowPod = false;
+            app.dropDownShowPol = false;
+        }
+    };
+    app.choiceLi = function (item, num) {
+        if(num==1){
+            app.pol = item.ENAME;
+            app.polId = item.id;
+        }else{
+            app.pod = item.ENAME;
+            app.podId = item.id;
+        }
+        app.dropDownShowPod = false;
+        app.dropDownShowPol = false;
+    };
+
+    app.findHref = function () {
+        var url = "static/index.html?polId="+app.polId+"&podId="+app.podId;
+        window.location.href = url;
+        console.log(url);
+    };
+    app.falseBlur = function(){
+        setTimeout(function (){
+            app.dropDownShowPod = false;
+            app.dropDownShowPol = false;
+        }, 100);
+       
+    };
+    Vue.component("drop-down", {
+        props: ["item"],
+        template:
+        '<li >' +
+        '<span v-text="item.ENAME"></span>' +
+        '</li>'
+    });
+
+    $(function () {
+        app.actionH();
+
+    });
+    $(window).resize(function () {
+        app.actionH();
+    });
+</script>
+</body>
+</html>

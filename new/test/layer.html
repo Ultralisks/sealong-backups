@@ -1,0 +1,733 @@
+<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+<style type="text/css">
+	#layer .layui-form-label{width:60px;}
+	#layer .layui-input-block{margin-left:70px;}
+	#layer .layui-form-item .layui-input-inline{margin-right:0}
+	#layer .layui-form-item .layui-input-inline{width:180px;}
+	#layer .layui-input, .layui-select, .layui-textarea{height:24px;}
+	#layer .layui-form-item{margin-bottom:0;}
+	#layer .layui-form-label{padding:5px;}
+	#layer .layui-input-block{min-height:30px;}
+	#layer .info{height:365px;}
+	#layer .info-l{width:500px;}
+	#layer .info-r{width:500px;}
+	#layer .edi{width:480px;}
+	#layer .coin{width:520px;}
+	#layer .small{width:50px;}
+	#layer .details{width:1000px;height:600px;padding:0 10px;border-top:1px solid #000;border-bottom:1px solid #000;}
+	#layer .nav{height:40px;padding-bottom:10px;}
+	#layer .nav button{margin-left:10px;}
+	#layer .footer{width:100%;height:40px;padding-top:10px;}
+	#layer .footer-btn{width:500px;height:40px;margin:auto;}
+	#layer footer-btn li{padding:0 10px;}
+</style>
+<div id="layer">
+	<h4 class="layui-form-item">
+		<label class="layui-form-label">单位类别</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" v-model="treeName" readonly />
+		</div>
+		<label class="layui-form-label">客户</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" v-model="corp.CODENO" readonly />
+		</div>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" v-model="corp.SNAME" readonly />
+		</div>
+		<label class="layui-form-label">动作</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" v-model="motion" readonly />
+		</div>
+	</h4>
+	<div class="nav">
+		<ul class="top">
+			<li :key="x.id"  class="fl" v-for="x in nav">
+				<button :class="{'layui-btn':true, 'layui-btn-primary':x.id!=navClass, 'layui-btn-normal':x.id==navClass}" @click="navClick(x)" v-text="x.text"></button>
+			</li>
+		</ul>
+	</div>
+	<div class="details">
+		<!-- 客户信息 -->
+		<div class="details-one clear-both" v-if="1==detailsNum">
+			<!-- 基本信息 -->
+			<div class="info">
+				<h3>基本信息</h3>
+				<div class="info-l fl layui-form">
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">客户编号</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">客户简称</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">中文名称</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+
+					<div class="fl">
+					<label class="layui-form-label">国家</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)" @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)">
+						<ul class="pos-abs drop-down"  v-if="1==ifShow">
+							<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item,1)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">省/州</label>
+							<div class="layui-input-inline" style="width:178px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">中文地址</label>
+							<div class="layui-input-block">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">开票地址</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">开票电话</label>
+							<div class="layui-input-inline" style="width:160px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:80px;">船公司代码</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">电话</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">传真</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">Email</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">箱属代码</label>
+							<div class="layui-input-inline" style="width:55px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">退佣率</label>
+							<div class="layui-input-inline" style="width:55px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">详细信息</label>
+						<div class="layui-input-block">
+							<textarea class="layui-textarea" placeholder="请输入"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="info-r fl">
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">国际代码</label>
+							<div class="layui-input-inline" style="width:55px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">海关代码</label>
+							<div class="layui-input-inline" style="width:55px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">状态</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 2)" @click="inputClick(this, 2)" @keyup="keyChoiceLi($event, 2)"  @blur="falseBlur(2)">
+								<ul class="pos-abs drop-down"  v-if="2==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 2)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">英文名称</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">城市</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">负责人</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">英文地址</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">客户来源</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 3)" @click="inputClick(this, 3)" @keyup="keyChoiceLi($event, 3)"  @blur="falseBlur(3)">
+								<ul class="pos-abs drop-down"  v-if="3==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 3)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">来源部门</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 4)" @click="inputClick(this, 4)" @keyup="keyChoiceLi($event, 4)"  @blur="falseBlur(4)">
+								<ul class="pos-abs drop-down"  v-if="4==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 4)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">业务员1</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 5)" @click="inputClick(this, 5)" @keyup="keyChoiceLi($event, 5)"  @blur="falseBlur(5)">
+								<ul class="pos-abs drop-down"  v-if="5==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 5)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">业务员2</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 6)" @click="inputClick(this, 6)" @keyup="keyChoiceLi($event, 6)"  @blur="falseBlur(6)">
+								<ul class="pos-abs drop-down"  v-if="6==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 6)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">业务员3</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 7)" @click="inputClick(this, 7)" @keyup="keyChoiceLi($event, 7)"  @blur="falseBlur(7)">
+								<ul class="pos-abs drop-down"  v-if="7==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 7)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">美线约号</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:90px;">所属单位编号</label>
+							<div class="layui-input-inline" style="width:150px;">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 8)" @click="inputClick(this, 8)" @keyup="keyChoiceLi($event, 8)"  @blur="falseBlur(8)">
+								<ul class="pos-abs drop-down"  v-if="8==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 8)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">信誉等级</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 9)" @click="inputClick(this, 9)" @keyup="keyChoiceLi($event, 9)"  @blur="falseBlur(9)">
+								<ul class="pos-abs drop-down"  v-if="9==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 9)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">名称</label>
+						<div class="layui-input-block">
+							<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 10)" @click="inputClick(this, 10)" @keyup="keyChoiceLi($event, 10)"  @blur="falseBlur(10)">
+								<ul class="pos-abs drop-down"  v-if="10==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 10)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">结算类型</label>
+							<div class="layui-input-inline" style="width:110px;">
+								<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value, 11)" @click="inputClick(this, 11)" @keyup="keyChoiceLi($event, 11)"  @blur="falseBlur(11)">
+								<ul class="pos-abs drop-down"  v-if="11==ifShow">
+									<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item, 11)" :class="{'curr':item.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:90px;">每月某日后结</label>
+							<div class="layui-input-inline" style="width:60px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:90px;">船开后几天结</label>
+							<div class="layui-input-inline" style="width:60px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">协议号</label>
+							<div class="layui-input-inline" style="width:120px;">
+								<input type="text" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:20px;">自</label>
+							<div class="layui-input-inline" style="width:120px;">
+								<input type="date" class="layui-input">
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width:20px;">——</label>
+							<div class="layui-input-inline" style="width:130px;">
+								<input type="date" class="layui-input">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="edi fl">
+				<h3>
+					<div class="layui-form-item">
+						<div class="layui-input-block" style="margin-left:0;">
+							<input type="checkbox" name="" />启用EDI
+						</div>
+					</div>
+					<!-- <div class="layui-input-block">
+						<input type="checkbox" name="like[dai]" title="启用EDI">
+					</div> -->
+				</h3>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:100px;">外代船公司代码</label>
+						<div class="layui-input-inline" style="width:120px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">格式名称</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">FTP地址</label>
+						<div class="layui-input-inline" style="width:170px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Email</label>
+						<div class="layui-input-inline" style="width:170px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="coin fl">
+				<ul class="top">
+					<li :key="x.id"  class="fl" v-for="x in coin" @click="coinClick(x)">
+						<button :class="{'layui-btn':true, 'layui-btn-primary':x.id!=coinClass, 'layui-btn-normal':x.id==coinClass}" @click="coinClick(x)" v-text="x.text"></button>
+					</li>
+				</ul>
+				<div class="layui-form-item">
+					<label class="layui-form-label">开户名</label>
+					<div class="layui-input-block">
+						<input type="text" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">账号</label>
+					<div class="layui-input-block">
+						<input type="text" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">银行</label>
+					<div class="layui-input-block">
+						<input type="text" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="other">
+				<h3>其他信息</h3>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">场站三字码</label>
+						<div class="layui-input-inline" style="width:160px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:100px;">CMA Laracode</label>
+						<div class="layui-input-inline" style="width:160px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:90px;">CMA Location</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:40px;">税号</label>
+						<div class="layui-input-inline" style="width:160px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">Inttra ICUA</label>
+						<div class="layui-input-inline" style="width:100px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">ZIM-CUCC</label>
+						<div class="layui-input-inline" style="width:100px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:90px;">联系人 Email</label>
+						<div class="layui-input-inline" style="width:180px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">纳税人类型</label>
+						<div class="layui-input-inline" style="width:120px;">
+							<input type="text" placeholder="请选择" class="layui-input" v-model="corp.COUNTRY" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)" @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)">
+							<ul class="pos-abs drop-down"  v-if="12==ifShow">
+								<drop-down v-for="c in countrys" v-bind:item="c.name" v-bind:key="c.id" class="pointer" @click.native="choiceLi(item,12)" :class="{'curr':item.ID==liClass}">
+								</drop-down>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">增值税税率</label>
+						<div class="layui-input-inline" style="width:80px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">备注</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">录入时间</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label">纳税简码</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="fl">
+					<div class="layui-form-item">
+						<label class="layui-form-label" style="width:70px;">附加费费率</label>
+						<div class="layui-input-inline" style="width:160px;">
+							<input type="text" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+		<div class="details-two" v-if="2==detailsNum">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" /></th>
+						<th v-for="x in linkman" :key="x.id" v-text="x.name"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="x in linkmanData">
+						<td><input type="" /></td>
+						<td v-text=""></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="details-there" v-if="3==detailsNum">
+			<ul class="main-tree fl">
+			<li :key="x.id"  class="" v-for="x in tree">
+				<input type="checkbox" v-if=""><a v-text="x.num +' '+ x.name" href="javascript:;" ></a>
+				<!-- :class="{'curr':x.id ==treeClass}" -->
+			</li>
+		</ul>
+		</div>
+		<div class="details-four" v-if="4==detailsNum">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" /></th>
+						<th v-for="x in news" :key="x.id" v-text="x.name"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="x in newsData">
+						<td><input type="" /></td>
+						<td v-text=""></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="footer">
+		<ul class="footer-btn">
+			<li :key="x.id"  class="fl" v-for="x in footer" @click="footerClick(x)">
+				<button :class="{'layui-btn':true, 'layui-btn-primary':x.id!=footerClass, 'layui-btn-normal':x.id==footerClass}" @click="footerClick(x)" v-text="x.text"></button>
+			</li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript">
+	var layer = new Vue({
+		el:"#layer",
+		data:{
+			treeName:"",
+			motion:"浏览",
+			corp:[],
+			x:"",
+			detailsNum:1,
+			tree:[{num:"0001", name:"收货人", id:1},
+				{num:"0002", name:"船公司", id:2},
+				{num:"0003", name:"场站", id:3},
+				{num:"0004", name:"国内直接客户", id:4},
+				{num:"0005", name:"国内同行及代理", id:5},
+				{num:"0006", name:"国外直接客户", id:6},
+				{num:"0007", name:"国外同行及代理", id:7},
+				{num:"0008", name:"报关行", id:8},
+				{num:"0009", name:"陆运公司", id:9},
+				{num:"0010", name:"快递公司", id:10},
+				{num:"0011", name:"其他", id:11},
+				{num:"0012", name:"办公用品客户", id:12},
+				{num:"0013", name:"航空公司", id:13},
+				{num:"0014", name:"航站", id:14}],
+			countrys:[{id:1, name:"中国"},
+				{id:2, name:"美国"},
+				{id:3, name:"俄罗斯"}],														
+			ifShow:0,
+			navClass:1,
+			nav:[{id:1, text:"客户信息"},
+				{id:2, text:"联系人"},
+				{id:3, text:"单位类别"},
+				{id:4, text:"同行收发通信息"}],
+			liClass:0,
+			coinClass:1,
+			coin:[{id:1, text:"本位币"},
+				{id:2, text:"外币"}],
+			footerClass:1,
+			footer:[{id:1, text:"新增"},
+				{id:2, text:"修改"},
+				{id:3, text:"取消"},
+				{id:4, text:"删除"},
+				{id:5, text:"退出"}],
+			linkman:[{id:1, name:"姓名"},
+				{id:2, name:"英文"},
+				{id:3, name:"部门"},
+				{id:4, name:"职务"},
+				{id:5, name:"性别"},
+				{id:6, name:"生日"},
+				{id:7, name:"电话"},
+				{id:8, name:"手机"},
+				{id:9, name:"传真"},
+				{id:10, name:"Email"},
+				{id:11, name:"网址"},
+				{id:12, name:"中文地址"},
+				{id:13, name:"英文地址"},
+				{id:14, name:"状态"},],
+			linkmanData:[],
+			news:[{id:1, name:"卸货港"},
+				{id:2, name:"发货人信息"},
+				{id:3, name:"收货人"},
+				{id:4, name:"通知人"},
+				{id:5, name:"货描"},],
+			newsData:[],
+
+		},
+		methods:{
+			inputChange:function(index){
+
+			},
+			inputClick:function(index){
+
+			},
+			keyChoiceLi:function(index){
+
+			},
+			falseBlur:function(index){
+
+			},
+			choiceLi:function(index){
+
+			},
+			navClick:function(x){	
+				layer.navClass = x.id;
+				layer.detailsNum = x.id
+			},
+			coinClick:function(x){	
+				layer.coinClass = x.id;
+			},
+			detailsClick:function(){
+
+			},
+
+		}
+	})
+	layui.use('element', function(){
+		var element = layui.element;
+	});
+</script>

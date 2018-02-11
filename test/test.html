@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="static/js/ajax.js"></script>
+
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+	/*var url1 = "testjson";
+	var data = getAjax();
+	var data1 = postAjax();
+	console.log(data);
+	console.log(data1);*/
+	$.ajax({
+		url:"testjson",
+		data:"",
+		async: false,
+        dataType: "json",
+		success:function(json){
+			console.log(json);
+		}
+	})
+
+	// 你放项目里给几个不同的url看
+</script>
+</html>

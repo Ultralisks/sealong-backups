@@ -1,0 +1,154 @@
+//******************************************************************************
+// - program: index
+//******************************************************************************
+
+program index;
+
+uses
+  System.SysUtils;
+function Execute(Application: TWebServerApplication; request: TiPlatformRestRequest;
+                 session: TWebSession; RequestParam: TWebRequestParam;
+                 const AMethodName, AURI: UTF8Str; const inputDoc: Variant;
+                 var Handled: Boolean; var AHttpStatus: Integer;
+                 var err: TWebError; var json_value: Variant): Boolean;
+
+var 
+  //定义参数
+  vd: TVariantDoc;//不知道什么东西
+  vv: Variant;    
+  i: int64;     
+  sql: UTF8Str;   
+  bFirst: Boolean;
+  res:UTF8Str;
+
+  // 执行sql
+  rows: ISQLDBRows; 
+
+  //定义传入参数
+  i_SysID:Int64;
+
+  //开始执行后台方法  
+  begin                 
+    vd:= TVariantDoc.Create(inputDoc);
+    //i_SysID:=vd.I['i_SysID'];
+ 
+    i_SysID:=7;
+
+ 
+    try
+      case RequestParam.URIMethod of
+          mGET:
+          begin
+              //提取系统数据
+              if DBConn<>nil then begin//如果连接数据库成功     
+                _ObjAddProps(['Engine', DBConn.Engine, 'DBMSEngine', DBConn.DBMSEngineName], json_value); //打印
+              //起始sql        1
+                  sql:= 'Select distinct SysID, Corpid, CorpNo, SName from Corps where Sysid='+inttostr(i_SysID)+' order by Sysid, CorpNo';
+                  rows:=DBConn.Execute(sql, []);//执行sql
+              if rows=nil then begin //不知道什么东西
+                      _ObjAddProps(['Rows', 'nil'], json_value);      
+                  end else begin
+                      i:=0;        
+                      while rows.Step do// 应该是固定语法开始写
+                      Inc(i);          
+                      _ObjAddProps(['Count', i], json_value);               
+                      vd.InitArray([], JSON_OPTIONS_FAST);//创建数组                           
+                      bFirst:=true;
+                      while rows.Step(bFirst) do begin//写数据
+                          bFirst:=false;            
+                          SetVariantNull(vv);
+                          for i:=0 to rows.ColumnCount - 1 do //for循环将查出的数据push到数组，组成json
+                             _ObjAddProps([rows.ColumnName(i), rows.ColumnVariant(i)], vv);
+                          vd.AddItem(vv);
+                      end;            
+                      _ObjAddProps(['corpsData', vd.ToVariant], json_value);                 
+                  end;                              
+              end;
+      {=============================================================================================================================}
+             if DBConn<>nil then begin//如果连接数据库成功    
+                _ObjAddProps(['Engine', DBConn.Engine, 'DBMSEngine', DBConn.DBMSEngineName], json_value); //打印
+              //起始sql
+                  sql:= 'select distinct  Cname,SysID, Goodsid,Goodsno,specs from Goods  where Sysid='+inttostr(i_SysID)+' order by Sysid, Goodsno';
+                  rows:=DBConn.Execute(sql, []);//执行sql
+              if rows=nil then begin //不知道什么东西
+                      _ObjAddProps(['Rows', 'nil'], json_value);      
+                  end else begin
+                      i:=0;        
+                      while rows.Step do// 应该是固定语法开始写
+                      Inc(i);          
+                      _ObjAddProps(['Count', i], json_value);               
+                      vd.InitArray([], JSON_OPTIONS_FAST);//创建数组                           
+                      bFirst:=true;
+                      while rows.Step(bFirst) do begin//写数据
+                          bFirst:=false;            
+                          SetVariantNull(vv);
+                          for i:=0 to rows.ColumnCount - 1 do //for循环将查出的数据push到数组，组成json
+                             _ObjAddProps([rows.ColumnName(i), rows.ColumnVariant(i)], vv);
+                          vd.AddItem(vv);
+                      end;            
+                      _ObjAddProps(['GoodsData', vd.ToVariant], json_value);                 
+                  end;                              
+              end;
+{=============================================================================================================================}
+              if DBConn<>nil then begin//如果连接数据库成功     
+                _ObjAddProps(['Engine', DBConn.Engine, 'DBMSEngine', DBConn.DBMSEngineName], json_value); //打印
+              //起始sql
+                  sql:= 'select SysID, TradeModeID, Sname from TradeMode  where Sysid='+inttostr(i_SysID)+' order by Sysid, Sname';
+                  rows:=DBConn.Execute(sql, []);//执行sql
+              if rows=nil then begin //不知道什么东西
+                      _ObjAddProps(['Rows', 'nil'], json_value);      
+                  end else begin
+                      i:=0;        
+                      while rows.Step do// 应该是固定语法开始写
+                      Inc(i);          
+                      _ObjAddProps(['Count', i], json_value);               
+                      vd.InitArray([], JSON_OPTIONS_FAST);//创建数组                           
+                      bFirst:=true;
+                      while rows.Step(bFirst) do begin//写数据
+                          bFirst:=false;            
+                          SetVariantNull(vv);
+                          for i:=0 to rows.ColumnCount - 1 do //for循环将查出的数据push到数组，组成json
+                             _ObjAddProps([rows.ColumnName(i), rows.ColumnVariant(i)], vv);
+                          vd.AddItem(vv);
+                      end;            
+                      _ObjAddProps(['TradeModeData', vd.ToVariant], json_value);                 
+                  end;                              
+              end;
+{=============================================================================================================================}
+              if DBConn<>nil then begin//如果连接数据库成功     
+                _ObjAddProps(['Engine', DBConn.Engine, 'DBMSEngine', DBConn.DBMSEngineName], json_value); //打印
+              //起始sql
+                  sql:= 'select SysID, Typeid,Cname from Types  where Sysid='+inttostr(i_SysID)+'and NorUle=''GOODS'' order by Sysid, Cname';
+                  rows:=DBConn.Execute(sql, []);//执行sql
+              if rows=nil then begin //不知道什么东西
+                      _ObjAddProps(['Rows', 'nil'], json_value);      
+                  end else begin
+                      i:=0;        
+                      while rows.Step do// 应该是固定语法开始写
+                      Inc(i);          
+                      _ObjAddProps(['Count', i], json_value);               
+                      vd.InitArray([], JSON_OPTIONS_FAST);//创建数组                           
+                      bFirst:=true;
+                      while rows.Step(bFirst) do begin//写数据
+                          bFirst:=false;            
+                          SetVariantNull(vv);
+                          for i:=0 to rows.ColumnCount - 1 do //for循环将查出的数据push到数组，组成json
+                             _ObjAddProps([rows.ColumnName(i), rows.ColumnVariant(i)], vv);
+                          vd.AddItem(vv);
+                      end;            
+                      _ObjAddProps(['typeData', vd.ToVariant], json_value);                 
+                  end;                              
+              end;        
+                        
+      
+        end;
+      else
+        err.Error('不支持的 HTTP 方法.');
+      end;
+    finally
+      vd.FREE;
+    end;    
+  end;
+begin
+
+end.

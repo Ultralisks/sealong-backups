@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE-edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>海运编辑</title>
+	<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<!-- 海运编辑 -->
+	<style type="text/css">
+		#oceanImported{}
+		#oceanImported .form-control{height:30px;}
+		#oceanImported textarea.form-control{height:100px;}
+		#oceanImported .form-group{margin-bottom:5px;}
+		#oceanImported .form-group .form-group{margin-bottom:0;}
+		#oceanImported .form-group label{width:65px;}
+		#oceanImported .main .main-c .form-group .form-control{width:217px;display:inline-block;}
+		#oceanImported .main .main-c .form-inline .form-group .form-control{width:70px;}
+		#oceanImported .main{padding-top:10px;}
+		#oceanImported .main .main-l{width:428px;}
+		#oceanImported .main .main-l textarea{width:99%;border-radius:5px;height:125px;}
+		#oceanImported .main .main-c{width:295px;padding-left:5px;}
+		#oceanImported .main .main-c .form-group textarea.form-control{width:99%;border-radius:5px;}
+		#oceanImported .main .main-c .form-inline .form-group .c-medium{width:106px;}
+		#oceanImported .main .main-r{width:400px;padding-left:5px;height:569px;}
+		#oceanImported .main .main-r .r-small{width:55px;}
+		#oceanImported .main .main-r .r-medium{width:120px;}
+		#oceanImported .main .main-r .r-big{width:318px;}
+		#oceanImported .main .main-r .box-number{width:100%;height:100px;overflow:auto;}
+		#oceanImported .main .main-r .box-number table{width:1000px;}
+		#oceanImported .main .main-r .box-number table input[type="checkbox"]{width:15px;}
+		#oceanImported .main .main-r .box-number table input[type="text"]{width:80px;}
+		#oceanImported .main .main-f{width:700px;height:160px;padding-left:10px;}
+		#oceanImported .main .main-f button{margin-bottom:5px;}
+		#oceanImported .main .main-f select{width:270px;}
+	</style>
+</head>
+<body>
+	<div id="oceanImported" class="container-fluid">
+		<div class="head">
+			<div class="" role="navigation">
+				<ul class="top nav nav-tabs">
+					<li :key="n.id" :class="{fl:true, test:true, active:n.id==navClass}" v-for="n in nav" @click="navClick(n)"  @click="navClick(n)" :key="n.id">
+						<a href="javascript:;" v-text="n.nav"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="main clearfix">
+			<div class="main-l fl">
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label class="">业务编号</label>
+						<input style="width:102px;" class="form-control" type="text"  v-model="oceanImportedData.BILLNO" />
+					</div>
+					<div class="form-group">
+						<label>制单日期</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.BILLDATE" />
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>客户</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.CUSTOMSCORP" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.ST_DT_a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>发货人</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.HSHIPPERID" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.HSHIPPERNAME" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div> 
+				<div class="form-group">
+					<textarea class="form-control" rows="5" v-model="oceanImportedData.HSHIPPERDETAILS"></textarea>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>收货人</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.HCNEEID" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.HCNEENAME" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" rows="5" v-model="oceanImportedData.HCNEEDETAILS"></textarea>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>通知人</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.HNOTIFYID" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.HNOTIFYID" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" rows="5" v-model="oceanImportedData.HNOTIFYDETAILS"></textarea>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>收货地</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>装货港</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>卸货港</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>目的地</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>交货地</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="main-c fl">
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>制单</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+					<div class="form-group">
+						<label>部门</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>业务来源</label>
+						<select class="form-control c-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+						<select class="form-control c-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>HB/L NO</label>
+						<input class="form-control c-medium" type="text" v-model="oceanImportedData.a" />
+						<select class="form-control c-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>MB/L NO</label>
+						<input class="form-control c-medium" type="text" v-model="oceanImportedData.a" />
+						<select class="form-control c-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>HB/L付费地</label>
+					<input class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">MB/L付费地</label>
+					<input class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-group">
+					<label>件数</label>
+					<input class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>毛重</label>
+						<input style="" class="form-control" type="text" v-model="oceanImportedData.a" />
+					</div>
+					<div class="form-group">
+						<label>尺码</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>包装</label>
+						<select class="form-control c-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+						<input class="form-control c-medium" type="text" v-model="oceanImportedData.a" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label>件数描述</label>
+					<input class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-group">
+					<label>HS代码品名</label>
+					<input class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-group">
+					<select style="width:100%" class="form-control" v-model="oceanImportedData.a">
+						<option></option>w
+					</select>
+				</div>
+				<div class="form-group">
+					<label>货物描述</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />危险品
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />冻柜
+					</label>
+						<button class="btn">详情</button>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" rows="3" v-model="oceanImportedData.a"></textarea>
+				</div>
+			</div>
+			<div class="main-r fl">
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>单据类型</label>
+						<input class="form-control r-small" type="text" v-model="oceanImportedData.a" />
+					</div>
+					<div class="form-group">
+						<label>业务类型</label>
+						<select class="form-control r-small" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>业务状态</label>
+						<select class="form-control r-small" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>装箱方式</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>ETD</label>
+						<input class="form-control r-medium" type="text" v-model="oceanImportedData.a" />
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>操作员</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>船名</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>签单方式</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>航次</label>
+						<input class="form-control r-medium" type="text" v-model="oceanImportedData.a" />
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>REF NO</label>
+						<input class="form-control r-medium" type="text" v-model="oceanImportedData.a" />
+					</div>
+					<div class="form-group">
+						<label>调度员</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="1==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>A M S</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>核算部门</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>A C I</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>提单份数</label>
+						<select class="form-control r-medium" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<label>客户约号</label>
+					<input class="form-control r-big" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<div class="form-group">
+					<label>唛头</label>
+					<textarea style="height:70px;" class="form-control" rows="2" v-model="oceanImportedData.a"></textarea>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label style="width:80px;" class="checkbox-inline">
+							<input type="checkbox" v-model="oceanImportedData.a" />是否SOC箱
+						</label>
+					</div>
+					<div class="form-group">
+						<label>电放/正本</label>
+						<input class="form-control" type="text" v-model="oceanImportedData.a" />						
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<label>箱量</label>
+					<button class="btn">新行</button>
+					<button class="btn">删行</button>
+					<label style="width:70px;" class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />箱量大写
+					</label>
+				</div>
+				<div class="box-number">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th></th>
+								<th v-for="b in boxQuantitysTitle" :key="b.id" v-text="b.title"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="form-group" v-for="b in boxQuantitysData">
+								<td><input class="form-control" type="checkbox" ></td>
+								<td>
+									<select v-model="b.CNTR" class="form-control">
+										<option v-for="t in CNTRDATA" v-text="t.CNTRSIZE" :value="t.CNTRSIZE"></option>
+									</select>
+								</td>
+								<td><input class="form-control" type="text" v-model="b.CNTRQTY"/></td>
+								<td><input class="form-control" type="text" v-model="b.REMARKS"/></td>
+								<td><input class="form-control" type="text" v-model="b.ONEWAYCNTR"/></td>
+								<td><input class="form-control" type="checkbox" v-model="b.IFSOC"/></td>
+								<td><input class="form-control" type="checkbox" v-model="b.CNTRTYPE"/></td>
+								<td><input class="form-control" type="text" v-model="b.TEMPERATURE"/></td>
+								<td><input class="form-control" type="text" v-model="b.TEMPERATUREUNIT"/></td>
+								<td><input class="form-control" type="text" v-model="b.HUMIDITY"/></td>
+								<td><input class="form-control" type="text" v-model="b.DRAUGHT"/></td>
+								<td><input class="form-control" type="text" v-model="b.TON"/></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="main-f fl">
+				<div class="form-group">
+					<label style="width:100px;">箱数或件数大写</label>
+					<input style="width:580px;display:inline-block;" class="form-control" type="text" v-model="oceanImportedData.a" />
+				</div>
+				<button class="btn btn-primary btn-block">发送EDT时 服务方式为 DOOR TO / TO DOOR 时客人名称和联系人</button>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>服务方式</label>
+						<select class="form-control" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>贸易条款</label>
+						<select class="form-control" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<div class="form-group">
+						<label>联运方式</label>
+						<select class="form-control" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>特殊装载</label>
+						<select class="form-control" v-model="oceanImportedData.a">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需报关
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需报检
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需陆运
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需仓储
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需堆场
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />需申报
+					</label>
+					<label style="width:70px;" class="checkbox-inline">
+						<input type="checkbox" v-model="oceanImportedData.a" />其他服务
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Vue.component("drop-down", {
+			props: ["item"],
+			template:
+			'<li >' +
+			'<span v-text="item"></span>' +
+			'</li>'
+		});
+		var oceanImported = new Vue({
+			el:"#oceanImported",
+			data:{
+				// 导航栏控制
+				navClass:1,
+				// 导航栏内容
+				ifShow:0,
+				liClass:0,
+				nav:[{id:1, nav:"接单"},
+					{id:2, nav:"订舱"},
+					{id:3, nav:"配箱"},
+					{id:4, nav:"费用"},
+					{id:5, nav:"报关/陆运/其他"}
+				],
+				// 箱量表表头
+				boxQuantitysTitle:[{id:1,title:"箱型"},
+					{id:2,title:"箱量"},
+					{id:3,title:"备注"},
+					{id:4,title:"单程箱"},
+					{id:5,title:"SOC箱"},
+					{id:6,title:"食品箱"},
+					{id:7,title:"温度"},
+					{id:8,title:"温度单位"},
+					{id:9,title:"湿度"},
+					{id:10,title:"通风度"},
+					{id:11,title:"加重吨数"}
+				],
+				// 箱量表数据
+				boxQuantitysData:[{}],
+				// 箱型数据
+				CNTRDATA:[],
+				oceanImportedData:[],
+			},
+			methods:{
+				navClick:function(item){
+					oceanImported.navClass = item.id;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

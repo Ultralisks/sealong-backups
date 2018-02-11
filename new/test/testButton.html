@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/layui/layui.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<button  :disabled="disabled">123456</button>
+	</div>
+	
+	<script type="text/javascript">
+		var app =new Vue({
+			el:"#app",
+			data:{
+				disabled:false,
+			},
+		})
+	</script>
+</body>
+</html>

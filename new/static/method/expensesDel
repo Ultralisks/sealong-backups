@@ -1,0 +1,44 @@
+//******************************************************************************
+// - ProgramName: Freight_management.expensesDel
+// - Description: 运价管理系统.费用维护删除
+// - Create Time: 2018-01-23 00:50:41 (UTC)
+// - Author Name: th
+// - 青岛世隆软件有限公司　　版权所有
+//******************************************************************************
+
+program expensesDel;
+
+uses
+  System.SysUtils;
+
+function Execute(Application: TWebServerApplication; request: TiPlatformRestRequest;
+                 session: TWebSession; RequestParam: TWebRequestParam;
+                 const AMethodName, AURI: UTF8Str; const inputDoc: Variant;
+                 var Handled: Boolean; var AHttpStatus: Integer;
+                 var err: TWebError; var json_value: Variant): Boolean;
+var
+  vd: TVariantDoc;
+  _id: TID;  
+  topic: TSQLItems;
+begin
+  vd:= TVariantDoc.Create(inputDoc);
+  topic:= TSQLItems.Create;
+  _id:=vd.I['id'];
+  try
+    case RequestParam.URIMethod of  
+      mPOST:
+        begin  
+           //数据记录的删除操作  
+           TSQLItems.Delete(_id);
+        end;    
+    else
+      err.Error('不支持的 HTTP 方法.');
+    end;
+  finally
+    vd.Free;
+    topic.Free;
+  end;
+end; 
+begin
+
+end.

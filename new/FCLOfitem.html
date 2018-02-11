@@ -1,0 +1,1284 @@
+﻿﻿<link rel="stylesheet" href="static/css/share.css"/>
+<link href="static/layui/css/layui.css" rel="stylesheet">
+<link href="static/layui/css/chose.css" rel="stylesheet">
+<!-- <link rel="stylesheet" href="static/css/fclofitem.css"/> -->
+<script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="static/js/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="static/vue/dist/vue.min.js"></script>
+<!-- 点击某列时显示的层 -->
+<!-- 海运管理费 -->
+<style>
+    .tishi{position:absolute;bottom:100px;right:30px;border:1px solid #999;border-radius:4px;padding:20px;background-color: #fff;display: none}
+    #auditing{position:absolute;left:0;right:0;top:0;bottom:0;margin:auto;height:200px;width:200px;z-index:1010;display:none;border-radius:5px;text-align: center;background: white;}
+    #auditing .check input{margin-left:5px;}
+    #auditing h3{background: #f2f2f2;height: 36px;color:#484751;line-height: 36px;text-align: center;border-radius: 4px 4px 0 0;}
+    #auditing button{width: 70px;height: 26px;margin-right:5px;line-height: 26px;margin-top:100px;}
+    #ofitem{position:relative;}
+    .load{width:100%;height:100%;background-color:#fff;display:block;position:absolute;    z-index: 100;
+    text-align: center;
+    font-size: 20px;}
+    .load i{font-size: 20px;}
+    #modify_tbl1_body .stick{background:#008bf6;color:#fff;}
+    #modify_tbl1_body .stick input{color:#fff;}
+    #modify_tbl1_d1{display:none;}
+    .he,.ftop6,.oficx{float:left;}
+</style>
+<input style="display:none" value="{{main.session.roles}}" id="roles" />
+<input style="display:none" value="{{main.session.UserName}}" id="username" />
+<div  id="modify_tbl1_d1">
+    <div id="modify_tbl1_d11">
+        <table class="layui-table" style="width:100%">
+            <tr>
+                <td><label> 有效期起：</label><input class="newdate new_tal" id="m_1" type="date"/></td>
+                <td><label> 有效期止：</label><input class="newdate new_tal" id="m_2" type="date"/></td>
+                <td><label>航线：</label>
+                    <select id="lane_select11">
+                        <option value="-1" selected>航线</option>
+                        {{#main.lane}}
+                        <option value="{{id}}">{{Cname}}</option>
+                        {{/main.lane}}
+                    </select>
+                </td>
+                <td><label>起运港：</label>
+                    <select id="pod_select11">
+                        <option value="-1" selected>起运港</option>
+                        {{#main.data}}
+                        <option value="{{id}}">{{CName}}({{Country}})</option>
+                        {{/main.data}}
+                    </select></td>
+            </tr>
+            <tr>
+                <td><label>目的港：</label>
+                    <select id="pod_select21">
+                        <option value="-1" selected>目的港</option>
+                        {{#main.data}}
+                        <option value="{{id}}">{{CName}}({{Country}})</option>
+                        {{/main.data}}
+                    </select>
+                </td>
+                <td><label>船期：</label><input type="text" id="m_14" class="new_tal"/></td>
+                <td><label>航程：</label><input type="text" id="m_3" class="new_tal"></td>
+                <td><label>中转港：</label>
+                    <select id="pod_select31">
+                        <option value="-1" selected>中转港</option>
+                        {{#main.data}}
+                        <option value="{{id}}">{{CName}}({{Country}})</option>
+                        {{/main.data}}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td> <label> 20：</label><input type="text" id="m_5"  class="new_tal"/></td>
+                <td> <label> 40：</label><input type="text" id="m_9"  class="new_tal"/></td>
+                <td> <label> 40HQ：</label><input type="text" id="m_11"  class="new_tal"/></td>
+                <td> <label>45：</label><input type="text" id="m_16"  class="new_tal"/></td>
+            </tr>
+            <tr>
+                <td> <label>货物类型：</label>
+                    <select id="m_13" style="height:18px;width:60%;">
+                        <option>普通</option>
+                        <option>栋柜</option>
+                    </select>
+                </td>
+                <td><label>承运人：</label>
+                    <select id="corp_select11">
+                        <option value="-1" selected>船公司</option>
+                        {{#main.info}}
+                        <option value="{{id}}">{{Cname}}</option>
+                        {{/main.info}}
+                    </select>
+                </td>
+                <td colspan="4"><label style="width:13%">备注：</label><input type="text" id="m_18" style="width:41%" class="new_tal"/></td>
+                <input type="hidden" class="new_tal" id="new_input"/>
+                <td style="display:none">操作人id<input type="text" id="operatorid"/></td>
+                <td style="display:none">操作人name<input type="text" id="operator"/></td>
+                <td style="display:none">船公司ID<input type="text" id="m_6_1"/></td>
+                <td style="display:none">ID<input type="text" id="m_12"/></td>
+                <td style="display:none">polID<input type="text" id="m_7_1"/></td><!-- m_15 -->
+                <td style="display:none">podID<input type="text" id="m_8_1"/></td>
+                <td style="display:none">laneID<input type="text" id="m_10_1"/></td>
+                <td style="display:none">transport1ID<input type="text" id="m_4_1"/></td>
+            </tr>
+        </table>
+        <div style="text-align:center;padding-top:5px">
+            <input type="button" value="修改" id="modify_tbl1_d1_update" class="float_lay_btn" />
+            <!--<input type="button" value="复制" id="modify_tbl1_d1_insert" class="float_lay_btn"/>-->
+            <input type="button" value="删除" id="modify_tbl1_d1_delete" class="float_lay_btn"/>
+            <input type="button" value="取消" id="modify_tbl1_d1_cancel" class="float_lay_btn"/>
+        </div>
+    </div>
+</div>
+<div id="ofitem">
+    <div class="load">
+        <span>正在加载请稍后...</span>
+        <div><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i></div>
+    </div>
+    <div class="ofitem_query">
+        <div class="top_1">
+            <div class="he">
+                <select id="pol_select">
+                    <option value="-1" selected>起运港</option>
+                    {{#main.data}}
+                    <option value="{{id}}">{{CName}}({{Country}})</option>
+                    {{/main.data}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="pod_select">
+                    <option value="-1" selected>目的港</option>
+                    {{#main.data}}
+                    <option value="{{id}}">{{CName}}({{Country}})</option>
+                    {{/main.data}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="corp_select">
+                    <option value="-1" selected>船公司</option>
+                    {{#main.info}}
+                    <option value="{{id}}">{{Cname}}</option>
+                    {{/main.info}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="lane_select">
+                    <option value="-1" selected>航线</option>
+                    {{#main.lane}}
+                    <option value="{{id}}">{{Cname}}</option>
+                    {{/main.lane}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="user_select">
+                    <option value="-1" selected>录入人</option>
+                    {{#main.user}}
+                    <option value="{{UserName}}">{{UserName}}</option>
+                    {{/main.user}}
+                </select>
+            </div>
+            <div class="he" style="width:25%;">
+                <input type="date" id="startdate" style="width:45%"/> 至 <input type="date" id="enddate" style="width:45%"/>
+            </div>
+            <div class="ftop6" style="width:6%;">
+                <select id="actived" class="ftop6" style="width:100%;">
+                    <option value="1">有效</option>
+                    <option value="2">无效</option>
+                    <option value="3">待审</option>
+                </select>
+            </div>
+            <div class="oficx" id="query" onclick="javascript:search();">查询</div>
+        </div>
+    </div>
+    <div class="ofitem_content">
+        <div class="main_content">
+            <div class="hang2">
+                <div class="ofibtn" id="new" onclick="ShowDiv('pinqiyun','fade')">新增</div>
+                <!-- <div class="ofibtn"><a href="mould">模板</a></div> -->
+                <div class="ofibtn" id="ValidDelete">删除选中</div>
+                <div class="ofibtn" id="AllActive1" onclick="javascript:ActivedAll('1');">有效</div>
+                <div class="ofibtn" id="AllActive2" onclick="javascript:ActivedAll('2');">无效</div>
+                <div class="ofibtn" id="AllActive3" onclick="javascript:ActivedAll('3');">请核</div>
+                <div class="ofibtn" id="resetting" onclick="resetting();">重置查询</div>
+                <div class="ofibtn" id="top" >置顶</div>
+                <div class="ofibtn" id="clearTop" >取消置顶</div>
+                <!-- <div class="ftop7"><input type="button" value="浏览.." id="Uploadbtn"/><input type="file" id="Uploadfile" /></div> -->
+                <a href="mould"><div class="ofibtn">模板导入</div></a>
+                <!-- <div class="ofibtn" id="Upload">导入 </div> -->
+                <a href="recycle">
+                    <div class="ofibtn " style="float:right;">回收站</div>
+                </a>
+
+            </div>
+            <table class="ofitem_content_title" cellpadding='0' cellspacing='0'>
+                <thead>
+                <tr style="height:40px;">
+                    <td style="width:40px;">
+                        <input type="checkbox" name="chkAll" id="chkAll" title="全选" onclick="ChkAllClick('chkSon','chkAll')"/>
+                    </td>
+                    <td>有效期</td>
+                    <td>航线</td>
+                    <td>起运港</td>
+                    <td>目的港</td>
+                    <td>船期</td>
+                    <td>航程</td>
+                    <td>中转港</td>
+                    <td>20</td>
+                    <td>40</td>
+                    <td>40HQ</td>
+                    <td>45</td>
+                    <td>货物类型</td>
+                    <td>承运人</td>
+                    <td>备注</td>
+                    <td>审核人 审核时间</td>
+                    <td>录入人</td>
+                    <td>驳回原因</td>
+                    <td>修改</td>
+                </tr>
+                </thead>
+                <tbody id="modify_tbl1_body">
+                </tbody>
+            </table>
+            <div id="pageLabel" style="margin-top:20px" ></div><!-- 显示分页页数 -->
+        </div>
+        <div id="fade" class="black_overlay"></div>
+        <div id="pinqiyun">
+            <div class="title">海运费</div>
+            <ul class="content">
+                <li class="hang">
+                    <p><label>有效期起：</label>
+                        <input type="date" id="begin_input"/>
+                    </p>
+                    <p><label>有效期止：</label>
+                        <input type="date" id="end_input"/>
+                    </p>
+                </li>
+                <li class="hang">
+                    <p><label>航线</label>
+                        <select id="lane_select1">
+                            <option value="-1" selected>航线</option>
+                            {{#main.lane}}
+                            <option value="{{id}}">{{Cname}}</option>
+                            {{/main.lane}}
+                        </select>
+                    </p>
+                    <p><label>起运港</label>
+                        <select id="pod_select1">
+                            <option value="-1" selected>起运港</option>
+                            {{#main.data}}
+                            <option value="{{id}}">{{CName}}({{Country}})</option>
+                            {{/main.data}}
+                        </select>
+                    </p>
+                </li>
+                <li class="hang">
+                    <p><label>目的港</label>
+                        <select id="pod_select2">
+                            <option value="-1" selected>目的港</option>
+                            {{#main.data}}
+                            <option value="{{id}}">{{CName}}({{Country}})</option>
+                            {{/main.data}}
+                        </select>
+                    </p>
+                    <p><label>船期</label>
+                        <input type="text" id="cq_input"/>
+                        <input type="hidden" id="cq_input_1"/>
+                    </p>
+                </li>
+                <li class="hang">
+                    <p><label>航程</label><input type="text" id="hc"/></p>
+                    <p><label>中转港</label>
+                        <select id="pod_select3">
+                            <option value="-1" selected>中转港</option>
+                            {{#main.data}}
+                            <option value="{{id}}">{{CName}}({{Country}})</option>
+                            {{/main.data}}
+                        </select>
+                    </p>
+                </li>
+                <li class="hang">
+                    <p><label>20</label><input type="text" id="dj1" value="0"/></p>
+                    <p><label>40</label><input type="text" id="dj2" value="0"/></p>
+                </li>
+                <li class="hang">
+                    <p><label>40HQ</label><input type="text" id="dj3" value="0"/></p>
+                    <p><label>45</label><input type="text" id="dj4" value="0"/></p>
+                </li>
+                <li class="hang">
+                    <p><label>货物类型</label>
+                        <select style="width:192px;height:28px;" id="dj5">
+                            <option>普通</option>
+                            <option>栋柜</option>
+                        </select>
+                    </p>
+                    <p><label>承运人</label>
+                        <select id="corp_select1">
+                            <option value="-1" selected>船公司</option>
+                            {{#main.info}}
+                            <option value="{{id}}">{{Cname}}</option>
+                            {{/main.info}}
+                        </select>
+                    </p>
+                </li>
+
+                <li class="hang">
+                    <label style="width:12%">备注</label><input type="text" id="beizhu" style="width:83.3%"/>
+                </li>
+                <li style="display:none"><label>操作id</label><input type="text" id="czrid"/></li>
+                <li style="display:none"><label>操作人</label><input type="text" id="czr"/></li>
+                <li style="text-align:center;"><button style="margin-right:20px;" id="sure">确认</button><button onclick="CloseDiv('pinqiyun','fade')">取消</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="auditing">
+    <h3>选择审核人</h3>
+    <div class="check">
+    </div>
+    <div>
+        <button onclick="doauditing()">确认</button>
+        <button onclick="closeauditing()">取消</button>
+    </div>
+</div>
+<div class="tishi">
+    <div class=""style="text-align: right">
+        <button id="tishiclose" class="tishiclose" style="padding:0 5px;">×</button>
+    </div>
+    <div id="tishi">
+    
+    </div>
+</div>
+
+<script type="text/javascript">
+ 
+    //显示弹出层
+    function ShowDiv(show_div,bg_div){
+        document.getElementById(show_div).style.display='block';
+        document.getElementById(bg_div).style.display='block' ;
+        var bgdiv = document.getElementById(bg_div);
+        bgdiv.style.width = document.body.scrollWidth;
+        $("#"+bg_div).height($(document).height());
+        qingkong();
+        $("#begin_input").focus();
+    }
+    function qingkong(){
+        $("#begin_input").val("");
+        $("#end_input").val("");
+        $("#lane_select1").val(-1);
+        $("#lane_select1_chosen a span").text("航线");
+        $("#pod_select1").val(-1);
+        $("#pod_select1_chosen a span").text("起运港");
+        $("#pod_select2").val(-1);
+        $("#pod_select2_chosen a span").text("目的港");
+        $("#cq_input").val("");
+        $("#hc").val("");
+        $("#corp_select1").val(-1);
+        $("#corp_select1_chosen a span").text("船公司");
+        $("#dj1").val(0);
+        $("#dj2").val(0);
+        $("#dj3").val(0);
+        ($("#dj4").val(0));
+        $("#dj5").val("普通");
+        $("#beizhu").val("");
+        $("#pod_select3").val(-1);
+        $("#pod_select3_chosen a span").text("中转港");
+    }
+
+
+    //关闭弹出层
+    function CloseDiv(show_div,bg_div){
+        document.getElementById(show_div).style.display='none';
+        document.getElementById(bg_div).style.display='none';
+    };
+    //全选
+    function ChkAllClick(sonName, cbAllId){
+        var arrSon = document.getElementsByName(sonName);
+        var cbAll = document.getElementById(cbAllId);
+        var tempState=cbAll.checked;
+        for(i=0;i<arrSon.length;i++) {
+            if(arrSon[i].checked!=tempState)
+                arrSon[i].click();
+        }
+    }
+    var newjson;
+    var begin = 0;//记录开始行
+    var end = 0;//记录结束行
+    var pagesize =10;//一个显示的行数
+    var liu_index=1;
+    var roles = $("#roles").val();
+    var username = $("#username").val();
+    var audit = ["Admin"];
+    function decide(){
+        if($("#actived").val() == 1){
+
+        }
+    }
+    //待审项提示
+    function find(){
+        if(roles == "[\"Examinant\"]" || roles == "[\"Administrator\"]"){
+            var _url="INPRICEMNGGENLEGITEMS?action=other&Actived=3&IFDEL=F&IFMould=F&AuditStatus="+username;
+            $.ajax({
+                url:_url,
+                type:"GET",
+                dataType:"json",
+                async:false,
+                success:function(json){
+                    console.log(json);
+                    var num =json.data.length;
+                    if(num>0){
+                        $(".tishi").css("display","block");
+                        $("#tishi").click(function(){
+                            $("#actived").val("3");
+                            search();
+                            $(".tishi").css("display","none");
+                        })
+                        $("#tishi").html("您有"+num+"条新的审核，请注意查看！")   
+                    }else{
+                        $(".tishi").css("display","none");
+                    }
+                }
+            });
+        }
+        if(roles == "[\"Staff\"]"){
+            $.ajax({
+                url:"INPRICEMNGGENLEGITEMS?action=other&Actived=2&IFDEL=F&IFMould=F&Writer="+username,
+                type:"GET",
+                dataType:"json",
+                async:false,
+                success:function(json){
+                    console.log(json);
+                    var num = 0;
+                    if(json.data.length){
+                        for(var i = 0; i <json.data.length; i++){
+                            if(json.data[i].REJECT != ""){
+                                num++;
+                            }
+                        }
+                        if(num>0){
+                            $(".tishi").css("display","block");
+                            $("#tishi").click(function(){
+                                $("#actived").val("2");
+                                search();
+                                $(".tishi").css("display","none");
+                            })
+                            $("#tishi").html("您有"+num+"条审核被驳回，请及时处理！")   
+                        }else{
+                            $(".tishi").css("display","none");
+                        }
+                    }
+                }
+            });
+        }
+    }
+    //根据有效状态显示按钮
+    function btnshow(){
+        if($("#actived").val() == 1){
+            $("#ValidDelete").css("display", "none");
+            $("#AllActive1").css("display", "none");
+            $("#AllActive2").css("display", "none");
+            $("#AllActive3").css("display", "none");
+            $("#clearTop").css("display", "block");
+            $("#top").css("display", "block");
+        }
+        if($("#actived").val() == 2){
+            if(roles == "[\"Staff\"]"){
+                $("#AllActive1").css("display", "none");
+                $("#AllActive2").css("display", "none");
+                $("#AllActive3").css("display", "block");
+                $("#ValidDelete").css("display", "block");
+            }else{
+                $("#AllActive1").css("display", "none");
+                $("#AllActive2").css("display", "none");
+                $("#AllActive3").css("display", "block");
+                $("#ValidDelete").css("display", "none");
+            }
+            $("#clearTop").css("display", "none");
+            $("#top").css("display", "none");
+        }
+        if($("#actived").val() == 3){
+            if(roles == "[\"Staff\"]"){
+                $("#AllActive1").css("display", "none");
+                $("#AllActive2").css("display", "block");
+                $("#AllActive3").css("display", "none");
+                $("#ValidDelete").css("display", "none");
+            }else{
+                $("#ValidDelete").css("display", "block");
+                $("#AllActive1").css("display", "block");
+                $("#AllActive2").css("display", "none");
+                $("#AllActive3").css("display", "none");
+            }
+            $("#clearTop").css("display", "none");
+            $("#top").css("display", "none");
+        }
+
+    }
+    $(function(){
+        setTimeout(function(){
+           $(".load").css("display", "none");
+        }, 100)
+        $("#tishiclose").click(function(){
+            $(".tishi").css("display","none");
+        });
+        search();
+        find();
+        btnshow();
+        $("#pol_select").chosen();
+        $("#pod_select").chosen();
+        $("#corp_select").chosen();
+        $("#lane_select").chosen();
+        $("#pod_select1").chosen();
+        $("#pod_select2").chosen();
+        $("#pod_select3").chosen();
+        $("#corp_select1").chosen();
+        $("#lane_select1").chosen();
+        $("#pod_select11").chosen();
+        $("#pod_select21").chosen();
+        $("#pod_select31").chosen();
+        $("#corp_select11").chosen();
+        $("#lane_select11").chosen();
+        $("#user_select").chosen();
+        $("#pinqiyun .chosen-container").css({"width":"192px"});
+        $("#modify_tbl1_d11 .chosen-container").css({"width":"60%"});
+        $("#sure").click(function(){
+            var begin_time=$("#begin_input").val();
+            var end_time=$("#end_input").val();
+            var lanes=$("#lane_select1").val();
+            var polid=$("#pod_select1").val();
+            var podid=$("#pod_select2").val();
+            var sail=$("#cq_input").val();
+            var voyage=$("#hc").val();
+            var coprs=$("#corp_select1").val();
+            var dj1=$("#dj1").val();
+            var dj2=$("#dj2").val();
+            var dj3=$("#dj3").val();
+            var dj4=parseInt($("#dj4").val());
+            var dj5=$("#dj5").val();
+            var remakrs=$("#beizhu").val();
+            var transport=$("#pod_select3").val();
+            if(!begin_time ||!end_time||(lanes==-1)||(polid==-1)||(podid==-1)||!sail||!voyage||(coprs==-1)){
+                console.log(podid);
+                var str = "";
+                if(!begin_time ){
+                    // $("#begin_input").focus();
+                    $("#begin_input").css("border", "1px solid red");
+                }else{
+                    $("#begin_input").css("border", "1px solid #ccc");
+                }
+                if(!end_time){
+                    // $("#end_input").focus();
+                    $("#end_input").css("border", "1px solid red");
+                }else{
+                    $("#end_input").css("border", "1px solid #ccc");
+                }
+                if(lanes==-1){
+                    // $("#lane_select1").focus();
+                    $("#lane_select1_chosen a").css("border", "1px solid red");
+                }else{
+                    $("#lane_select1_chosen a").css("border", "1px solid #ccc");
+                }
+                if(polid==-1){
+                    // $("#pod_select1").focus();
+                    $("#pod_select1_chosen a").css("border", "1px solid red");
+                }else{
+                    $("#pod_select1_chosen a").css("border", "1px solid #ccc");
+                }
+                if(podid==-1){1
+                    // $("#pod_select2").focus();
+                    $("#pod_select2_chosen a").css("border", "1px solid red");
+                }else{
+                    $("#pod_select2_chosen a").css("border", "1px solid #ccc");
+                }
+                if(!sail){
+                    // $("#cq_input").focus();
+                    $("#cq_input").css("border", "1px solid red");
+                }else{
+                    $("#cq_input").css("border", "1px solid #ccc");
+                }
+                if(!voyage){
+                    // $("#hc").focus();
+                    $("#hc").css("border", "1px solid red");
+                }else{
+                    $("#hc").css("border", "1px solid #ccc");
+                }
+                if(coprs==-1){
+                    // $("#corp_select1").focus();
+                    $("#corp_select1_chosen a").css("border", "1px solid red");
+                }else{
+                    $("#corp_select1_chosen a").css("border", "1px solid #ccc");
+                }
+                alert( "必填项不能为空");
+            }else{
+                var time = new Date();
+                var Time = ""+time.getFullYear()+(time.getMonth()+1)+time.getDay()+time.getHours()+time.getMinutes()+time.getSeconds();
+                $.ajax({
+                    url: "INPRICEMNGGENLEGITEMS?InureFrom="+begin_time+"&InureTo="+end_time+"&PolID="+polid+"&LaneID="+lanes+"&PodID="+podid+"&Transport1ID="+transport+"&VesWeek="+sail+"&Voyage="+voyage+"&CarrierID="+coprs+"&Remarks="+remakrs+"&H20GP="+dj1+"&H40GP="+dj2+"&H40HQ="+dj3+"&H45GP="+dj4+"&CargoType="+dj5+"&Writer="+username+"&Actived=2"+"&Identifier="+Time+"&IFDEL=F&IFMould=F",
+                    dataType: 'json',
+                    type: "POST",
+                    async:false,
+                    success: function(data){
+                        if(data.result.success==true){
+                            alert('添加成功');
+                            $("#pinqiyun,#fade").css("display","none");
+                        }else {
+                            alert('失败! ');
+                        }
+                    }
+                });
+
+            }
+
+        });
+
+
+
+        //复制
+//        $("#modify_tbl1_d1_insert").click(function(){
+//            pagesize =10;
+//            if($("#goto").length>0){ liu_index=$("#goto").val();}
+//            var sfg= $("#m_7_1").val();//始发港ID
+//            var mdg=$("#m_8_1").val();//目的港ID
+//            var m_1=$.trim($("#m_1").val()); //有效期开始
+//            var m_1_1=$.trim($("#m_2").val());//有效期结束
+//            var m_2=$.trim($("#m_14").val()); //船期
+//            var m_3=$.trim($("#m_3").val());//航程
+//            var m_4=$.trim($("#m_4").val());//中转港
+//            var m_5=$.trim($("#m_5").val());//20GP
+//            var m_6=$.trim($("#m_6").val());//船公司
+//            var m_7=$.trim($("#m_7").val());//起运港
+//            var m_8=$.trim($("#m_8").val());//目的港
+//            var m_9=$.trim($("#m_9").val());//40GP
+//            var m_10=$.trim($("#m_10").val());//航线
+//            var m_11=$.trim($("#m_11").val());//40HQ
+//            var m_12=$.trim($("#m_12").val());//id
+//            var m_13=$.trim($("#m_10_1").val());//laneID
+//            var m_14=$.trim($("#m_4_1").val());//transport1ID
+//            var m_15=$.trim($("#m_6_1").val());//船公司ID
+//            var m_16=$.trim($("#m_18").val());//remarks  备注
+//            var m_17=$.trim($("#m_16").val());//45GP
+//            var m_18=$.trim($("#m_13").val());//货物类型
+//            jQuery.ajax({
+//                url:"INPRICEMNGGENLEGITEMS?&InureFrom="+m_1+"&InureTo="+m_1_1+"&PolID="+sfg+"&LaneID="+m_13+"&PodID="+mdg+"&Transport1ID="+m_14+"&VesWeek="+m_2+"&Voyage="+m_3+"&CarrierID="+m_6+"&Remarks="+m_16+"&H20GP="+m_5+"&H40GP="+m_9+"&H40HQ="+m_11+"&H45GP="+m_17+"&CargoType="+m_18,
+//                dataType: 'json',
+//                type: "POST",
+//                async:false,
+//                cache:false,
+//                success: function(json){
+//                    console.log(json);
+//                    if(json.result.success==true){
+//                        alert("添加成功！");
+//                        $("#query").trigger("click");
+//                        if($("#goto").length>0){$("#goto").val(liu_index);}//当前页数赋值给文本框
+//                        begin = (liu_index - 1) * pagesize;//json读取开始位置
+//                        (begin + pagesize > newjson.data.length) ? end = newjson.data.results.length : end=begin + pagesize;//设置结束为止判断  读取的json是否超出了json 的长度
+//                        pageing(begin, end);
+//                        $("#pageLabel a").eq(liu_index-1).addClass("pagesize").siblings().removeClass("pagesize");
+//                        if($("#goto").length>0){ $("#goto").addClass("pagesize"); $("#pageLabel a").removeClass("pagesize");}
+//                    }else{
+//                        alert("添加失败！");
+//                    }
+//                },
+//            });
+//            $("#modify_tbl1_d1").css({"display":"none"});
+//        });
+        //弹出层的 修改  按钮
+        $("#modify_tbl1_d1_update").click(function(){
+            //计算开始位置 结束位置
+            //保存当前行的索引
+            pagesize =10;
+            if($("#goto").length>0){ liu_index=$("#goto").val();}
+            var sfg= $("#m_7_1").val();//始发港ID
+            var mdg=$("#m_8_1").val();//目的港ID
+            var m_1=$.trim($("#m_1").val()); //有效期开始
+            var m_1_1=$.trim($("#m_2").val());//有效期结束
+            var m_2=$.trim($("#m_14").val()); //船期
+            var m_3=$.trim($("#m_3").val());//航程
+            var m_4=$("#pod_select31").val();//中转港
+            var m_5=$.trim($("#m_5").val());//20GP
+            var m_6=$("#corp_select11").val();//船公司
+            var m_7=$("#pod_select11").val();//起运港
+            var m_8=$("#pod_select21").val();//目的港
+            var m_9=$.trim($("#m_9").val());//40GP
+            var m_10=$("#lane_select11").val();//航线
+            var m_11=$.trim($("#m_11").val());//40HQ
+            var m_12=$.trim($("#m_12").val());//id
+            /*var m_13=$.trim($("#m_10_1").val());//laneID
+            var m_14=$.trim($("#m_4_1").val());//transport1ID
+            var m_15=$.trim($("#m_6_1").val());//船公司ID*/
+            var m_16=$.trim($("#m_18").val());//remarks  备注
+            var m_17=$.trim($("#m_16").val());//45GP
+            var m_18=$.trim($("#m_13").val());//货物类型
+            var  url_update="INPRICEMNGGENLEGITEMS?id="+m_12+"&InureFrom="+m_1+"&InureTo="+m_1_1+"&PolID="+sfg+"&LaneID="+m_10+"&PodID="+mdg+"&TransportID="+m_4+"&VesWeek="+m_2+"&Voyage="+m_3+"&CarrierID="+m_6+"&Remarks="+m_16+"&H20GP="+m_5+"&H40GP="+m_9+"&H40HQ="+m_11+"&H45GP="+m_17+"&CargoType="+m_18;
+            $.ajax({
+                url:url_update,
+                dataType: 'json',
+                type: "POST",
+                async:false,
+                cache:false,
+                success: function(data){
+                    if(data.result.success==true){
+                        alert("修改成功！");
+                        $("#query").trigger("click");
+                        if($("#goto").length>0){ $("#goto").val(liu_index);}
+                        begin = (liu_index - 1) * pagesize;//json读取开始位置
+                        (begin + pagesize > newjson.data.length) ? end = newjson.data.length : end=begin + pagesize;//设置结束为止判断  读取的json是否超出了json 的长度
+                        pageing(begin, end);
+                        $("#pageLabel a").eq(liu_index-1).addClass("pagesize").siblings().removeClass("pagesize");
+                        if($("#goto").length>0){ $("#goto").addClass("pagesize"); $("#pageLabel a").removeClass("pagesize");}
+                    }else{
+                        alert("修改失败");
+                    }
+                },
+            });
+            $("#modify_tbl1_d1").css({"display":"none"});
+        });
+        //删除按钮
+        $("#modify_tbl1_d1_delete").click(function(){
+            pagesize =10;
+
+            var yes= window.confirm("确定删除吗？");
+            if(yes){
+                var time = new Date();
+                var Time = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDay()+" "+time.getHours()+":"+time.getMinutes();
+                var m_12=$.trim($("#m_12").val());//id
+                if($("#goto").length>0){ liu_index=$("#goto").val();}
+                jQuery.ajax({
+                    url:"INPRICEMNGGENLEGITEMS?id="+m_12+"&Actived=2&IFDEL=T"+"&AuditUser="+username+"&AuditTime="+Time,
+                    //DElRICEMNGGENLEGITEMS?id
+                    dataType: 'json',
+                    type: "POST",
+                    async:false,
+                    cache:false,
+                    success: function(json){
+                        if(json.result.success==true){
+                            alert("删除成功");
+                            $("#query").trigger("click");
+                            if(liu_index>Math.ceil(newjson.data.length/pagesize)){liu_index=Math.ceil(newjson.data.length/pagesize)}
+                            if($("#goto").length>0){$("#goto").val(liu_index);}//当前页数赋值给文本框
+                            begin = (liu_index - 1) * pagesize;//json读取开始位置
+                            (begin + pagesize > newjson.data.length) ? end = newjson.data.length : end=begin + pagesize;//设置结束为止判断  读取的json是否超出了json 的长度
+                            pageing(begin, end);
+                            $("#pageLabel a").eq(liu_index-1).addClass("pagesize").siblings().removeClass("pagesize");
+                            if($("#goto").length>0){ $("#goto").addClass("pagesize"); $("#pageLabel a").removeClass("pagesize");}
+
+                        }else{
+                            alert("删除失败");
+                        }
+                    }
+                });
+                $("#modify_tbl1_d1").css({"display":"none"});
+            }
+        });
+        //批量删除按钮事件
+        $("#ValidDelete").click(function(){
+            // 获取时间
+            var startdate=$("#startdate").val();
+            var endate=$("#ValidToID").val();
+            flag=true;
+            this_tr="";
+            var time = new Date();
+            var Time = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDay()+" "+time.getHours()+":"+time.getMinutes();
+            $("#modify_tbl1_body tr").each(function(value){
+                if($(this).children().children(".doublek").is(":checked")){
+                    this_tr=$(this);
+                    var this_id=$(this).children("td").eq(16).text();
+                    jQuery.ajax({
+                        url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&Actived=2&IFDEL=T"+"&AuditUser="+username+"&AuditTime="+Time,//"DElRICEMNGGENLEGITEMS?id="+this_id,
+                        dataType: 'json',
+                        type: "POST",
+                        async:false,
+                        cache:false,
+                        success: function(json){
+                            if(json.result.success==false){
+                                flag=false;
+                            }else{
+                                this_tr.hide();
+                            }
+                        },
+                    });
+                }
+            });
+            if(flag==false){
+                alert("删除失败");
+            }else{
+                alert("删除成功");
+                //$('#query').click();
+            }
+        });
+        //置顶
+        $("#top").click(function(){
+            // 获取时间
+            flag=true;
+            this_tr="";
+            $("#modify_tbl1_body tr").each(function(value){
+                if($(this).children().children(".doublek").is(":checked")){
+                    this_tr=$(this);
+                    var this_id=$(this).children("td").eq(16).text();
+                    jQuery.ajax({
+                        url:"INPRICEMNGGENLEGITEMS?action=other&id="+this_id+"&Stick=1",//"DElRICEMNGGENLEGITEMS?id="+this_id,
+                        dataType: 'json',
+                        type: "POST",
+                        async:false,
+                        cache:false,
+                        success: function(json){
+                        }
+                    });
+                }
+            });
+            /*if(flag==false){
+                alert("置顶成功");
+            }else{
+                alert("置顶成功");
+                //$('#query').click();
+            }*/
+            search();
+        });
+        //取消置顶
+        $("#clearTop").click(function(){
+            // 获取时间
+            flag=true;
+            this_tr="";
+            $("#modify_tbl1_body tr").each(function(value){
+                if($(this).children().children(".doublek").is(":checked")){
+                    this_tr=$(this);
+                    var this_id=$(this).children("td").eq(16).text();
+                    jQuery.ajax({
+                        url:"INPRICEMNGGENLEGITEMS?action=other&id="+this_id+"&Stick=",//"DElRICEMNGGENLEGITEMS?id="+this_id,
+                        dataType: 'json',
+                        type: "POST",
+                        async:false,
+                        cache:false,
+                        success: function(json){
+                        }
+                    });
+                }
+            });
+            /*if(flag==false){
+                alert("置顶成功");
+            }else{
+                alert("置顶成功");
+                //$('#query').click();
+            }*/
+            search();
+        });
+        
+        //点击弹出层的取消按钮隐藏事件
+        /*$("#modify_tbl1_d1_cancel").click(function(){
+            $("#modify_tbl1_d1").css("display","none");
+        });
+        //记录鼠标是否移开了表
+        var modify_isout=true;
+        $("#modify_tbl1_body").on("mouseover","tr",function(){
+            modify_isout=false;
+        }).on("mouseout","tr",function(){
+            modify_isout=true;
+        });
+        //记录鼠标是否移开table
+        var modify_isout1=true;
+        $("#modify_tbl1_d1").mouseover(function(){
+            modify_isout1=false;
+        }).mouseout(function(){
+            modify_isout1=true;
+        });
+        document.onmousedown=function(){
+            if(isout_keyEvent_ul && modify_isout && modify_isout1 &&$("#modify_tbl1_d1").css("display")!="none"){
+                $("#modify_tbl1_d1").css("display","none");
+            }
+        }*/
+    });
+
+    /**石军芝*/
+    function search(){//查询数据
+        btnshow();
+        find();
+        pagesize =10;
+        var pol=$("#pol_select").val();//起运港
+        if(pol == -1){
+            pol = "";
+        }
+        var pod=$("#pod_select").val();//目的港
+        if(pod == -1){
+            pod = "";
+        }
+        var carrier=$("#corp_select").val();//船公司
+        if(carrier == -1){
+            carrier = "";
+        }
+        var lane=$("#lane_select").val();//航线
+        if(lane == -1){
+            lane = "";
+        }
+        var user=$("#user_select").val();
+        if(user == -1){
+            user = ""
+        }
+        var startdate=$("#startdate").val();//有效期始
+        var enddate=$("#enddate").val();//有效期止
+        var actived=$("#actived").val();//有效/无效
+        var _url="INPRICEMNGGENLEGITEMS?action=other&IFDEL=F&IFMould=F";//
+        if(pol!=""){_url+="&Pol="+pol;}
+        if(pod!=""){_url+="&Pod="+pod;}
+        if(carrier!=""){_url+="&Carrier="+carrier;}
+        if(lane!=""){_url+="&Lane="+lane;}
+        if(startdate!=""){_url+="&StartTime="+startdate;}
+        if(enddate!=""){_url+="&EndTime="+enddate;}
+        if(actived!=""){_url+="&Actived="+actived;}
+        if(actived == "3" && (roles == "[\"Examinant\"]" || roles == "[\"Administrator\"]")){_url+="&AuditStatus="+username;}
+        if(roles == "[\"Staff\"]"){
+            _url+="&Writer="+username;
+        }
+        if(user != ""){_url+="&Writer="+user;}
+        $.ajax({
+            url:_url,
+            type:"GET",
+            dataType:"json",
+            async:false,
+            success:function(json){
+                console.log(json);
+                var data=null;
+                var html="";
+                if(json){if(json.data){data=json.data}}
+                if(data!=null && !data.fieldCount){
+                    newjson=json;//保存到全局变量
+                    //获取table的行数
+                    var page = json.data.length;//获取json长度   即是 table所有的行数
+                    var p = parseInt(Math.ceil(page / pagesize));//长度除以每页显示的行数 就是分页数
+                    var a="";
+                    //控制分页位置显示的页数
+                    if(p<=1){
+                        $("#pageLabel").hide();
+                    }else if(p>6){
+                        a+= "<a href='#' class='page''>" + 1 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + 2 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + 3 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+="<input type='button' value='<<' id='_back'/>";
+                        a+= "<input type='text' id='goto' style='width:50px;text-align:center'/>";//显示页数
+                        a+="<input type='button' value='>>' id='_next'/>";
+                        a+= "<a href='#' class='page''>" + (p-2) + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + (p-1) + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + p + "</a>&nbsp;&nbsp;";//显示页数
+                    }else{
+                        for (var i = 1; i <=p; i++) {
+                            a+= "<a href='#' class='page''>" + i + "</a>&nbsp;&nbsp;";//显示页数
+                        }
+                    }
+                    $("#pageLabel").html(a);//显示分页控制列表
+                    ( pagesize > json.data.length) ? pagesize=json.data.length :pagesize=pagesize ;
+                    pageing(0,pagesize);//读取json数据  查询完毕后显示第一页
+                    //显示分页位置
+                    $("#pageLabel").show();
+                    //改变背景色
+                    $("#pageLabel a:first").addClass("pagesize").siblings().removeClass("pagesize");
+                    $("#goto").val(1);
+                }else{
+                    html+="<tr><td colspan='15'>没有查询到数据！</td></tr>";
+                    $("#modify_tbl1_body").html(html);
+                }
+            }
+        });
+    }
+    $("#pageLabel").on("click","#_back",function(){
+        //获取 文本框的值
+        var pageNo=parseInt($.trim($("#goto").val()))-1;
+        if(pageNo<1){
+            alert("已经是第一页");
+        }else{
+            $("#goto").val(pageNo);//当前页数赋值给文本框
+            begin = (pageNo- 1) * pagesize;//json读取开始位置
+            (begin + pagesize > newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+            pageing(begin, end);
+            //改变背景色
+            $(this).addClass("pagesize").siblings().removeClass("pagesize");
+        }
+    });
+    //下一页 事件
+    $("#pageLabel").on("click","#_next",function(){
+        //获取 文本框的值
+        var pageNo=parseInt($.trim($("#goto").val()))+1;
+        if(pageNo>parseInt(Math.ceil( newjson.data.length / pagesize))){
+            alert("已经是最后一页");
+        }else{
+            $("#goto").val(pageNo);//当前页数赋值给文本框
+            begin = (pageNo- 1) * pagesize;//json读取开始位置
+            (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+            pageing(begin, end);
+            //改变背景色
+            $(this).addClass("pagesize").siblings().removeClass("pagesize");
+        }
+    });
+
+    //页数跳转
+    $("#pageLabel").on("keyup","#goto",function(){
+        var num=$(this).val();
+        begin = (num - 1) * pagesize;//json读取开始位置
+        (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+        pageing(begin, end);
+        //改变背景色
+        $(this).addClass("pagesize").siblings().removeClass("pagesize");
+    });
+    //分页开始
+    $("#pageLabel").on("click", "a", function () {
+        var num = parseInt($(this).text());
+        liu_index=num;
+        $("#goto").val(num);
+        begin = (num - 1) * pagesize;
+        (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+        pageing(begin, end);
+        //改变背景色
+        $(this).addClass("pagesize").siblings().removeClass("pagesize");
+    });
+    //将数据添加到页面
+    function pageing(bgn, ed) {
+        var html_page = "";//
+        var highstandard="";
+        var lowsstandard="";
+        for (var i = bgn; i < ed; i++) {
+            if(newjson.data[i].STICK == 1){
+                html_page+="<tr style='height:40px' class = 'stick'>";
+            }else{
+                html_page+="<tr style='height:40px'>";
+            }
+            html_page+="<td><input type='checkbox' name='chkSon' class='doublek' value='"+newjson.data[i].ID+"'/></td>"+
+                "<td>"+newjson.data[i].INUREFROM+"/"+newjson.data[i].INURETO+"</td>"+
+                "<td laneid='"+newjson.data[i].LANEID+"'>"+newjson.data[i].LANENAME+"</td>"+
+                "<td polid='"+newjson.data[i].POLID+"'>"+newjson.data[i].POLNAME+"</td>"+
+                "<td podid='"+newjson.data[i].PODID+"'>"+newjson.data[i].PODNAME+"</td>"+
+                "<td>"+newjson.data[i].VESWEEK+"</td>"+
+                "<td>"+newjson.data[i].VOYAGE+"</td>"+
+                "<td transportid='"+newjson.data[i].TRANSPORTID+"'>"+newjson.data[i].TRANSPORTNAME+"</td>"+
+                "<td>"+newjson.data[i].H20GP+"</td>"+
+                "<td>"+newjson.data[i].H40GP+"</td>"+
+                "<td>"+newjson.data[i].H40HQ+"</td>"+
+                "<td>"+newjson.data[i].H45GP+"</td>"+
+                "<td>"+newjson.data[i].CARGOTYPE+"</td>"+
+                "<td carrierid='"+newjson.data[i].CARRIERID+"'>"+newjson.data[i].CARRIERNAME+"</td>"+
+                "<td class='remarks'>"+newjson.data[i].REMARKS+"</td>";
+            html_page+="<td>"+newjson.data[i].AUDITUSER+" "+newjson.data[i].AUDITTIME+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].ID+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].POLID+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].PODID+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].LANEID+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].TRANSPORTID+"</td>"+
+                "<td style='display:none'>"+newjson.data[i].CARRIERID+"</td>"+
+                "<td class='writer'>"+newjson.data[i].WRITER+"</td>"+
+                "<td>"+newjson.data[i].REJECT+"</td>"+
+                "<td><input type='button' class='operate' value='修改' />"+
+                "<input type='button' class='reject' value='驳回' style='margin-right:10px;' />" +
+                "</td>"+
+                "</tr>";
+            //$("#modify_tbl1_body").empty();
+        }
+        $("#modify_tbl1_body").html(html_page);
+        //根据有效无效控制修改栏的按钮
+        if($("#actived").val() == 1 || $("#actived").val() ==3){
+            $(".operate").css("display", "none");
+        }else{
+            $(".reject").css("display", "none");
+            $(".top").css("display", "none");
+        }
+        //根据权限判断显示内容
+        if($("#actived").val() == 2 || $("#actived").val() == 3){
+            if(roles == "[\"Staff\"]"){
+                $(".writer").each(function(){
+                    if($(this).text() != username){
+                        $(this).parent().css("display", "none");
+                    }
+                })
+            }
+        }
+    };
+    //驳回方法
+    $("#modify_tbl1_body").on("click",".reject",function(){
+        var rejectText= prompt("请输入驳回原因", "");
+        if(rejectText == null){
+            return false;
+        }
+        $(this).parent().siblings("td:eq("+24+")").text(rejectText);
+        var _this = $(this).parent().parent();
+        var time = new Date();
+        var Time = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDay()+" "+time.getHours()+":"+time.getMinutes();
+        //var this_id=$(this).children("td").eq(14).text();
+        var this_id=$(this).parent().parent().children().children(".doublek").val();
+        console.log(this_id);
+        jQuery.ajax({
+            url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&Actived=2&AuditUser="+username+"&AuditTime="+Time+"&Reject="+rejectText,//+"&IFDEL=F"
+            dataType: 'json',
+            type: "POST",
+            async:false,
+            cache:false,
+            success: function(json){
+                console.log(json);
+                _this.hide();
+            }
+        });
+
+    });
+    $("#modify_tbl1_body").on("click",".top",function(){
+        var this_id=$(this).parent().parent().children().children(".doublek").val();
+       jQuery.ajax({
+           url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&Stick=T",
+           dataType: 'json',
+           type: "POST",
+           async:false,
+           cache:false,
+           success: function(json){
+               console.log(json);
+               _this.hide();
+           }
+       });
+        alert();
+    });
+
+    //修改方法
+    $("#modify_tbl1_body").on("click",".operate",function(){
+        /*var col19= $(this).parent().siblings("td:eq("+20+")").text();//username
+          var col20= $(this).parent().siblings("td:eq("+21+")").text();//userid
+        if(Signerid!=1){//除了管理员sealong能操作所有用户信息，其它用户只能操作自己的信息
+          if(Signerid!=col20){
+            alert("只能操作自己的信息");
+            return false;
+          }
+        }*/
+        where_tr=$(this).parent().parent().index();//保存下当前行的索引
+        //获取点击行的位置
+        var y=parseInt($(this).parent().parent().offset().top);
+        var x=parseInt($(this).parent().parent().offset().left);
+        //获取点击行的高度
+        var  height=parseInt($(this).parent().parent().height());
+        //获取点击行的宽度
+        var  width=parseInt($(this).parent().parent().width());
+        //隐藏的层显示相应行的信息,设置位置
+        $("#modify_tbl1_d1").css({"display":"block","top":y+height,"left":x});
+        //获取点击行信息显示在层里
+        var col= $(this).parent().siblings("td:eq("+1+")").text();//有效期起止内容
+        var col1= $(this).parent().siblings("td:eq("+2+")").text();//航线
+        var col2= $(this).parent().siblings("td:eq("+3+")").text();//起运港
+        var col3= $(this).parent().siblings("td:eq("+4+")").text();//目的港
+        var col4= $(this).parent().siblings("td:eq("+5+")").text();//船期
+        var col5= $(this).parent().siblings("td:eq("+6+")").text();//航程
+        var col6= $(this).parent().siblings("td:eq("+7+")").text();//中转港
+        var col7= $(this).parent().siblings("td:eq("+8+")").text();//20GP
+        var col8= $(this).parent().siblings("td:eq("+9+")").text();//40GP
+        var col9= $(this).parent().siblings("td:eq("+10+")").text();//40HQ
+        var col18= $(this).parent().siblings("td:eq("+11+")").text();//45GP
+        var col19= $(this).parent().siblings("td:eq("+12+")").text();//货物类型
+        var col10= $(this).parent().siblings("td:eq("+13+")").text();//船公司
+        var col11= $(this).parent().siblings("td:eq("+14+")").text();//remarks
+        var col12= $(this).parent().siblings("td:eq("+16+")").text();//id
+        var col13= $(this).parent().siblings("td:eq("+17+")").text();//polid
+        var col14= $(this).parent().siblings("td:eq("+18+")").text();//podid
+        var col15= $(this).parent().siblings("td:eq("+19+")").text();//laneid
+        var col16= $(this).parent().siblings("td:eq("+20+")").text();//transport1ID
+        var col17= $(this).parent().siblings("td:eq("+21+")").text();//carrierid
+        console.log(col1, col2, col3, col6, col10);
+        $("#m_1").val(col.substring(0,10));//获取起始日期
+        $("#m_2").val(col.substring(parseInt(col.indexOf("/"))+1));//获取终止日期
+        $("#lane_select11").next().find("a").find("span").text(col1);//航线
+        $("#pod_select11").next().find("a").find("span").text(col2);//起运港
+        $("#pod_select21").next().find("a").find("span").text(col3);//目的港
+        $("#m_14").val(col4);//船期
+        $("#m_3").val(col5);//;航程
+        $("#pod_select31").next().find("a").find("span").text(col6);//中转港
+        $("#m_5").val(col7);//20GP
+        $("#m_9").val(col8);//40GP
+        $("#m_11").val(col9);//40HQ
+        $("#m_16").val(col18);//45Gp
+        $("#m_13").val(col19);//货物类型
+        $("#corp_select11").next().find("a").find("span").text(col10);//船公司
+        $("#m_18").val(col11);//备注
+        $("#m_12").val(col12);//id
+        $("#m_6_1").val(col17);//船公司ID
+        $("#m_7_1").val(col13);//polid
+        $("#m_8_1").val(col14);//podid
+        $("#m_10_1").val(col15);//laneid
+        $("#m_4_1").val(col16);//transport1ID
+    });
+
+    function ActivedAll(actived){//修改有效无效 批量
+        flag=true;
+        this_tr="";
+        var time = new Date();
+        var Time = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDay()+" "+time.getHours()+":"+time.getMinutes();
+        $("#modify_tbl1_body tr").each(function(value){
+            if(actived == 3){
+                audit = ["Admin"];
+                $.ajax({
+                    url:"findUser",
+                    type:"GET",
+                    async:true,
+                    cache:false,
+                    success: function(json){
+                        console.log(json);
+                        if(json.data.length){
+                            var length = json.data.length;
+                            var html = "<label><input onclick='clickCheck(this)' type='checkbox' checked /><span>Admin</span></label>";
+                            for(var i = 0; i < length; i++){
+                                console.log(json.data[i].USERNAME, json.data[i]);
+                                html += "<label><input onclick='clickCheck(this)' type='checkbox' /><span>"+json.data[i].USERNAME+"</span></label>";
+                            }
+                            $(".check").html(html);
+                            ShowDiv("auditing", "fade");
+                        }
+                    }
+                });
+            }else{
+                if($(this).children().children(".doublek").is(":checked")){
+                    this_tr=$(this);
+                    //var this_id=$(this).children("td").eq(14).text();
+                    var this_id=$(this).children().children(".doublek").val();
+                    jQuery.ajax({
+                        url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&Actived="+actived+"&AuditUser="+username+"&AuditTime="+Time,
+                        dataType: 'json',
+                        type: "POST",
+                        async:false,
+                        cache:false,
+                        success: function(json){
+                            console.log(json);
+                            if(json.result.success==false){
+                                flag=false;
+                            }else{
+                                this_tr.hide();
+                            }
+                            if(flag==false){
+                                alert("请选择需要修改状态的数据");
+                            }else{
+                                alert("修改成功");
+                                //$('#query').click();
+                            }
+                        }
+                    });
+                }
+            }
+                
+        });
+        
+    }
+    function resetting(){
+        location.reload();
+    }
+    function clickCheck(obj){
+        var str = $(obj).siblings('span').text();
+        if($(obj).is(":checked")){
+            audit.push(str);
+        }else{
+            audit.splice($.inArray(str, audit),1);
+        }
+    }
+
+    function doauditing(){
+        var string = audit.join(",");console.log(string);
+        $("#modify_tbl1_body tr").each(function(value){
+            if($(this).children().children(".doublek").is(":checked")){
+                this_tr=$(this);
+                //var this_id=$(this).children("td").eq(14).text();
+                var this_id=$(this).children().children(".doublek").val();
+                jQuery.ajax({
+                    url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&Actived=3&AuditStatus="+string,
+                    dataType: 'json',
+                    type: "POST",
+                    async:false,
+                    cache:false,
+                    success: function(json){
+                        console.log(json);
+                        if(json.result.success==false){
+                            flag=false;
+                        }else{
+                            this_tr.hide();
+                            $("#auditing").css("display", "none");
+                            $("#fade").css("display", "none");
+                        }
+                        if(flag==false){
+                            alert("请选择需要修改状态的数据");
+                        }else{
+                            alert("请核成功");
+                            //$('#query').click();
+                        }
+                    },
+                });
+            }
+        });
+    }
+    function closeauditing(){
+        $("#auditing").css("display", "none");
+        $("#fade").css("display", "none");
+    }
+    
+</script>

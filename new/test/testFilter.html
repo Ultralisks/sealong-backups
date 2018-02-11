@@ -1,0 +1,57 @@
+<link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+<script type="text/javascript" src="../static/layui/layui.all.js"></script>
+<script type="text/javascript" src="../static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+<div id="app">
+	<ul>
+		<li v-for="(x, index) in filterBy(arr)" :value="x.DC">
+			<input type="text" :value="x.DC" />
+		</li>
+	</ul>
+</div>
+<script type="text/javascript">
+	// Vue.filter('filterB', function(item, index){
+	// 	if(item.DC == "C"){
+	// 		return item
+	// 	}else{
+	// 		index++;
+	// 		return app.arr[index];
+	// 	}
+	// })
+	var app = new Vue({
+		el:"#app",
+		data:{
+			arr2:[],
+			arr:[{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"D","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"},{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"C","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"},{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"D","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"}],
+
+		},
+		methods:{
+			filterBy:function(arr){
+				var arr2 = [];
+				arr.forEach(function(item){
+					if(item.DC == "C"){
+						arr2.push(item);
+					}
+				});
+				console.log(arr2)
+				return arr2;
+			}
+		},
+		filters:{
+			filterB:function(){},
+
+		}
+	})
+	app.filterB = function(item, index){
+				if(item.DC == "C"){
+					return item
+					console.log(item)
+				}else{
+					index++;
+					return app.arr.splice(index,1);
+					console.log(app.arr)
+				}
+			}
+		
+</script>

@@ -1,0 +1,67 @@
+bootstrap样式一般都自带自适应布局，所以不同浏览器宽度，可能宴会影响视觉效果
+bootstrap的扩展样式需要先设置基本样式  例如 btn btn-primary
+
+form表单
+	form-inline  该类下的元素会被置于一行内（宽度允许的情况下）
+	form-group  常用表单分组，每个表单元素一个 has-warning等控制颜色等属性
+		form-control  常用于控制input select等元素
+			input-group-addon  
+			input-lg input-sm
+		control-label	控制label的样式，使之与所属表单组的样式相同
+		input-group  包裹input用于添加其他样式
+	well  简单的嵌入效果
+			
+button按钮
+	btn, btn-default, btn-
+	btn-block  与父元素一样宽
+	active  点击状态
+	大中小
+按钮组
+	btn-group  横向按钮组（子元素按钮合并靠拢）
+	btn-toolbar  工具组，包含多个按钮组
+	btn-group-vertical  纵向按钮组
+	大中小
+nav导航  一般用于局部
+	使用ul li a结构
+	nav nav-tabs  标签页
+	nav nav-pills  常用样式
+		nav-stacked  竖向
+	nav-justified  平均分布
+navbar导航栏  一般用于全局
+
+	navbar navbar-default
+		container  设置在navber下，包含导航中的元素控制导航栏宽度
+		navbar-header  导航左侧
+			navbar-brand  一般用来放logo
+		navbar-nav  导航主体  通常是ul li a结构
+			navbar-right  右浮动
+		navbar-form  表单，一般用于写搜索框
+panel面板
+	panel panel-default
+		panel-heading  面板头部
+			panel-title  标题
+		panel-body  面板主体
+		panel-footer  面板底部
+table表格
+	table 无边框表格
+	table-striped  单双行区分
+	table-hover  hover特效
+	table-bordered  有边框
+		success，danger的类，设置给th，控制单行的样式
+分页
+	pagination  常用结构ul li a  位置居左
+	pager 同上  位置居中
+路径导航
+	breadcrumb  ul/li/a 结构  根据a标签的顺序决定a标签路径的层级  active属性表示当前所在的路径
+label标签  label-success等不同的状态样式
+badge徽章  <span class="badge"></span>  会根据主体动态改变自己的样式、
+alert提醒  success等样式
+list-group列表
+	list-group-item
+clearfix清除浮动  用于父元素
+
+hidden  隐藏
+
+for  样式跟随等号后的标签
+
+visible-xl-block  在xl尺寸下的display为block

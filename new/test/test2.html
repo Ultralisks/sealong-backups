@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://unpkg.com/vue"></script>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<like></like>
+	</div>
+<script type="text/javascript">
+	Vue.component("like", {
+		template:"<button @click='toggle_like' v-text='like_count' ></button>",
+		data: function(){
+			return {
+				like_count:10,
+				liked: false
+			}
+		},
+		methods:{
+			toggle_like: function(){
+				if(!this.liked){
+					this.like_count++;
+					this.liked = !this.liked;
+				}else{
+					this.like_count--;
+					this.liked = !this.liked;
+				}
+				
+			}
+		}
+	})
+	var app = new Vue({
+		el: "#app",
+
+	})
+	/*Vue.component("alert",{
+		template:"<button @click='on_click' >123</button>",
+		methods:{
+			on_click:function(){
+				alert("1")
+			}
+		}
+	})*/
+</script>
+</body>
+</html>

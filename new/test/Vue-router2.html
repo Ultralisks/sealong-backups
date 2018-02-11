@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>多个同级路由</title>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue-router.js"></script>
+	<style type="text/css">
+		.box{width:300px;border:1px solid #000;}
+		.box div{padding:15px;}
+		.header{border-bottom:1px solid #000;}
+		.footer{border-top:1px solid #000;}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div>
+			<router-link to="/">首页</router-link>
+			<router-link to="/user">用户列表</router-link>
+			<router-link to="/post">标签列表</router-link>
+		</div>
+		<div>
+			<router-view name="sidebar"></router-view>
+			<router-view name="content"></router-view>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var routes = [{
+			path:"/",
+			component:{  //这个写法不行，必须跟下面一样，使用components，声明其中一个view
+				template:`
+					<div>
+						<h1>首页</h1>
+					</div>
+				`,
+			},
+		},{
+			path:"/user",
+			name:"user",
+			components:{  //多个view需要用components  注意！！！
+				sidebar:{
+					template:`
+						<div>
+							<ul>
+								<li>用户管理</li>
+								<li>权限管理</li>
+							</ul>
+						</div>
+					`,
+				},
+				content:{
+					template:`
+						<div>123456</div>
+					`
+				}
+			}
+		},{
+			path:"/post",
+			name:"user",
+			components:{  //多个view需要用components  注意！！！
+				sidebar:{
+					template:`
+						<div>
+							<ul>
+								<li>帖子列表</li>
+								<li>标签管理</li>
+							</ul>
+						</div>
+					`,
+				},
+				content:{
+					template:`
+						<div>123456</div>
+					`
+				}
+			}
+		}];
+		var router = new VueRouter({
+			routes:routes,
+		});
+		var app = new Vue({
+			el:"#app",
+			router:router,
+			data:{
+				
+			}
+		})
+	</script>
+</body>
+</html>

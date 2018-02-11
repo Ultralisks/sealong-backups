@@ -1,0 +1,44 @@
+//******************************************************************************
+// - ProgramName: Freight_management.laneRecordsDel
+// - Description: 运价管理系统.航向维护删除
+// - Create Time: 2018-01-23 02:26:49 (UTC)
+// - Author Name: th
+// - 青岛世隆软件有限公司　　版权所有
+//******************************************************************************
+
+program laneRecordsDel;
+
+uses
+  System.SysUtils;
+
+function Execute(Application: TWebServerApplication; request: TiPlatformRestRequest;
+                 session: TWebSession; RequestParam: TWebRequestParam;
+                 const AMethodName, AURI: UTF8Str; const inputDoc: Variant;
+                 var Handled: Boolean; var AHttpStatus: Integer;
+                 var err: TWebError; var json_value: Variant): Boolean;
+var
+  vd: TVariantDoc;
+  _id: TID;  
+  topic: TSQLLanes;
+begin
+  vd:= TVariantDoc.Create(inputDoc);
+  topic:= TSQLLanes.Create;
+  _id:=vd.I['id'];
+  try
+    case RequestParam.URIMethod of  
+      mPOST:
+        begin  
+           //数据记录的删除操作  
+           TSQLLanes.Delete(_id);
+        end;    
+    else
+      err.Error('不支持的 HTTP 方法.');
+    end;
+  finally
+    vd.Free;
+    topic.Free;
+  end;
+end; 
+begin
+
+end.

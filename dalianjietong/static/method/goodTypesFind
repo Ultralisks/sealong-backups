@@ -1,0 +1,155 @@
+//******************************************************************************
+// - ProgramName: DLJT.goodTypesFind
+// - Description: 大连捷通.货物类型查询
+// - Create Time: 2018-02-08 07:50:07 (UTC)
+// - Author Name: th
+// - 青岛世隆软件有限公司　　版权所有
+//******************************************************************************
+
+program goodTypesFind;
+
+uses
+  System.SysUtils;
+
+function Execute(Application: TWebServerApplication; request: TiPlatformRestRequest;
+                 session: TWebSession; RequestParam: TWebRequestParam;
+                 const AMethodName, AURI: UTF8Str; const inputDoc: Variant;
+                 var Handled: Boolean; var AHttpStatus: Integer;
+                 var err: TWebError; var json_value: Variant): Boolean;
+//注意，新平台引用旧平台的数据，BindTextU要改成BindTextS
+var
+  vd: TVariantDoc;
+  vv,ss: Variant;
+  i: Integer;
+  sqlText,U: UTF8Str;
+  bFirst: Boolean;
+  rows,rows2: ISQLDBRows;
+  COUNTRY,ENAME,CNAME,TABLE:UTF8Str;
+  _pid: Integer;
+  qry: ISQLDBStatement;
+  PageNo,PageSize,PageCount,RowCount,PageStart,PageEnd,PriorPage,NextPage,WDCODE:integer; 
+begin
+  //_ObjAddProps(['sql',entityid], json_value);
+  // 数字使用InputIntOrVoid
+  // 字符串使用InputUTF8OrVoid
+  if RequestParam.URIMethod =mGET then begin
+  TABLE:='TYPES';
+  CNAME:=request.InputUTF8OrVoid['CNAME']; 
+    //if action='search' then begin
+      sqlText:='select count(*) from  '+TABLE+' where 1=1 ';
+      if CNAME<>'' then
+        sqlText:=sqlText+ ' and CNAME like ?';
+      try
+        // 获得返回数据集，即执行 Select
+        qry := DBConn.CreateThreadSafeStatementPrepared(sqlText, true, true);
+        if not Assigned(qry) then
+          err.Error('Query=nil');
+      except
+        on E: Exception do begin
+          err.Error('Error: ' + ToUTF8(E.Message));
+        end;
+      end;
+      _pid:=1;//问号后面的第几个
+      if CNAME<>'' then begin
+        CNAME:='%'+CNAME+'%';
+        qry.BindTextS(_pid, CNAME);
+        Inc(_pid);
+      end;
+       
+      try
+        qry.ExecutePrepared;
+      except
+        on E: Exception do begin
+          err.Error('Error: ' + ToUTF8(E.Message));
+        end;
+      end;
+      if err.IsError then
+        exit;
+      U:=qry.FetchAllAsJSON(true);
+      SetCodePage(U, CP_UTF8, false);
+      RowCount:=qry.ColumnInt(0);
+    
+      PageNo:=request.InputIntOrVoid['Page'];
+      PageSize:=request.InputIntOrVoid['PageSize'];
+      if PageSize=0 then
+        PageSize:=10;
+      pagecount:=RowCount div pagesize;
+      if pagecount*pagesize < rowCount then
+        pagecount:=pagecount+1;
+      if PageNo<=1 then
+        PageNo:=1
+      else if PageNo>pagecount then
+        PageNo:=pagecount;
+     
+      PageStart:=(PageNo-1)*PageSize+1;
+      PageEnd:=PageNo*PageSize;
+      if PageEnd>RowCount then
+        PageEnd:=RowCount;
+      //如果有值在前后加%
+    TABLE:='TYPES';  
+      CNAME:=request.InputUTF8OrVoid['CNAME']; 
+    sqlText:='select TYPEID,CNAME from  '+TABLE+' where 1=1 ';
+      if CNAME<>'' then
+        sqlText:=sqlText+ ' and CNAME like ?';
+    //从几到几
+      sqlText:=sqlText+ '  rows ? to ?';
+      try
+        // 获得返回数据集，即执行 Select
+        qry := DBConn.CreateThreadSafeStatementPrepared(sqlText, true, true);
+        if not Assigned(qry) then
+          err.Error('Query=nil');
+      except
+        on E: Exception do begin
+          err.Error('Error: ' + ToUTF8(E.Message));
+        end;
+      end;
+      _pid:=1;//问号后面的第几个
+      if CNAME<>'' then begin
+        CNAME:='%'+CNAME+'%';
+        qry.BindTextS(_pid, CNAME);
+        Inc(_pid);
+      end;
+      qry.Bind(_pid, PageStart);
+      Inc(_pid);
+      qry.Bind(_pid, PageEnd);
+    
+      try
+        qry.ExecutePrepared;
+      except
+        on E: Exception do begin
+          err.Error('Error: ' + ToUTF8(E.Message));
+        end;
+      end;
+      if err.IsError then
+        exit;
+      U:=qry.FetchAllAsJSON(true);
+      SetCodePage(U, CP_UTF8, false);
+      _ObjAddProps(['data', _JsonFast(U)], json_value);
+      if PageNo=1 then
+        PriorPage:=1
+      else
+        PriorPage:=PageNo-1;
+      
+      if PageNo+1>pagecount then
+        NextPage:=pagecount
+      else
+        NextPage:=PageNo+1;
+      
+      _ObjAddProps([    
+          'RowCount', RowCount, 
+          'PageSize', PageSize,
+          'Page', PageNo,
+          'First', 1,
+          'FirstPage', 1,
+          'Prior', PriorPage,
+          'Next', NextPage,
+          'Last', pagecount,
+          'Total', pagecount
+        ], ss);
+        _ObjAddProps(['pagging', ss], json_value);
+   // end;   
+  end;
+end;                 
+begin
+
+end.

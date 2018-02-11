@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>index</title>
+    <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+  	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+  	<script type="text/javascript" src="static/layui/layui.js"></script>
+  	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app1">
+<my-component></my-component>
+</div>
+<script>
+  Vue.component("my-component",{
+   template:"<button @click='add3'>" +
+   "{{message}}</button>",
+   data:function(){
+     return {
+       message:"hello world"
+     }
+   },
+   methods:{
+     add3:function(){
+       alert("我是局部")
+     }
+   }
+ });
+ var app = new Vue({
+   el:"#app1",
+   methods:{
+     add3:function(){
+       alert("我是全局")
+     }
+   }
+ })
+</script>
+</body>
+</html>

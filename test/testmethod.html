@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jsonpTest</title>
+	<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<script type="text/javascript" src="static/js/jquery.jsonp.js"></script>
+</head>
+<body>
+	<div>
+		<p>革命尚未成功，小田仍需努力</p>
+	</div>
+
+	<script type="text/javascript"></script>
+	<script type="text/javascript">
+		addEvent('search-input-text', 'keyup', function() {
+
+        var searchText = getDOM("search-input-text").value;
+
+        //供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）
+
+        //其实参数都是前端和后台程序员规定的，前端传过去，后端判断获取即可。
+
+        var url = "http://api.bing.com/qsonhs.aspx?type=cb&cb=jsonpcallback&q=" + searchText;
+
+        var script = document.createElement('script');
+
+        script.setAttribute('src', url);
+
+        // 把script标签加入body，此时调用开始        
+
+        document.getElementsByTagName('body')[0].appendChild(script);
+
+        getDOM('search-suggest').style.top = getElementTop(getDOM('search-form')) + 38 + 'px';
+
+        getDOM('search-suggest').style.left = getElementLeft(getDOM('search-form')) + 'px';
+
+        getDOM('search-suggest').style.position = 'absolute';
+
+        getDOM('search-suggest').style.display = 'block';        
+
+    });
+
+
+
+    function jsonpcallback(data) {
+
+        var data = data.AS.Results[0].Suggests;
+
+        var html = "";
+
+        console.log(data);
+
+        var html = "";
+
+        for (var i=0;i<data.length;i++) {
+
+            html += "<li>" + data[i].Txt + "</li>"
+
+        }
+
+        getDOM('search-result').innerHTML = html;
+
+    };
+
+
+		/*$.jsonp({
+			"url": "http://192.168.66.240:9010/price/jsonpTest?WDCODE=1",
+			"success": function(data) {
+				console.log(data);
+			},
+			"error": function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log(XMLHttpRequest);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		});*/
+		/*$.ajax({
+			url: "http://202.136.55.138:8096/sldc/ContainerTracking/json?mblno=HDMUIIQI1699391&customercode=HGQI&nocustomers=true",
+			type: "get",
+			dataType: "jsonp",
+			jsonp: "callback",
+			success:function(json){
+				console.log(json)
+			}
+		});*/
+		/*var script1 = document.createElement("script");
+		var script2 = document.createElement("script");
+		script1.src = "https://api.douban.com/v2/book/search?q=javascript&count=1&callback=aResponse";
+		script2.src = "http://192.168.66.240:9010/price/jsonpTest?WDCODE=1&callback=handleResponse";
+		document.body.insertBefore(script1, document.body.firstChild);
+		document.body.insertBefore(script2, document.body.firstChild);
+		function handleResponse(response){
+			// 对response数据进行操作代码
+			console.log(response);
+		}
+		function aResponse(response){
+			// 对response数据进行操作代码
+			console.log(response);
+		}*/
+		/*$.ajax({
+			url:"https://api.douban.com/v2/book/search?q=javascript&count=1",
+			type:"GET",
+			data:"",
+			async:true,
+			success:function(json){
+				console.log(json);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})*/
+	</script>
+</body>
+</html>

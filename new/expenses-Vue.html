@@ -1,0 +1,234 @@
+<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<script type="text/javascript" src="static/layui/layui.all.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+<style type="text/css">
+	#expenses .main .layui-table td{padding:0;}
+	#expenses .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
+	#expenses .main{overflow:scroll;}
+	#expenses .main .layui-table{width:3000px;}
+</style>
+<!-- 费用 -->
+<div id="expenses">
+	<div class="head">
+		<button class="layui-btn" @click="expensesCreate">新增</button>
+		<button class="layui-btn" @click="expensesSave">保存</button>
+		<button class="layui-btn" @click="expensesDel">删除</button>
+	</div>
+	<div class="main">
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
+					<th>费用编号</th>
+					<th>ITEMID</th>
+					<th>费用名称</th>
+					<th>英文名称</th>
+					<th>计量单位</th>
+					<th>核算要素</th>
+					<th>记账属性</th>
+					<th>会计科目</th>
+					<th>借贷</th>
+					<th>属性</th>
+					<th>缺省币种</th>
+					<th>贸易方式</th>
+					<th>贸易控制方式</th>
+					<th>标准成本</th>
+					<th>计划成本</th>
+					<th>状态</th>
+					<th>备注</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="r in expensesData">
+					<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ITEMNO" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ITEMID" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ITEM" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ENAME" />
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.UNITNO">
+							<option value="票">票</option>
+							<option value="箱">箱</option>
+							<option value="箱量">箱量</option>
+							<option value="尺码">尺码</option>
+							<option value="公斤">公斤</option>
+						</select>
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.ACCELEMENTID">
+							<option value="1">空运费</option>
+							<option value="2">海运费</option>
+							<option value="3">场站费</option>
+							<option value="4">报关费</option>
+							<option value="5">陆运费</option>
+							<option value="6">代垫费</option>
+							<option value="7">单证费</option>
+							<option value="8">代理费</option>
+							<option value="9">THC</option>
+							<option value="10">商检费</option>
+							<option value="11">三检费</option>
+							<option value="12">港杂费</option>
+							<option value="13">其他</option>
+						</select>
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ACCPROP" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ACCID" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.ACCDC" />
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.ITEMPROP">
+							<option value=""></option>
+							<option value="海运费">海运费</option>
+							<option value="利润分享">利润分享</option>
+						</select>
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.CYNO">
+							<option value="RMB">RMB</option>
+							<option value="USD">USD</option>
+						</select>
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.TRADETERM">
+							<option value="FOB">FOB</option>
+							<option value="CNF">CNF</option>
+							<option value="F-C">F-C</option>
+							<option value="C-F">C-F</option>
+							<option value="NA">NA</option>
+						</select>
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.TRADETERMCTRLMODE">
+							<option value="DR">DR</option>
+							<option value="CR">CR</option>
+							<option value="DC">DC</option>
+							<option value="NA">NA</option>
+						</select>
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.STDCOST" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.PLANCOST" />
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.STATUS">
+							<option value="1">正常使用</option>
+							<option value="2">设计使用</option>
+							<option value="3">准备停用</option>
+							<option value="4">报废停用</option>
+						</select>
+					</td>
+					<td>
+						<input style="width:300px;" class="layui-input" type="text" v-model="r.REMARKS" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="page"></div>
+</div>
+<script type="text/javascript">
+	var expenses = new Vue({
+		el:"#expenses",
+		data:{
+			checked:false,
+			pageNum:0,
+			checkArr:[],
+			expensesData:[{}],
+		},
+		methods:{
+			expensesSearch:function(){
+				$.ajax({
+					url:"expensesFind",
+					type:"GET",
+					async:true,
+					success:function(json){
+						console.log(json);
+						if(json.data){
+							if(!json.data.length){
+								expenses.expensesData = [];
+							}else{
+								expenses.expensesData = json.data;
+								expenses.pageNum = json.data;length;
+							}
+						}
+					}
+				})
+			},
+			expensesCreate:function(){
+				expenses.expensesData.push({ID:0, LCELENO:"", LCELEDESC:"", IFCONST:"T", RELATABLE:"", RELAKEYFLD:"", RELARESULTFLD:"", STATUS:1, REMARKS:""})
+			},
+			expensesSave:function(){
+				expenses.expensesData.forEach(function(item){
+					$.ajax({
+						url:"expensesPost",
+						data:item,
+						type:"POST",
+						async:false,
+						success:function(json){
+							console.log(json);
+						}
+					})
+				})
+				expenses.expensesSearch();
+			},
+			expensesDel:function(){
+				for(var i = 0; i < expenses.checkArr.length; i++){
+					$.ajax({
+						url:"expensesDel?ID="+expenses.checkArr[i],
+						type:"POST",
+						success:function(json){
+							console.log(json);
+							expenses.expensesSearch();
+						}
+					})
+				}
+				expenses.checkArr=[];
+			},
+			checkAll:function(){
+				if(!expenses.checked){
+					expenses.expensesData.forEach(function(index){
+						expenses.checkArr.push(index.ID);
+					})
+				}else{
+					expenses.checkArr = [];
+				}
+				expenses.checked = !expenses.checked;
+			},
+			searchData:function(){
+				$.ajax({
+					url:"countrysFind",
+					
+				})
+			}
+		}
+	});
+	expenses.expensesSearch();
+	layui.use('laypage', function(){
+		var laypage = layui.laypage;
+		//执行一个laypage实例
+		laypage.render({
+			elem: 'page', //这里的page是ID，不用加#号
+			count: expenses.pageNum //数据总数，从服务端得到
+		});
+	});
+	$(function(){
+		$(".layui-select").css("width", $(".layui-input").css("width"));
+	})
+</script>

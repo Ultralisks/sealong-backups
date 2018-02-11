@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>元数据和路由匹配</title>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue-router.js"></script>
+	<style type="text/css">
+		.box{width:300px;border:1px solid #000;}
+		.box div{padding:15px;}
+		.header{border-bottom:1px solid #000;}
+		.footer{border-top:1px solid #000;}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div>
+			<router-link to="/">首页</router-link>
+			<router-link to="/login">登录</router-link>
+			<router-link to="/user">用户列表</router-link>
+		</div>
+		<div>
+			<router-view></router-view>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var routes = [{
+			path:"/",
+			component:{
+				template:"<div>首页</div>"
+			}
+		},{
+			path:"/login",
+			component:{
+				template:"<div>登录</div>"
+			}
+		},{
+			path:"/user",
+			meta:{
+				dologin:false
+			},
+			component:{
+				template:`
+					<div>用户列表
+					<router-link to="user123" append>用户123</router-link>
+					<router-view></router-view></div>
+				`
+			},
+			children:[{
+				path:"user123",
+				component:{
+					template:`
+						<div>用户1详细信息</div>					`
+				}
+			}]
+		}];
+		var router = new VueRouter({
+			routes:routes
+		});
+		//生命周期函数
+		router.beforeEach(function(to, form, next){  //目标路径函数， 起始路径函数， 回调函数， 基本能算是默认写法
+			var logined = false;
+			console.log(to.matched);
+			if(!logined && to.matched.some(function(item){  //some的作用遍历
+				// return item.path == "/user";
+				return to.meta.dologin;  //可以通过meta进行多个路由的判断
+			})){
+				next("/login");
+			}else{
+				next();
+			}
+		});
+		router.afterEach(function(to, form){
+
+		})
+		var app = new Vue({
+			el:"#app",
+			router:router,
+			data:{}
+		});
+	</script>
+</body>
+</html>

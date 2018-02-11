@@ -1,0 +1,173 @@
+    datum.inputClick = function(obj, num){
+        datum.liClass = 0;
+        datum.n = -1;
+        setTimeout(function(){
+            if(num==1){
+                datum.ifShow = 1;
+            }else if(num==2){
+                datum.ifShow = 2;
+            }else if(num==3){
+                datum.ifShow = 3;
+            }else if(num==4){
+                datum.ifShow = 4;
+            }else if(num==5){
+                datum.ifShow = 5;
+            }else if(num==6){
+                datum.ifShow = 6;
+            }else if(num==7){
+                datum.ifShow = 7;
+            }else if(num==8){
+                datum.ifShow = 8;
+            }else if(num==9){
+                datum.ifShow = 9;
+            }else if(num==10){
+                datum.ifShow = 10;
+            }else if(num==11){
+                datum.ifShow = 11;
+            }else if(num==12){
+                datum.ifShow = 12;
+            }
+        },110);
+    };
+    datum.keyChoiceLi = function (e, num) {
+        var downData =[];
+        if(num==1){
+            downData = datum.countryData;//
+        }else if(num==2){
+            downData = datum.statusData;//
+        }else if(num==3){
+            downData = datum.bssrcData;//
+        }else if(num==4){
+            downData = datum.fmdeptData;//
+        }else if(num==5){
+            downData = datum.salesData;//
+        }else if(num==6){
+            downData = datum.sales1Data;//
+        }else if(num==7){
+            downData = datum.sales2Data;//
+        }else if(num==8){
+            downData = datum.subcorpData;//
+        }else if(num==9){
+            downData = datum.corplevelData;//
+        }else if(num==10){
+            downData = datum.corpsData;//
+        }else if(num==11){
+            downData = datum.stltypeData;//
+        }else if(num==12){
+            downData = datum.taxtypeData;// 
+        }
+        console.log(downData)
+        if(!downData){
+        }else{
+            var length = downData.length;
+            if (e.keyCode == 40) {
+                if(datum.n >= length-1){
+                    datum.n = -1;
+                }
+                datum.n = datum.n + 1;
+                datum.liClass = downData[datum.n].ID;
+                console.log(downData);
+            }
+            if (e.keyCode == 38) {
+                if(datum.n <= 0){
+                    datum.n = length;
+                }
+                datum.n=datum.n-1;
+                datum.liClass = downData[datum.n].ID;
+            }
+            if (e.keyCode == 13) {
+                if(!downData[datum.n]){
+                }else{
+                    if(datum.ifShow==1){
+                        datum.corpData.COUNTRY = downData[datum.n].COUNTRY;
+                        datum.corpData.COUNTRYID = downData[datum.n].ID;
+                    }else if(datum.ifShow==2){
+                        datum.corpData.STATUS = downData[datum.n].STATUS;
+                        datum.corpData.ID = downData[datum.n].ID;
+                    }else if(datum.ifShow==3){
+                        datum.corpData.BSSRC = downData[datum.n].BSSRC;
+                        datum.corpData.BSSRCID = downData[datum.n].ID;
+                    }else if(datum.ifShow==4){
+                        datum.corpData.FMDEPT = downData[datum.n].FMDEPT;
+                        datum.corpData.FMDEPTID = downData[datum.n].ID;
+                    }else if(datum.ifShow==5){
+                        datum.corpData.SALES = downData[datum.n].SALES;
+                        datum.corpData.SALESID = downData[datum.n].ID;
+                    }else if(datum.ifShow==6){
+                        datum.corpData.SALES1 = downData[datum.n].SALES;
+                        datum.corpData.SALESID1 = downData[datum.n].ID;
+                    }else if(datum.ifShow==7){
+                        datum.corpData.SALES2 = downData[datum.n].SALES;
+                        datum.corpData.SALESID2 = downData[datum.n].ID;
+                    }else if(datum.ifShow==8){
+                        datum.corpData.SUBCORPNO = downData[datum.n].CORPNO;
+                        datum.corpData.SUBCORPNAME = downData[datum.n].CNAME;
+                        datum.corpData.SUBCORPID = downData[datum.n].ID;
+                    }else if(datum.ifShow==9){
+                        datum.corpData.CORPLEVEL = downData[datum.n].LEVEL;
+                        datum.corpData.ID = downData[datum.n].ID;
+                    }else if(datum.ifShow==10){
+                        datum.corpData.SUBCORPNO = downData[datum.n].CORPNO;
+                        datum.corpData.SUBCORPNAME = downData[datum.n].CNAME;
+                        datum.corpData.SUBCORPID = downData[datum.n].ID;
+                    }else if(datum.ifShow==11){
+                        datum.corpData.STLTYPE = downData[datum.n].STLTYPE;
+                        datum.corpData.ID = downData[datum.n].ID;
+                    }else if(datum.ifShow==12){// Ð¶»õ
+                        datum.corpData.TAXTYPE = downData[datum.n].TAXTYPE;
+                        datum.corpData.ID = downData[datum.n].ID;
+                    }
+                }
+                datum.ifShow = 0;
+            }
+        }
+    };
+    datum.choiceLi = function (item, num) {
+        if(num==1){
+            datum.corpData.COUNTRY = item.COUNTRY;
+            datum.corpData.COUNTRYID = item.ID;
+        }else if(num==2){
+            datum.corpData.STATUS = item.STATUS;
+            datum.corpData.ID = item.ID;
+        }else if(num==3){
+            datum.corpData.BSSRC = item.BSSRC;
+            datum.corpData.BSSRCID = item.ID;
+        }else if(num==4){
+            datum.corpData.FMDEPT = item.FMDEPT;
+            datum.corpData.FMDEPTID = item.ID;
+        }else if(num==5){
+            datum.corpData.SALES = item.SALES;
+            datum.corpData.SALESID = item.ID;
+        }else if(num==6){
+            datum.corpData.SALES1 = item.SALES;
+            datum.corpData.SALESID1 = item.ID;
+        }else if(num==7){
+            datum.corpData.SALES2 = item.SALES;
+            datum.corpData.SALESID2 = item.ID;
+        }else if(num==8){
+            datum.corpData.SUBCORPNO = item.CORPNO;
+            datum.corpData.SUBCORPNAME = item.CNAME;
+            datum.corpData.ID = item.ID;
+        }else if(num==9){
+            datum.corpData.CORPLEVEL = item.LEVEL;
+            datum.corpData.ID = item.ID;
+        }else if(num==10){
+            datum.corpData.SUBCORPNO = item.CORPNO;
+            datum.corpData.SUBCORPNAME = item.CNAME;
+            datum.corpData.SUBCORPID = item.ID;
+        }else if(num==11){
+            datum.corpData.STLTYPE = item.STLTYPE;
+            datum.corpData.ID = item.ID;
+        }else if(num==12){
+            datum.corpData.TAXTYPE = item.TAXTYPE;
+            datum.corpData.ID = item.ID;
+        }
+        datum.ifShow = 0;
+    };
+    app.falseBlur = function(num){
+        setTimeout(function (){
+            if(num==1){
+                app.ifShow = -1;
+            }
+        }, 100);
+    };

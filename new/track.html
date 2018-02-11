@@ -1,0 +1,177 @@
+﻿<!-- <link rel="stylesheet" type="text/css" href="static/css/huowugenzong.css" /> -->
+<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+<style type="text/css">
+  .margin{width:1226px;margin:0 auto;}
+  .top{height:28px;padding:10px 20px;background:#eee;}
+  .top div{float:left;font:14/28px "";text-align:center;}
+  .top div span{height:28px;}
+  .top div input{border:1px solid #888;height:28px;}
+  .top button{float:right;height:28px;border:0;background:#008bf6;color:#fff;width:60px;}
+  .main table{width:100%;margin:10px 0 20px;text-align:center;}
+  .main table tr{height:34px;}
+  .main table.main-total thead tr th{background:#4988cd;}
+  .main table.main-details thead tr th{background:#eee;}
+  .main table.main-details tbody tr.click{background:#008bf6;}
+  .main .main-follow{display:none;margin-top:50px;}
+  .main .main-follow h3{margin:0 auto;width:100px;}
+</style>
+<div class="margin">
+  <div class="top">
+    <div>
+      <span>提单号：</span><input id="mblno" type="text" placeholder="请输入提单号" />
+    </div>
+    <button id="search">查询</button>
+  </div>
+  <div class="main">
+    <table class="main-total layui-table" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>承运人</th>
+          <th>提单号</th>
+          <th>船名/航次</th>
+          <th>箱量</th>
+          <th>起运港</th>
+          <th>目的港</th>
+          <th>目的地</th>
+          <th>E.T.D</th>
+          <th>E.T.A</th>
+          <th>A.T.D</th>
+          <th>A.T.A</th>
+        </tr>
+      </thead>
+      <tbody id="main-total">
+        <tr>
+ 
+        </tr>
+      </tbody>
+    </table>
+    <table class="main-details layui-table" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>最新状态</th>
+          <th>箱号</th>
+          <th>封号</th>
+          <th>件数</th>
+          <th>毛重</th>
+          <th>尺码</th>
+          <th>关区代码</th>
+          <th>海关回执事件</th>
+          <th>海关回执描述</th>
+          <th>A.T.D</th>
+          <th>A.T.A</th>
+        </tr>
+      </thead>
+      <tbody id="main-details">
+        <tr></tr>
+      </tbody>
+    </table>
+    <div class="main-follow">
+      <h3>物流跟踪</h3>
+      <table class="layui-table" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th colspan="3">状态</th>
+            <th>发生地点</th>
+            <th>发生时间</th>
+          </tr>
+        </thead>
+        <tbody id="main-follow">
+          <tr>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript">
+$(function(){
+  var btn = document.getElementById("search");
+  btn.onclick = function(){
+      var mblno = $("#mblno").val();
+      console.log(mblno);
+      // var mblno = "OOLU2595370820";
+      var _url = "searchTrack?url=http://202.136.55.138:8096/sldc/ContainerTracking/json?mblno="+mblno;
+      $.ajax({
+        url: _url,
+        type: "GET",
+        dataType: "json",
+          async: false,
+        success: function(json){
+            console.log(json);
+            var data = null;
+            if(json.HttpGet.response.main.data){
+                data = json.HttpGet.response.main.data;
+            }
+            if(!data){
+          alert("没有查询到数据")
+            }else{
+              var total = "";//信息汇总
+          var details = "";//单箱信息
+          var follow = "";//跟踪信息
+          total += "<tr>"+
+          "<td>" + data.bills.carriername + "</td>"+
+          "<td>" + data.bills.mblno + "</td>"+
+          "<td>" + data.bills.vesselname+"/"+data.bills.voyageno + "</td>"+
+          "<td>" + data.bills.containercount + "</td>"+
+          "<td>" + data.bills.pol + "</td>"+
+          "<td>" + data.bills.pod + "</td>"+
+          "<td>" + data.bills.destination + "</td>"+
+          "<td>" + data.bills.etd + "</td>"+
+          "<td>" + data.bills.eta + "</td>"+
+          "<td>" + data.bills.atd + "</td>"+
+          "<td>" + data.bills.ata + "</td>"+
+          "</tr>";
+          $("#main-total").html(total);
+          for(var i=0;i<data.containers.length;i++){
+            details += "<tr>"+
+            "<td>"+data.containers[i].currentstatus_cn+"</td>"+
+            "<td>"+data.containers[i].containerno+"</td>"+
+            "<td>"+data.containers[i].containersealno+"</td>"+
+            "<td>"+data.containers[i].packages+"</td>"+
+            "<td>"+data.containers[i].grossweight+"</td>"+
+            "<td>"+data.containers[i].volume+"</td>"+
+            "<td>"+data.containers[i].customno+"</td>"+
+            "<td>"+data.containers[i].customreceipttime+"</td>"+
+            "<td>"+data.containers[i].customreceiptmessage+"</td>"+
+            "<td>"+data.containers[i].atd+"</td>"+
+            "<td>"+data.containers[i].ata+"</td>"+
+            "</tr>";
+          }
+          $("#main-details").html(details);
+          $("#main-details tr").on("click",function(){
+          $("#main-follow").innerHTML="";
+          var follow="";
+          var follow_data = null
+          var index=$(this).index();
+          $("#main-details tr").each(function(){
+              $(this).removeClass("click");
+          });
+          $(this).addClass("click");
+          follow_data=data.containers[index];
+          if(follow_data.podtimes !=null){
+            for(var i=0;i<follow_data.podtimes.length;i++){
+                follow+="<tr>"+
+                "<td>"+follow_data.podtimes[i].currentstatus+"</td>"+
+                "<td>"+follow_data.podtimes[i].currentstatus_en+"</td>"+
+                "<td>"+follow_data.podtimes[i].currentstatus_cn+"</td>"+
+                "<td>"+follow_data.podtimes[i].currentlocale+"</td>"+
+                "<td>"+follow_data.podtimes[i].occurrencetime+"</td>"+
+                "</tr>";
+            }
+          }    
+          $("#main-follow").html(follow);
+          if(follow==""){
+              $("#main-follow").html("<tr></tr>")
+          }
+          $(".main-follow").show();
+                });
+            }
+         }
+      })
+  }
+})
+</script>
+</body>

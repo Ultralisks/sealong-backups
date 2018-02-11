@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/layui/layui.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th v-text="theadData.T1"></th>
+					<th v-text="theadData.T2"></th>
+					<th v-text="theadData.T3"></th>
+					<th v-text="theadData.T4"></th>
+					<th v-text="theadData.T5"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="x in tbodyData">
+					<td id="qwe" v-text="x.MOUTH"></td>
+					<td v-text="x.NUM"></td>
+					<td v-text="x.SNAME"></td>
+					<td v-text="x.CNAME"></td>
+					<td v-text="x.ENAME"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script type="text/javascript">
+		var app = new Vue({
+			el:"#app",
+			data:{
+				theadData:{T1:"MOUTH", T2:"NUM", T3:"SNAME", T4:"CNAME", T5:"ENAME", ID:"1"},
+				tbodyData:[{MOUTH:"1", NUM:1, SNAME:"A", CNAME:"A", ENAME:"A"},
+					{MOUTH:"2", NUM:2, SNAME:"B", CNAME:"B", ENAME:"B"},
+					{MOUTH:"3", NUM:3, SNAME:"C", CNAME:"C", ENAME:"C"},
+					{MOUTH:"4", NUM:4, SNAME:"D", CNAME:"D", ENAME:"D"},
+					{MOUTH:"5", NUM:5, SNAME:"E", CNAME:"E", ENAME:"E"}],
+				a:"MOUTH"
+			},
+			methods:{
+
+			}
+		});
+	</script>
+</body>
+</html>

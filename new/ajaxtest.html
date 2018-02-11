@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="static/js/ajax.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			var url = "countrysFind";
+			var url1 = "portRecordsFind";
+			var data = getAjax(url, '');
+			var data1 = getAjax(url1,'');
+			console.log(data);
+			console.log(data1);
+			$.ajax({
+				url:"portRecordsFind",
+				type:"GET",
+		        async:true,
+		        success:function(json){
+		            console.log(json);
+		        }
+			})
+		});
+	</script>
+</body>
+</html>

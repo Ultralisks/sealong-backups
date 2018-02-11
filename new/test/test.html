@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://unpkg.com/vue"></script>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="text" @input="chan" v-model="va" :key="x" />
+		<input type="text" v-model="va" /><div :class="{ 'class-a': 1==1}">Demo4</div>
+	<button :class="{'a':q}">123</button>
+	</div>
+
+<script type="text/javascript">
+	var app = new Vue({
+		el: "#app",
+		data:{
+			wo:"1525225",
+			va:"",
+			q:true,
+			w:false,
+			x:5,
+		},
+		methods:{
+			chan:function(){
+				console.log(this.va);
+			}
+		}
+	})
+	window.onload = function(){
+		app.va = app.wo;
+	}
+</script>
+</body>
+</html>

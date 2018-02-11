@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css" />
+	<script type="text/javascript" src="../static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="../static/layui/layui.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<select v-model="select">
+			<option v-for="x in selectData" :value="x.value" v-text="x.text"></option>
+		</select>
+		<select>
+			<option>客户</option >
+			<option v-for="items in jsonData" v-text="items.CUSTOMSCORP">
+			</option>
+		</select>
+	</div>
+	<script type="text/javascript">
+		var app = new Vue({
+			el:"#app",
+			data:{
+				selectData:[{id:1, value:"a", text:"A"},
+					{id:2, value:"b", text:"B"},
+					{id:3, value:"c", text:"C"},
+					{id:4, value:"d", text:"D"},
+					{id:5, value:"e", text:"E"}],
+				select:"",
+				jsonData:[{ID:111, CUSTOMSCORP:222},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},
+					{ID:2, CUSTOMSCORP:2},
+					{ID:"a", CUSTOMSCORP:"a"},
+					{ID:4, CUSTOMSCORP:4},
+					{ID:5, CUSTOMSCORP:5},
+					{ID:6, CUSTOMSCORP:6},
+					{ID:7, CUSTOMSCORP:7},
+					{ID:8, CUSTOMSCORP:8},
+					{ID:9, CUSTOMSCORP:9},],
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+<script type="text/javascript" src="../static/layui/layui.all.js"></script>
+<script type="text/javascript" src="../static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="content" v-cloak>
+  <form @submit.prevent="submit">
+    <div class="list" v-for="item in addList">
+      <h3 class="title">
+        <label for=""><input type='checkbox' class='item-check-btn' v-model="item.checked" @click="selectAll(item)"></label>
+        {{item.name}}
+      </h3>
+        <ul class="menu">
+          <li v-for="(s,index) in item.children">
+            <label for="">
+              <input type='checkbox' :value="index" v-model="s.checked" class='item-check-btn' @click="selectItem(item,s,index)">
+            </label>
+            {{s.name}}
+          </li>
+        </ul>
+    </div>
+    <div class="bottom_btn">
+      <input type="submit" value="确认选择" class="btn">
+    </div>
+  </form>
+  </div>
+ 
+</body>
+<script>
+  new Vue({
+  el: "#content",
+  data: {
+    addList: [
+   {
+    "name":"用户管理",
+    "checked":true,
+    "children":[
+    {"name":"添加","checked":true},
+    {"name":"删除","checked":false},
+    {"name":"修改","checked":true}
+    ]
+   }
+  ]
+  },
+  methods: {
+    selectAll: function(item) {
+     //如果父级被选中，那么子集循环，全被给checked=true
+      if(!item.checked){
+          item.children.forEach(function(item){
+            item.checked=true;
+         });
+      }else{
+      //相反，如果没有被选中，子集应该全部checked=false
+          item.children.forEach(function(item){
+        item.checked=false;
+     
+       });
+      }
+    },
+  selectItem: function(item,s,index) {
+    //父级选中条件
+    //子集有选中的，那么父级checked=true
+    //some检测的就是有一个满足的就为true
+    item.checked=s.checked ? true : item.children.some(a => a.checked);
+   },
+   submit: function(item,s) {
+    //去拿所有的数据，返回给后台
+    var formData=this.addList;
+    console.log(JSON.stringify(formData));
+  }
+  }
+  });
+
+  [{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"D","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"},{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"C","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"},{"ID":1,"CREATEDAT":135425961259,"MODIFIEDAT":135425961259,"CREATETIME":"2018-01-03T02:52:43","SYSID":0,"ENTITYID":46,"LANENO":0,"CORPID":123,"ITEMID":0,"DC":"D","IFQTY":"F","QTYSPECS":"","QTYUNIT":"","QTY":0,"PRICE":0,"AMT":0,"IFFCY":"F","FCYNO":"","FCYEXRATE":0,"FCYAMT":0,"TAXRATE":0,"TAXAMT":0,"PAYMODE":"","PAYPLACE":"","SETTLETERM":"","POSTSN":"","STATUS":"N","IFACC":"F","IFSTEP":"F","STLAMT":0,"STLFCY":0,"STLDATE":"","INVAMT":0,"INVFCY":0,"SRCACTID":0,"SRCENTITYID":0,"SRCLINENO":0,"USERID":0,"ISPUBLIC":"T","SALEPRICE":0,"SALEAMT":0,"SALEFCYAMT":0,"ACCELEMENTID":0,"REMARKS":"","ACC":"T","IFACCSIGNIN":"F","IFSHARE":"F"},]
+  filters:{
+    filterBy:function(item){
+        if(item[i].DC == "C"){
+          return item;
+        }
+    }
+  }
+</script>
+</html>

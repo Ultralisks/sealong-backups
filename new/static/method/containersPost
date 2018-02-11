@@ -1,0 +1,62 @@
+//******************************************************************************
+// - ProgramName: Freight_management.containersPost
+// - Description: 运价管理系统.集装箱种类保存
+// - Create Time: 2018-01-23 03:04:36 (UTC)
+// - Author Name: th
+// - 青岛世隆软件有限公司　　版权所有
+//******************************************************************************
+
+program containersPost;
+
+uses
+  System.SysUtils;
+
+function Execute(Application: TWebServerApplication; request: TiPlatformRestRequest;
+                 session: TWebSession; RequestParam: TWebRequestParam;
+                 const AMethodName, AURI: UTF8Str; const inputDoc: Variant;
+                 var Handled: Boolean; var AHttpStatus: Integer;
+                 var err: TWebError; var json_value: Variant): Boolean;
+var
+  auto1: IAutoFree;
+  auto2: IAutoFree;
+  vd: TVariantDoc;
+  _id: TID;  
+  topic: TSQLCntrtypes;
+     
+begin
+  auto1:=TAutoFree.Create(vd, TVariantDoc.Create(inputDoc));
+  auto2:=TAutoFree.Create(topic, TSQLCntrtypes.Create);
+ 
+  _id:=vd.I['id'];  
+ 
+  case RequestParam.URIMethod of 
+    mPOST:
+      begin
+        if _id>0 then begin  
+        //更新操作
+          if topic.Retrieve(_id) then begin
+            topic.FillFrom(inputDoc); //对应表中的字段
+            topic.Update;        
+            _ObjAddProps(['data', topic.GetAsDocVariantEx(true)], json_value);
+          end else begin
+            err.Error(ERR_CODE_QUERY_PARAMS_MISSING);
+          end;
+        end else begin
+        //新增记录
+          topic.Init;
+          topic.FillFrom(inputDoc); //对应表中的字段
+          if topic.Add>0 then begin      //新增一条记录
+            _ObjAddProps(['data', topic.GetAsDocVariantEx(true)], json_value);
+          end else begin
+            err.Error(ERR_CODE_UPDATE_EXCEPTION);
+          end;
+        end; 
+      end; 
+  else
+    err.Error('不支持的 HTTP 方法.');
+  end
+end;
+
+begin
+
+end.

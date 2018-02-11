@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>路由和子路由</title>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue-router.js"></script>
+	<style type="text/css">
+		.box{width:300px;border:1px solid #000;}
+		.box div{padding:15px;}
+		.header{border-bottom:1px solid #000;}
+		.footer{border-top:1px solid #000;}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div>
+			<router-link to="/">首页</router-link>
+			<router-link to="/about">关于我们</router-link>
+			<router-link to="/user/用户1">用户1</router-link>
+			<router-link to="/user/用户2?age=123">用户2</router-link>
+			<button @click="onClick">测试</button>
+		</div>
+		<div>
+			<router-view></router-view>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var routes = [{
+			path:"/",
+			component:{
+				template:`
+					<div>
+						<h1>首页</h1>
+					</div>
+				`,
+			}		
+		},{
+			path:"/about",
+			component:{
+				template:`
+					<div>
+						<h1>关于我们</h1>
+					</div>
+				`,
+			}			
+		},{
+			path:"/user/:name",
+			name:"user",
+			component:{
+				template:`
+					<div>
+						<div>{{$route.params.name}}</div>
+						<div v-text="$route.params.name"></div>
+						<div>{{$route.query.age}}</div>
+						<router-link :to="'/user/' + $route.params.name + '/more'">更多信息</router-link>
+						<router-view></router-view>
+					</div>
+				`,
+			},
+			children:[{
+				path:"more",  //子组件不需要"/"
+				component:{
+					template:`
+						<div>
+							{{$route.params.name}}
+						</div>
+					`,
+				}
+					
+			}]	
+		}];
+		var router = new VueRouter({
+			routes:routes
+		});
+		var app = new Vue({
+			el:"#app",
+			router:router,
+			data:{
+				
+			},
+			methods:{
+				onClick:function(){
+					setTimeout(function(){
+						this.router.push("/about");
+						setTimeout(function(){
+							this.router.push({name:"user", params:{name:"用户1"}});
+						}, 2000);
+					}, 2000);
+				}
+			}
+		});
+	</script>
+</body>
+</html>

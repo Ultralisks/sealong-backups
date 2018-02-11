@@ -1,0 +1,305 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>创建印章</title>
+	<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+	<div id="CreatSeal">
+		<input type="hidden" value="1" id="userid">
+		<p class="mainP"><a href="">首页</a> &gt; &gt; <a>新建流程</a> &gt; &gt; 印章管理</p>
+		<div id="CreatSeal_main">
+			<div class="CreatSeal_title">印章使用（外带）审批单</div>
+			<form class="myform" id="myform" method="post" action="CreatSeal" name="myform">
+				<!--  这票单据id  -->
+				<input type="hidden" value="">
+				<table class="table table-hover table-bordered">
+					<tbody>
+						<tr>
+							<td>标题</td>
+							<td colspan="3">
+								<input type="text" value="印章使用审批流程-Admin " readonly="readonly" id="title" name="title">
+							</td>
+							<td>申请单位</td>
+							<td>
+								<input type="text" value="青岛世隆科技有限公司" readonly="readonly" id="ApplyUnit" name="ApplyUnit">
+							</td>
+						</tr>
+						<tr>
+							<td>申请部门</td>
+							<td>
+								<input type="text" id="ApplyDept" name="ApplyDept" value="">
+							</td>
+							<td>申请人</td>
+							<td>
+								<input type="text" value="Admin" readonly="readonly" id="ApplyName" name="ApplyName">
+							</td>
+							<td>申请日期</td>
+							<td>
+								<input type="text" id="applydate" readonly="readonly" name="ApplyDate" value="">
+							</td>
+						</tr>
+						<tr>
+							<td>主送单位</td>
+							<td colspan="7">
+								<input type="text" id="MainUnit" name="MainUnit" value="">
+							</td>
+						</tr>
+						<tr>
+							<td>用章名称</td>
+							<td colspan="5" style="text-align:left">
+								<input type="checkbox" style="width:2%" id="cachet">公章
+								<input type="hidden" id="Cachet" name="Cachet">
+								<input type="checkbox" style="width:2%" id="financialchapter">财务章
+								<input type="hidden" id="FinancialChapter" name="FinancialChapter">
+								<input type="checkbox" style="width:2%" id="legalchapter">法人章
+								<input type="hidden" id="LegalChapter" name="LegalChapter">
+								<input type="checkbox" style="width:2%" id="contractchapter">合同章
+								<input type="hidden" id="ContractChapter" name="ContractChapter">
+								<input type="checkbox" style="width:2%" id="invoicechapter">发票章
+								<input type="hidden" id="InvoiceChapter" name="InvoiceChapter">
+							</td>
+						</tr>
+						<tr>
+							<td>是否外带</td>
+							<td colspan="5" style="text-align:left">
+								<select id="IFouter" name="IFouter" value="">
+									<option></option>
+									<option>是</option>
+									<option>否</option>
+								</select>
+								<span style="color: red;">外带说明：如需外带印章使用，申请人承担印章保管责任和使用责任</span>
+							</td>
+						</tr>
+						<tr>
+							<td>审核人</td>
+							<td colspan="5">
+								<input type="text" id="Auditor" name="Auditor" style="width:80%" value="">
+								<span><img src="static/MIMG/search.png" data-toggle="modal" data-target="#CreatSeal_layer"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>相关附件</td>
+							<td colspan="5">
+								<button type="button" class="filebtn">选择文件</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="creatseal_subtitle">明细信息</div>
+				<div class="creatseal_subtitle button1">
+					<i class="glyphicon glyphicon-plus-sign" style="font-size: 18px; color: #1E9FFF;"></i>
+					<i class="glyphicon glyphicon-minus-sign" style="font-size: 18px; color: #1E9FFF;"></i>
+				</div>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<td>文件名</td>
+							<td>正本</td>
+							<td>复印件</td>
+							<td>份数</td>
+							<td>盖章数量</td>
+							<td>用途说明</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="text">
+							</td>
+							<td>
+								<input name="" type="checkbox" value="">
+							</td>
+							<td>
+								<input name="" type="checkbox" value="">
+							</td>
+							<td>
+								<input type="text">
+							</td>
+							<td></td>
+							<td>
+								<input type="text">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="creatseal_subtitle button1">
+					<i class="glyphicon glyphicon-plus-sign" style="font-size: 18px; color: #1E9FFF;"></i>
+					<i class="glyphicon glyphicon-minus-sign" style="font-size: 18px; color: #1E9FFF;"></i>
+				</div>
+				<table class="table table-hover table-bordered ">
+					<thead>
+						<tr>
+							<td>合同名</td>
+							<td>合同编号</td>
+							<td width="7%">签订时间</td>
+							<td>履约单位</td>
+							<td>签订对方</td>
+							<td>标的额（万元）</td>
+							<td>主要约定事项</td>
+							<td>合同履行情况</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="text">
+							</td>
+							<td>
+								<input type="text">
+							</td>
+							<td><i class="layui-icon" style="font-size: 24px; color: #1E9FFF;"></i> </td>
+							<td>
+								<input type="text">
+							</td>
+							<td>
+								<input type="text">
+							</td>
+							<td>
+								<input type="text">
+							</td>
+							<td>
+								<textarea></textarea>
+							</td>
+							<td>
+								<textarea></textarea>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="creatseal_subtitle button1"></div>
+				<table class="table table-hover table-bordered ">
+					<tbody>
+						<tr>
+							<td width="10%">部门意见</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>财务部</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>企管部</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>总经办</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>相关领导会签</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="width:100px;margin:20px auto;">
+					<button type="submit" class="btn btn-primary" onclick="return tijiao(); return false;">提交信息</button>
+				</div>
+			</form>
+		</div>
+		<!--  弹出层  -->
+		<div id="CreatSeal_layer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width:40%">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							×
+						</button>
+						<div class="modal-title" id="myModalLabel">
+							请选择
+						</div>
+					</div>
+					<div style="min-height:380px;">
+						<div class="content_title">
+							<div style="width:57%">待选</div>
+							<div style="width:40%">已选</div>
+						</div>
+						<div class="layer_left">
+							<p>刘丽艳</p>
+							<p>刘春雨</p>
+							<p>王风刚</p>
+						</div>
+						<div class="layer_middle">
+							<div><i class="glyphicon glyphicon-arrow-right" style="font-size:22px;color:#999;cursor:default;" onclick="transfera()"></i> </div>
+							<div><i class="glyphicon glyphicon-arrow-left" style="font-size:22px;color:#999;cursor:default;" onclick="transferb()"></i> </div>
+							<div><i class="glyphicon glyphicon-transfer" style="font-size:22px;color:#999;cursor:default;" onclick="SelectAll()"></i> </div>
+						</div>
+						<div class="layer_right">
+						</div>
+					</div>
+					<div class="modal-footer" style="clear:both;text-align:center">
+						<a data-dismiss="modal" onclick="AuditorSure()">确定</a> | <a data-dismiss="modal">取消</a>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!--  弹出层结束  -->
+		</div>
+		<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="static/OAjs/CreatSeal.js"></script>
+		<script src="static/js/bootstrap.js"></script>
+		<script type="text/javascript">
+		//获取当前日期
+		var currentdate;
+
+		function getNowFormatDate() {
+			var date = new Date();
+			var seperator1 = "-";
+			var seperator2 = ":";
+			var month = date.getMonth() + 1;
+			var strDate = date.getDate();
+			if (month >= 1 && month <= 9) {
+				month = "0" + month;
+			}
+			if (strDate >= 0 && strDate <= 9) {
+				strDate = "0" + strDate;
+			}
+			currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+		}
+		var Deptid;
+		$(function() {
+			getNowFormatDate();
+			$("#applydate").val(currentdate);
+			//获取当前登录人的部门
+			var userid = $("#userid").val();
+
+			$.ajax({
+				url: "users/json?id=" + userid,
+				dataType: "json",
+				type: "POST",
+				async: false,
+				success: function(json) {
+					console.log(json)
+					var data = null;
+					if (json) { if (json.main.data) { data = json.main.data } }
+					if (data != null) {
+						Deptid = data[0].StrProp1;
+
+					}
+
+				}
+			})
+			if (Deptid != "") {
+				$.ajax({
+					url: "MeetingDeptControl/json?id=" + Deptid,
+					dataType: "json",
+					type: "POST",
+					async: false,
+					success: function(json) {
+						var data = null;
+						if (json) { if (json.main.dataID) { data = json.main.dataID } }
+						if (data != null) {
+							$("#ApplyDept").val(data.Dept);
+						}
+
+					}
+				})
+			}
+		})
+		</script>
+	</div>
+</body>
+
+</html>

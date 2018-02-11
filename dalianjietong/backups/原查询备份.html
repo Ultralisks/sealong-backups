@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>世隆软件</title>
+    <link rel="stylesheet" href="static/css/chose.css"/>
+    <link href="static/lay/css/layui.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="static/lay/layui.js"></script>
+    <script src="static/js/chosen.jquery.min.js"></script>
+
+</head>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--<meta charset="UTF-8">-->
+<!--<title>世隆软件</title>-->
+<!--<link href="layui/css/layui.css" rel="stylesheet">-->
+<!--<link href="css/style.css" rel="stylesheet">-->
+<!--<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script src="layui/layui.js"></script>-->
+<!--<script src="js/ajaxData.js"></script>-->
+<!--</head>-->
+<style>
+    .table-main{padding:0px 30px;clear: both;position:relative;}
+    .layui-table td, .layui-table th{padding:5px;overflow:hidden; text-overflow:ellipsis;word-break:keep-all; white-space:nowrap;}
+    .select .li{width:18%;float:left;margin-bottom:10px;}
+    .select .li select{color:#999;max-height:100px; overflow: auto;}
+    .select .li select option{line-height: 30px;}
+    .select .sli{width:45%;line-height:40px;padding-left:25px;}
+    .select{margin-top:20px;}
+    .text-r{text-align: right}
+    .fr{float:right;}
+    .table-frame{overflow: auto;}
+    .footer{text-align: center;line-height:40px;}
+    .layui-table{margin:0;}
+    .find-before,.finding,.find-after{text-align: center;color:#999;padding:10px;}
+    .finding,.find-after{display:none;}
+    .posi-rel{position:relative;}
+    .posi-abs{position:absolute;}
+    .inpu-sele{}
+    .inpu-sele .input{display:none;line-height:36px;top:1px;left:1px;border:none;width:70%;z-index:100;padding-left:10px;}
+    .layui-anim-upbit{width:100%;}
+    .cover{height:80%;top:60px;width:100%;text-align: center;font-size:40px;padding-top:80px;background-color:#fff;z-index:1000;}
+    .cover i{font-size:40px;}
+    @media screen and (max-width: 1550px) {
+    }
+
+
+
+</style>
+<body class="find-list">
+<div class="layui-nav layui-bg-cyan">
+    <div class="layui-nav-item">
+        世隆软信息查询平台
+    </div>
+    <span class="fr layui-nav-item"><a href="denglu">退出</a></span>
+
+</div>
+
+<ul class="select ">
+    <li class="li" id="corps">
+        <label class="layui-form-label">客户：</label>
+        <div class="layui-input-block posi-rel inpu-sele " str="corps">
+            <select class="" name="i_CORPID" id="i_CORPID">
+                <option value="">请选择</option>
+                {{#main.corpsData}}
+                <option value="{{CORPID}}">{{SNAME}}</option>
+                {{/main.corpsData}}
+            </select>
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">货物名称：</label>
+        <div class="layui-input-block posi-rel inpu-sele" str="goodsname">
+            <select class="" name="i_GOODSID" id="i_GOODSID">
+                <option value="">请选择</option>
+                {{#main.GoodsData}}
+                <option value="{{GOODSID}}">{{CNAME}}</option>
+                {{/main.GoodsData}}
+            </select>
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">番号：</label>
+        <div class="layui-input-block ">
+            <input type="" name="i_DBEditLotno" id="i_DBEditLotno" placeholder="请输入番号" class="layui-input">
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">仓储方式：</label>
+        <div class="layui-input-block inpu-sele posi-rel">
+            <!--<input class=" input posi-abs"/>-->
+            <select class="layui-select layui-input" name="storageMode" lay-verify="required" id="storageMode">
+                <option value="">暂时没有选项</option>
+            </select>
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label" >截止日期</label>
+        <div class="layui-input-block">
+            <input type="date" class="layui-input" placeholder="点击选择日期" id="dateOne">
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">货物类别：</label>
+        <div class="layui-input-block posi-rel inpu-sele" str="goodstype">
+            <!--<input class=" input posi-abs"/>-->
+            <select class="" name="i_GOODSTYPRID" id="i_GOODSTYPRID">
+                <option value="0">全部</option>
+                {{#main.typeData}}
+                <option value="{{TYPEID}}">{{CNAME}}</option>
+                {{/main.typeData}}
+            </select>
+        </div>
+    </li>
+
+    <li class="li">
+        <label class="layui-form-label">仓库：</label>
+        <div class="layui-input-block posi-rel inpu-sele">
+            <!--<input class=" input posi-abs" placeholder="请选择"/>-->
+            <select class="layui-select layui-input" name="warehouse" lay-verify="required" id="warehouse">
+                <option value="0">暂时没有选项</option>
+            </select>
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">库区：</label>
+        <div class="layui-input-block posi-rel inpu-sele">
+            <!--<input class=" input posi-abs" placeholder="请选择"/>-->
+            <select class="layui-select layui-input" name="StoreLocNo" lay-verify="required" id="StoreLocNo">
+                <option value="0">暂时没有选项</option>
+            </select>
+        </div>
+    </li>
+    <li class="li">
+        <label class="layui-form-label">库位：</label>
+        <div class="layui-input-block posi-rel inpu-sele">
+            <!--<input class=" input posi-abs" placeholder="请选择"/>-->
+            <select class="layui-select layui-input" name="library" lay-verify="required" id="library">
+                <option value="0">暂时没有选项</option>
+            </select>
+        </div>
+    </li>
+
+    <li class="li sli">
+        <div class="layui-form">
+            <input type="checkbox" name="" title="不显示零结余" lay-skin="primary"  checked="checked">
+            <input type="checkbox" name="" title="按入库单号排序" lay-skin="primary"  >
+        </div>
+
+    </li>
+    <li class="li sli">
+        <div  style="float:right;">
+            <button class="layui-btn layui-btn-normal find"  title="统计" >
+                <i class="layui-icon">&#xe62d;</i>统计
+            </button>
+            <button class="layui-btn layui-btn-warm clear" title="清空">
+                <i class="layui-icon">&#xe640;</i>清空
+            </button>
+        </div>
+
+
+    </li>
+
+</ul>
+<div class="table-main" >
+    <div class="table-frame">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th title="">客户</th>
+                <th title="">入库单号</th>
+                <th title="">货物编号</th>
+                <th title="">货物名称</th>
+                <th title="">货物品名</th>
+                <th title="">规格</th>
+                <th title="">库区</th>
+                <th title="">番号起</th>
+                <th title="">番号止</th>
+                <th title="">件数</th>
+                <th title="">净重</th>
+                <th title="">毛重</th>
+                <th title="">体积</th>
+                <th title="">托盘</th>
+                <th title="">箱数</th>
+                <th title="">小件</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <div class="find-before">
+            点击右上角统计查看数据
+        </div>
+        <div class="finding">
+            正在查询请稍后 <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>
+        </div>
+        <div class="find-after">
+            没有相关数据
+        </div>
+    </div>
+    <div id="page"></div>
+</div>
+<div class="layui-bg-cyan footer">
+    <span class="layui-nav-item">
+        鲁icp备11010695号 | copyright © 2014 青岛世隆创新软件科技有限公司
+    </span>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#corps").hide();
+        Date.prototype.Format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "h+": this.getHours(),
+                "m+": this.getMinutes(),
+                "s+": this.getSeconds(),
+                "q+": Math.floor((this.getMonth() + 3) / 3),
+                "S": this.getMilliseconds()
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+        var time = new Date().Format("yyyy-MM-dd");
+        var url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串，使用了两次decodeRUI解码
+        url = url.slice(1);
+        url = url.split("=");
+        url = url[1];
+        // console.log(url);
+        if(url == undefined){
+            window.location.href = "http://218.24.155.252:9009/jtl/denglu";
+        }
+        var corpid = 0;
+        if(url != "admin"){
+            ajaxData("GET", "corpIDFind?SNAME="+url, "");
+            console.log(list);
+            corpid = list[0].CORPID;
+            // console.log(corpid);
+            //findData();
+        }else{
+
+        }
+        $("#i_CORPID").chosen();
+        $("#i_GOODSID").chosen();
+        $("#i_GOODSTYPRID").chosen();
+        var list =[];
+        var selectLength = 0;
+        
+
+        layui.use('form', function(){
+            var form = layui.form;
+
+            form.on('select', function(data){
+
+            });
+
+        });
+        function ajaxData(type,url,para){
+            $.ajax({
+                type:type,
+                url:url,
+                data:para,
+                async:false,
+                success:function(res){
+                    // console.log(res);
+                    list = res.data;
+                    $(".find-before").css("display","none");
+                    $(".finding").css("display","none");
+                },error:function(res){
+
+                }
+            });
+        };
+        layui.use('layer', function(){
+            $(".find").click(function(){
+                $(".find-before").css("display","none");
+                $(".finding").css("display","block");
+                $(".find-after").css("display","none");
+                setTimeout(findData,100);
+            });
+        });
+        function findData(){
+            var para = {};
+            para.i_SYSID = 7;
+            if(url != "admin"){
+                para.i_CORPID = corpid;
+            }else{
+                para.i_CORPID = $("#i_CORPID").val();
+            }
+            para.i_GOODSID = $("#i_GOODSID").val();
+            para.i_BIllDATE = $("#dateOne").val();
+            para.i_GOODSTYPRID = $("#i_GOODSTYPRID").val();
+
+            if (!para.i_CORPID){
+
+                var layer = layui.layer;
+                layer.msg('用户名不能为空');
+                $(".finding").css("display","none");
+                $(".find-before").css("display","block");
+            }else{
+                if(para.i_BIllDATE==""){
+                    para.i_BIllDATE =time;
+                }
+                // console.log(para);
+                ajaxData("GET","findlist",para);
+                views();
+            }
+
+        };
+
+        function views(){
+            if(!list.length){
+                $(".find-after").css("display","block");
+                $(".finding").css("display","none");
+            }else{
+                var listLength = list.length;
+                var view = "";
+                for(var i=0;i<listLength;i++){
+                    view  +=
+                        '<tr>' +
+                        '<td class="text-one-linev">'+list[i].SNAME+'</td>' +
+                        '<td class="text-one-linev">'+list[i].BILLNO+'</td>' +
+                        '<td class="text-one-linev">'+list[i].GOODSNO+'</td>'+
+                        '<td class="text-one-linev">'+list[i].CNAME+'</td>' +
+                        '<td class="text-one-linev"><!-- '+list[i].SPECS+' --></td>' +
+                        '<td class="text-one-linev">'+list[i].TYPES+'</td>' +
+                        '<td class="text-one-linev">'+list[i].STORELOCNO+'</td>' +
+                        '<td class="text-one-linev">'+list[i].LOTNO+'</td>' +
+                        '<td class="text-one-linev">'+list[i].LOTNOTO+'</td>' +
+                        '<td class="text-one-linev">'+list[i].QTY+'</td>' +
+                        '<td class="text-one-linev">'+list[i].GOODSNO+'</td>' +
+                        '<td class="text-one-linev">'+list[i].QTYTON+'</td>' +
+                        '<td class="text-one-linev">'+list[i].VOLUME+'</td>' +
+                        '<td class="text-one-linev">'+list[i].TRAYS+'</td>' +
+                        '<td class="text-one-linev">'+list[i].BOXES+'</td>' +
+                        '<td class="text-one-linev">'+list[i].AMQTY+'</td>' +
+                        '</tr>';
+                }
+            }
+                
+
+            $("#tbody").html(view);
+
+        }
+
+
+
+
+        $(".clear").click(function(){
+            location.reload()
+        });
+
+        /*layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#dateOne'
+            });
+        });*/
+        /*layui.use('laypage', function(){
+            var laypage = layui.laypage;
+
+            laypage.render({
+                elem: 'page'
+                ,count: 50
+                ,jump: function(obj, first){
+                    console.log(obj.curr);
+                    console.log(obj.limit);
+                    if(!first){
+
+                    }
+                }
+            });
+        });*/
+        var winH = $(window).outerHeight();
+        var winW = $(window).outerWidth();
+        var selDoxW = $(".inpu-sele").outerWidth();
+        $(".chosen-container").css("width",selDoxW);
+        $(".table-frame").css("height",winH - 266-55);
+        setTimeout(function(){
+            $(".cover").css("display","none");
+            if(url == "admin"){
+               $("#corps").show(); 
+            }
+        },1000);
+            
+    });
+
+</script>
+</body>
+</html>

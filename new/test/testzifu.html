@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>子父通信</title>
+	<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap.css" />
+	<script type="text/javascript" src="../static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="../static/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<father></father>
+	</div>
+	<script type="text/javascript">
+		Vue.component("father", {
+			template:`
+				<div>
+					<son @alert="abcd"></son>
+					<div v-if="abc">
+						{{txt}}
+					</div>
+				</div>
+			`,
+			data:function(){
+				return {
+					abc:false,
+					txt:""
+				}
+			},
+			methods:{
+				abcd:function(data){
+					this.abc=true;
+					this.txt=data;
+				},
+				onClick:function(){
+					alert(111);
+				},
+			}
+		});
+		Vue.component("son", {
+			template:'<input type="text" v-model="text" @input="onClick" />',
+			methods:{
+				onClick:function(){
+					this.$emit("alert", this.text);
+				}
+			},
+			data:function(){
+				return {
+					text:""
+				}
+			}
+		});
+		var app = new Vue({
+			el:"#app",
+			data:{
+
+			},
+			methods:{
+
+			}
+		})
+	</script>
+</body>
+</html>

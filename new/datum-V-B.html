@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>往来客户信息</title>
+	<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<style type="text/css">
+		#datum .bs-example-modal-lg .modal-lg{width:1037px;}
+
+		#datum .head .form-group{display:inline-block;}
+		#datum .modal-body .nav{margin-top:5px;}
+		#datum .modal-body .nav div{margin-left:10px;}
+		#datum .modal-body h4{padding-top:10px;}
+		#datum .modal-body .info{height:365px;}
+		#datum .modal-body .info-l{width:500px;padding:0 5px;}
+		#datum .modal-body .info-r{width:500px;padding:0 5px;}
+		#datum .modal-body .edi{width:480px;}
+		#datum .modal-body .coin{width:490px;}
+		#datum .modal-body .small{width:50px;}
+		#datum .modal-body .details{width:1000px;height:600px;padding:0 10px 10px;}
+		#datum .modal-body .nav{height:40px;}
+		#datum .modal-body .nav button{margin-left:10px;}
+		#datum .modal-body .details label{display:inline-block;width:60px;}
+		#datum .modal-body .details .form-control{display:inline-block;height:24px;padding:0 5px;width:172px;}
+		#datum .modal-body .details .form-group{width:100%;margin:2px 0;}
+		#datum .modal-body .details .form-group textarea{width:410px;height:90px;border-radius:5px;}
+		#datum .modal-body .details .form-group select{width:173px;}
+		#datum .modal-body .details .form-group label{line-height:100%;}
+		#datum .modal-body .details .input-long{width:84%;}
+		#datum .modal-body .details .coin .top li{margin-right:10px;}
+		#datum .modal-body .details .coin .form-control{width:420px;}
+		#datum .modal-body .details .other .form-control{width:160px;}
+		#datum .modal-body .details .details-two{overflow-x:scroll;height:600px;}
+		#datum .modal-body .details .details-two .form-control{width:150px;}
+		#datum .modal-body .details .details-there a{display:inline-block;}
+		#datum .modal-body .footer{width:100%;height:40px;padding-top:10px;}
+		#datum .modal-body .footer-btn{width:600px;height:40px;margin:auto;}
+		#datum .modal-body .footer-btn li{padding:0 10px;}
+		#datum .modal-body .pos-abs.drop-down{z-index:10;}
+
+	</style>
+</head>
+<body>
+	<div id="datum" class="container-fluid"> 
+		<!-- <button class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">显示</button> -->
+		<div class="head">
+			<button class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg" @click="create">新增</button>
+			<button class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg" @click="revise">修改</button>
+
+			<button class="btn btn-primary" @click="del">删除</button>
+			<div class="form-group">
+				<input type="text" class="form-control" v-model="creates" @input="inputSearch($event.target.value)" />
+			</div>
+			<button class="btn btn-primary" @click="clickSearch">查询</button>
+		</div>
+		<div class="main">
+			<ul class="main-tree fl nav nav-pills nav-stacked">
+				<li :key="x.id" v-for="x in tree" @click="liClick(x)" :class="{'active':x.id ==treeClass}" @click="treeClick(x)">
+					<a v-text="x.num +' '+ x.tree" href="javascript:;"></a>
+				</li>
+			</ul>
+			<div class="main-table fr">
+				<table class="table table-striped table-bordered table-condensed" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th><input type="checkbox" /></th>
+							<th v-for="t in theadData" v-text="t.name" :key="t.id"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(c, index) in corpsData" :key="c.ID" v-bind="{name:c.ID}" @dblclick="details(c)">
+							<td><input type="checkbox" :value="index" v-model="corpsArr" /></td>
+							<td v-text="c.CORPNO"></td>
+							<td v-text="c.SNAME"></td>
+							<td v-text="c.CNAME"></td>
+							<td v-text="c.ENAME"></td>
+							<td v-text="c.CADDR"></td>
+							<td v-text="c.EADDR"></td>
+							<td v-text="c.INVCADDR"></td>
+						</tr>
+					</tbody>
+				</table>
+				<div id="page"></div>
+			</div>
+		</div>
+		<div class="modal fade bs-example-modal-lg" aria-hidden="true" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="form-inline">
+							<div class="form-group">
+								<label>单位类别</label>
+								<input type="text" class="form-control" v-model="corpData.WDCODE"  />
+							</div>
+							<div class="form-group">
+								<label>客户</label>
+								<input type="text" class="form-control" v-model="corpData.CORPNO"  />
+								<input type="text" class="form-control" v-model="corpData.SNAME"  />
+							</div>
+							<div class="form-group">
+								<label>动作</label>
+								<input type="text" class="form-control" v-model="motion"  />
+							</div>
+						</h4>
+						<div class="nav">
+							<ul class="top">
+								<li :key="x.id"  class="fl test" v-for="x in nav" @click="navClick(x)">
+									<div :class="{'btn':true, 'btn-primary':x.id==navClass, 'btn-default':x.id!=navClass}" @click="navClick(x)" v-text="x.nav"></div>
+								</li>
+							</ul>
+						</div>
+						<div class="details">
+							<div class="details-one clear-both" v-if="1==detailsNum">
+								<div class="info row">
+									<h4>基本信息</h4>
+									<div class="info-l fl form-inline col-md-6">
+										<div class="fl">
+											<div class="form-group">
+												<label>客户编号</label>
+												<input type="text" class="form-control" v-model="corpData.CORPNO" />
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>客户简称</label>
+												<input type="text" class="form-control" v-model="corpData.SNAME" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label>中文名称</label>
+											<input type="text" class="form-control input-long" v-model="corpData.CNAME" />
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>国家</label>
+												<input type="text" placeholder="请选择" class="form-control" @input="inputChange($event.target.value, 1)" @click="inputClick(this, 1)" @keyup="keyChoiceLi($event, 1)"  @blur="falseBlur(1)" v-bind="{value:corpData.COUNTRY, name:corpData.COUNTRYID}" />
+												<ul class="pos-abs drop-down"  v-if="1==ifShow">
+													<drop-down v-for="c in countryData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 1)" :class="{'curr':c.ID==liClass}">
+													</drop-down>
+												</ul>
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>省/州</label>
+												<input type="text" class="form-control" v-model="corpData.STATE">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label>中文地址</label>
+											<input type="text" class="form-control input-long" v-model="corpData.CADDR">
+										</div>
+
+										<div class="form-group">
+											<label>开票地址</label>
+											<input type="text" class="form-control input-long" v-model="corpData.INVCADDR">
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>开票电话</label>
+												<input type="text" class="form-control" v-model="corpData.INVTEL">
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label style="width:70px;">船公司代码</label>
+												<input style="width:67%;" type="text" class="form-control" v-model="corpData.EDICORPNO">
+											</div>
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>电话</label>
+												<input type="text" class="form-control" v-model="corpData.TEL">
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>传真</label>
+												<input type="text" class="form-control" v-model="corpData.FAX">
+											</div>
+										</div>
+
+										<div class="fl" style="width:33%;">
+											<div class="form-group">
+												<label>Email</label>
+												<input style="width:55%;" type="text" class="form-control" v-model="corpData.EMAIL">
+											</div>
+										</div>
+										<div class="fl" style="width:33%;">
+											<div class="form-group">
+												<label>箱属代码</label>
+												<input style="width:55%;" type="text" class="form-control" v-model="corpData.CARRIERCODE">
+											</div>
+										</div>
+										<div class="fl" style="width:33%;">
+											<div class="form-group">
+												<label>退佣率</label>
+												<input style="width:55%;" type="text" class="form-control" v-model="corpData.SURRATE">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label>详细信息</label>
+											<textarea class="" placeholder="请输入" v-model="corpData.DETAILS"></textarea>
+										</div>
+									</div>
+									<div class="info-r fl form-inline col-md-6">
+										<div class="fl" style="width:30%;">
+											<div class="form-group">
+												<label>国际代码</label>
+												<input style="width:55%;" type="text" class="form-control" v-model="corpData.CODENO">
+											</div>
+										</div>
+										<div class="fl" style="width:30%;">
+											<div class="form-group">
+												<label>海关代码</label>
+												<input style="width:55%;" type="text" class="form-control" v-model="corpData.HSCODENO">
+											</div>
+										</div>
+										<div class="fl" style="width:40%;">
+											<div class="form-group">
+												<label>状态</label>
+												<select style="width:55%;" class="form-control" v-model="corpData.STATUS">
+													<option v-for="x in statusData" :value="x.ID" v-text="x.STATUS"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" @input="inputChange($event.target.value, 2)" @click="inputClick(this, 2)" @keyup="keyChoiceLi($event, 2)"  @blur="falseBlur(2)" v-model="corpData.STATUS"> -->
+													<!-- <ul class="pos-abs drop-down"  v-if="2==ifShow">
+														<drop-down v-for="c in statusData" v-bind:item="c.STATUS" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 2)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label>英文名称</label>
+											<input type="text" class="form-control input-long" v-model="corpData.ENAME">
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>城市</label>
+												<input type="text" class="form-control" v-model="corpData.CITY">
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>负责人</label>
+												<input type="text" class="form-control" v-model="corpData.MANAGER">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label>英文地址</label>
+											<input type="text" class="form-control input-long" v-model="corpData.EADDR">
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>客户来源</label>
+												<select class="form-control" v-model="corpData.BSSRCID">
+													<option v-for="x in bssrcData" :value="x.ID" v-text="x.BSSRC"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" @input="inputChange($event.target.value, 3)" @click="inputClick(this, 3)" @keyup="keyChoiceLi($event, 3)"  @blur="falseBlur(3)" v-bind="{value:corpData.BSSRC, name:corpData.BSSRCID}">
+													<ul class="pos-abs drop-down"  v-if="3==ifShow">
+														<drop-down v-for="c in bssrcData" v-bind:item="c.BSSRC" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 3)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>来源部门</label>
+												<select class="form-control" v-model="corpData.FMDEPTID">
+													<option v-for="x in fmdeptData" :value="x.ID" v-text="x.FMDEPT"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" @input="inputChange($event.target.value, 4)" @click="inputClick(this, 4)" @keyup="keyChoiceLi($event, 4)"  @blur="falseBlur(4)" v-bind="{name:corpData.FMDEPTID, value:corpData.FMDEPT}">
+													<ul class="pos-abs drop-down"  v-if="4==ifShow">
+														<drop-down v-for="c in fmdeptData" v-bind:item="c.FMDEPT" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 4)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>业务员1</label>
+												<select class="form-control" v-model="corpData.SALESID">
+													<option v-for="x in salesData" :value="x.ID" v-text="x.SALES"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" @input="inputChange($event.target.value, 5)" @click="inputClick(this, 5)" @keyup="keyChoiceLi($event, 5)"  @blur="falseBlur(5)" v-bind="{name:corpData.SALESID, value:corpData.SALES}">
+													<ul class="pos-abs drop-down"  v-if="5==ifShow">
+														<drop-down v-for="c in salesData" v-bind:item="c.SALES" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 5)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>业务员2</label>
+												<select class="form-control" v-model="corpData.SALESID1">
+													<option v-for="x in salesData" :value="x.ID" v-text="x.SALES"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" v-bind="{name:corpData.SALESID1, value:corpData.SALES1}" @input="inputChange($event.target.value, 6)" @click="inputClick(this, 6)" @keyup="keyChoiceLi($event, 6)"  @blur="falseBlur(6)">
+													<ul class="pos-abs drop-down"  v-if="6==ifShow">
+														<drop-down v-for="c in sales1Data" v-bind:item="c.SALES" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 6)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+
+										<div class="fl">
+											<div class="form-group">
+												<label>业务员3</label>
+												<select class="form-control" v-model="corpData.SALESID2">
+													<option v-for="x in salesData" :value="x.ID" v-text="x.SALES"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" v-bind="{name:corpData.SALESID2, value:corpData.SALES2}" @input="inputChange($event.target.value, 7)" @click="inputClick(this, 7)" @keyup="keyChoiceLi($event, 7)"  @blur="falseBlur(7)">
+													<ul class="pos-abs drop-down"  v-if="7==ifShow">
+														<drop-down v-for="c in sales2Data" v-bind:item="c.SALES" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 7)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>美线约号</label>
+												<input type="text" class="form-control" v-model="corpData.CONTRACTNO">
+											</div>
+										</div>
+
+										<div class="fl" style="width:49%">
+											<div class="form-group">
+												<label style="width:80px;">所属单位编号</label>
+												<input style="width:63%;" type="text" placeholder="请选择" class="form-control" v-bind="{name:corpData.SUBCORPID, value:corpData.SUBCORPNO}" @input="inputChange($event.target.value, 8)" @click="inputClick(this, 8)" @keyup="keyChoiceLi($event, 8)"  @blur="falseBlur(8)">
+												<ul class="pos-abs drop-down"  v-if="8==ifShow">
+													<drop-down v-for="c in corpsData" v-bind:item="c.CORPNO" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 8)" :class="{'curr':c.ID==liClass}">
+													</drop-down>
+												</ul>
+											</div>
+										</div>
+										<div class="fl">
+											<div class="form-group">
+												<label>信誉等级</label>
+												<select class="form-control" v-model="corpData.CORPLEVEL">
+													<option v-for="x in corplevelData" :value="x.ID" v-text="x.LEVEL"></option>
+												</select>
+													<!-- <input type="text" placeholder="请选择" class="form-control" v-model="corpData.CORPLEVEL" @input="inputChange($event.target.value, 9)" @click="inputClick(this, 9)" @keyup="keyChoiceLi($event, 9)"  @blur="falseBlur(9)">
+													<ul class="pos-abs drop-down"  v-if="9==ifShow">
+														<drop-down v-for="c in corplevelData" v-bind:item="c.LEVEL" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 9)" :class="{'curr':c.ID==liClass}">
+														</drop-down>
+													</ul> -->
+											</div>
+										</div>
+										<div class="form-group">
+											<label>名称</label>
+											<input v-once type="text" placeholder="请选择" class="form-control input-long" v-bind="{name:corpData.SUBCORPID, value:corpData.SUBCORPNAME}" @input="inputChange($event.target.value, 10)" @click="inputClick(this, 10)" @keyup="keyChoiceLi($event, 10)"  @blur="falseBlur(10)">
+											<ul class="pos-abs drop-down"  v-if="10==ifShow">
+												<drop-down v-for="c in corpsData" v-bind:item="c.CNAME" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 10)" :class="{'curr':c.ID==liClass}">
+												</drop-down>
+											</ul>
+										</div>
+										<div class="fl" style="width:40%;">
+											<div class="form-group">
+												<label>结算类型</label>
+												<select style="width:65%;" class="form-control" v-model="corpData.STLTYPE">
+													<option v-for="x in stltypeData" :value="x.STLTYPE" v-text="x.STLTYPE"></option>
+												</select>
+											</div>
+										</div>
+										<div class="fl" style="width:30%;">
+											<div class="form-group">
+												<label style="width:80px;">每月某日后结</label>
+												<input style="width:40%;" type="text" class="form-control" v-model="corpData.DATETYPE">
+											</div>
+										</div>
+										<div class="fl" style="width:30%;">
+											<div class="form-group">
+												<label style="width:80px;">船开后几天结</label>
+												<input style="width:35%;" type="text" class="form-control" v-model="corpData.DAYS">
+											</div>
+										</div>
+
+										<div class="fl" style="width:28%;">
+											<div class="form-group">
+												<label>协议号</label>
+												<input style="width:40%;" type="text" class="form-control" v-model="corpData.CONTRACTNO">
+											</div>
+										</div>
+										<div class="fl" style="width:36%;">
+											<div class="form-group">
+												<label style="width:20px;">自</label>
+												<input style="width:80%;" type="date" class="form-control" v-model="corpData.FROMDATE" >
+											</div>
+										</div>
+										<div class="fl" style="width:36%;">
+											<div class="form-group">
+												<label style="width:20px;">——</label>
+												<input style="width:80%;" type="date" class="form-control" v-model="corpData.TODATE">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="edi fl clear-both">
+									<h4>
+										<div class="form-group">
+											<input type="checkbox" name="" v-model="corpData.IFEDI"/>启用EDI
+										</div>	
+									</h4>
+									<div class="fl" style="width:238px;">
+										<div class="form-group">
+											<label style="width:100px;">外代船公司代码</label>
+											<input style="width:55%;" type="text" class="form-control" v-model="corpData.OUTERCORPNO">
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>格式名称</label>
+											<input type="text" class="form-control" v-model="corpData.EDIFMT">
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>FTP地址</label>
+											<input type="text" class="form-control" v-model="corpData.EDIFTP">
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>Email</label>
+											<input type="text" class="form-control" v-model="corpData.EDIEMAIL">
+										</div>
+									</div>
+								</div>
+								<div class="coin fl">
+									<ul class="top clear-both">
+										<li :key="x.id"  class="fl" v-for="x in coin" @click="coinClick(x)">
+											<button :class="{'btn':true, 'btn-primary':x.id==coinClass, 'btn-default':x.id!=coinClass}" @click="coinClick(x)" v-text="x.coin"></button>
+										</li>
+									</ul>
+									<div v-if="1==coinNum">
+										<div class="form-group">
+											<label>开户名</label>
+											<input type="text" class="form-control" v-model="corpData.ACCOUNTNAME" />
+										</div>
+										<div class="form-group">
+											<label>账号</label>
+											<input type="text" class="form-control" v-model="corpData.BANKACCNO" />
+										</div>
+										<div class="form-group">
+											<label>银行</label>
+											<input type="text" class="form-control" v-model="corpData.BANK" />
+										</div>
+									</div>
+									<div v-if="2==coinNum">
+										<div class="form-group">
+											<label>开户名</label>
+											<input type="text" class="form-control" v-model="corpData.FCYACCOUNTNAME" />
+										</div>
+										<div class="form-group">
+											<label>账号</label>
+											<input type="text" class="form-control" v-model="corpData.FCYBANKACCNO" />
+										</div>
+										<div class="form-group">
+											<label>银行</label>
+											<input type="text" class="form-control" v-model="corpData.FCYBANK" />
+										</div>
+									</div>	
+								</div>
+								<div class="other clear-both">
+									<h4>其他信息</h4>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:70px;">场站三字码</label>
+											<input type="text" class="form-control" v-model="corpData.IFSOFSCODE" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:80px;">CMA Laracode</label>
+											<input type="text" class="form-control" v-model="corpData.CMA_LARACODE" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:80px;">CMA Location</label>
+											<input type="text" class="form-control" v-model="corpData.CMA_LOCATION" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:40px;">税号</label>
+											<input type="text" class="form-control" v-model="corpData.TAXNO" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:70px;">Inttra ICUA</label>
+											<input style="width:120px;" type="text" class="form-control" v-model="corpData.INTTRA_ICUA_ATTN" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>ZIM-CUCC</label>
+											<input style="width:120px;" type="text" class="form-control" v-model="corpData.CUCC" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:80px;">联系人 Email</label>
+											<input type="text" class="form-control" v-model="corpData.INTTRA_ICUA_EMAIL" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:70px;">纳税人类型</label>
+											<select style="width:120px;" class="form-control" v-model="corpData.TAXTYPE">
+												<option v-for="x in taxtypeData" :value="x.TAXTYPE" v-text="x.TAXTYPE"></option>
+											</select>
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:70px;">增值税税率</label>
+											<input style="width:40px;" type="text" class="form-control" v-model="corpData.TAXRATE" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>备注</label>
+											<input style="width:400px;" type="text" class="form-control" v-model="corpData.REMARKS" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>录入时间</label>
+											<input type="text" class="form-control" v-model="corpData.OPTIME" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label>纳税简码</label>
+											<input style="width:50px;" type="text" class="form-control" v-model="corpData.CARRIERNO" />
+										</div>
+									</div>
+									<div class="fl">
+										<div class="form-group">
+											<label style="width:70px;">附加费费率</label>
+											<input style="width:50px;" type="text" class="form-control" v-model="corpData.SURRATE" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="details-two" v-if="2==detailsNum">
+								<table class="table table-striped table-bordered table-condensed" style="width:100%">
+									<thead>
+										<tr>
+											<th v-for="x in linkman" :key="x.id" v-text="x.linkman"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" v-model="corpData.VOYAGE" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="details-there" v-if="3==detailsNum">
+								<ul class="main-tree fl nav nav-pills nav-stacked">
+									<li :key="x.id" v-for="x in tree">
+										<input type="checkbox" v-if=""><a v-text="x.num +' '+ x.tree" href="javascript:;" ></a>
+									</li>
+								</ul>
+							</div>
+							<div class="details-four" v-if="4==detailsNum">
+								<table class="table table-striped table-bordered table-condensed">
+									<thead>
+										<tr>
+											<th><input type="checkbox" /></th>
+											<th v-for="x in news" :key="x.id" v-text="x.news"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><input type="checkbox" /></td>
+											<td class="form-group">
+												<input type="text" class="form-control" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" />
+											</td>
+											<td class="form-group">
+												<input type="text" class="form-control" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="footer">
+							<ul class="footer-btn">
+								<li class="fl">
+									<button :class="{'btn':true, 'btn-primary':layerBtnShow}" @click="layerCreate">新增</button>
+								</li>
+								<li class="fl">
+									<button class="btn btn-primary" @click="layerRevise" v-text="layerBtnName"></button>
+								</li>
+								<li class="fl">
+									<button :class="{'btn':true, 'btn-primary':!layerBtnShow}" data-dismiss="modal" @click="layerCancel">取消</button>
+								</li>
+								<li class="fl">
+									<button :class="{'btn':true, 'btn-primary':layerBtnShow}" data-dismiss="modal" @click="layerDel">删除</button>
+								</li>
+								<li class="fl">
+									<button class="btn btn-primary" data-dismiss="modal" @click="layerExit">退出</button>
+								</li>
+								<li class="fl">
+									<button class="btn btn-primary" @click="layerSave">测试</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!-- <div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Vue.component("drop-down", {
+			props: ["item"],
+			template:
+			'<li >' +
+			'<span v-text="item"></span>' +
+			'</li>'
+		});
+		var datum = new Vue({
+			el:"#datum",
+			data:{
+				UserName:"123456",
+				Roles:"7890",
+				pageNum:0,
+				// 复选框是否被选择
+				corpsArr:[],
+				treeClass:1,
+				creates:"",
+				//表格表头数据
+				theadData:[{id:1, name:"客户编号"},
+					{id:2, name:"客户简称"},
+					{id:3, name:"中文名称"},
+					{id:4, name:"英文名称"},
+					{id:5, name:"中文地址"},
+					{id:6, name:"英文地址"},
+					{id:7, name:"开票地址"},],
+				//表格模拟数据
+				corpsData:[{ID:1, CORPNO:"1", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:2, CORPNO:"2", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:3, CORPNO:"3", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:4, CORPNO:"4", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:5, CORPNO:"5", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:6, CORPNO:"6", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},],
+				// 单条详细数据
+				corpData:{},
+				// 缓存数据
+				cacheData:{},
+				// 导航栏传值
+				treeName:"",
+				// 头部状态栏内容
+				motion:"浏览",
+				// 单条详细信息
+				corp:[],
+				detailsNum:1,
+				//导航数据
+				tree:[{num:"0001", tree:"收货人", id:1},
+					{num:"0002", tree:"船公司", id:2},
+					{num:"0003", tree:"场站", id:3},
+					{num:"0004", tree:"国内直接客户", id:4},
+					{num:"0005", tree:"国内同行及代理", id:5},
+					{num:"0006", tree:"国外直接客户", id:6},
+					{num:"0007", tree:"国外同行及代理", id:7},
+					{num:"0008", tree:"报关行", id:8},
+					{num:"0009", tree:"陆运公司", id:9},
+					{num:"0010", tree:"快递公司", id:10},
+					{num:"0011", tree:"其他", id:11},
+					{num:"0012", tree:"办公用品客户", id:12},
+					{num:"0013", tree:"航空公司", id:13},
+					{num:"0014", tree:"航站", id:14}],
+				countrys:[],														
+				ifShow:0,
+				// 弹出框导航栏
+				navClass:1,
+				nav:[{id:1, nav:"客户信息"},
+					{id:2, nav:"联系人"},
+					{id:3, nav:"单位类别"},
+					{id:4, nav:"同行收发通信息"}],
+				liClass:0,
+				// 币种选择
+				coinClass:1,
+				coin:[{id:1, coin:"本位币"},
+					{id:2, coin:"外币"}],
+				// 联系人信息表格
+				linkman:[{id:1, linkman:"姓名"},
+					{id:2, linkman:"英文"},
+					{id:3, linkman:"部门"},
+					{id:4, linkman:"职务"},
+					{id:5, linkman:"性别"},
+					{id:6, linkman:"生日"},
+					{id:7, linkman:"电话"},
+					{id:8, linkman:"手机"},
+					{id:9, linkman:"传真"},
+					{id:10, linkman:"Email"},
+					{id:11, linkman:"网址"},
+					{id:12, linkman:"中文地址"},
+					{id:13, linkman:"英文地址"},
+					{id:14, linkman:"状态"},],
+				linkmanData:[],
+				// 同行表格表头数据
+				news:[{id:1, news:"卸货港"},
+					{id:2, news:"发货人信息"},
+					{id:3, news:"收货人"},
+					{id:4, news:"通知人"},
+					{id:5, news:"货描"},],
+				newsData:[],
+				coinNum:1,
+				layerBtnShow:true,
+				layerBtnName:"修改",
+				// 模拟数据
+				countryData:[{ID:1, COUNTRY:"China"},
+					{ID:2, COUNTRY:"USA"}],
+				statusData:[{ID:1, STATUS:"正常使用"},
+					{ID:2, STATUS:"设计使用"},
+					{ID:3, STATUS:"接单中使用"},
+					{ID:4, STATUS:"报废停用"},],
+				bssrcData:[{ID:1, BSSRC:"公司"},
+					{ID:2, BSSRC:"代理"},
+					{ID:3, BSSRC:"业务员"},],
+				fmdeptData:[{ID:1, FMDEPT:"空运部"},
+					{ID:2, FMDEPT:"其他"},],
+				salesData:[{ID:1, SALES:"世隆软件"}],
+				sales1Data:[{ID:1, SALES:"世隆软件"}],
+				sales2Data:[{ID:1, SALES:"世隆软件"}],
+				corplevelData:[{ID:1, LEVEL:"A"},
+					{ID:2, LEVEL:"B"},
+					{ID:3, LEVEL:"C"},
+					{ID:4, LEVEL:"D"},],
+				stltypeData:[{ID:1, STLTYPE:"票结"},
+					{ID:2, STLTYPE:"月结"},
+					{ID:3, STLTYPE:"45天结"},],
+				taxtypeData:[{ID:1, TAXTYPE:"小规模纳税人"},
+					{ID:2, TAXTYPE:"一般纳税人"},],
+			},
+			methods:{
+				inputSearch:{},
+				//新增按钮点击事件，新增数据
+				create:function(){
+	
+					datum.cacheData = datum.corpData;
+					datum.layerBtnShow = false;
+					datum.layerBtnName = "保存";
+					datum.corpData = {};
+					datum.motion = "新增";
+				},
+				//修改按钮点击事件
+				revise:{},
+				//删除按钮点击事件
+				del:function(){
+					if(!datum.corpsArr.length){}else{
+						for(var i = 0; i < datum.corpsArr.length; i++){
+							var _index = datum.corpsArr[i];
+							$.ajax({
+								url:"corpsDel?ID=" + datum.corpsData[_index].ID,
+								type:"POST",
+								async:true,
+								success:function(json){
+									console.log(json, _index, datum.corpsData[_index].ID);
+									
+								}
+							});
+						}
+						datum.search();
+					}
+				},
+				//查询按钮点击事件
+				clickSearch:function(){
+
+				},
+				//导航栏actived方法
+				liClick:function(x){	
+					datum.treeClass = x.id;
+					datum.search();
+				},
+				//数据双击详情
+				details:{},
+				//点击导航栏
+				treeClick:function(){
+					console.log(datum.treeClass);
+					datum.search();
+				},
+				// 下拉组件监听
+				inputChange:function(index){
+					
+				},
+				// 展开下拉组件
+				inputClick:{},
+				keyChoiceLi:{},
+				// 输入框失焦关闭下拉组件
+				falseBlur:function(num){
+					setTimeout(function (){
+						datum.ifShow = -1;
+					}, 150);
+				},
+				// 选择组件中的某一项
+				choiceLi:{},
+				// 
+				navClick:function(x){
+					datum.navClass = x.id; 
+					datum.detailsNum = x.id
+				},
+				coinClick:function(x){	
+					datum.coinClass = x.id;
+				},
+				coinClick:function(x){
+					datum.coinClass = x.id;
+					datum.coinNum = x.id
+				},
+				// 弹窗新增
+				layerCreate:function(){
+					if(datum.layerBtnShow){
+						datum.cacheData = datum.corpData;
+						datum.layerBtnShow = false;
+						datum.layerBtnName = "保存";
+						datum.corpData = {};
+						datum.motion = "新增";
+						datum.detailsNum = 1;
+						datum.navClass = 1;
+					}
+				},
+				// 弹窗修改保存
+				layerRevise:function(){
+					if(datum.layerBtnShow){
+						datum.layerBtnShow = false;
+						datum.layerBtnName = "保存";
+						datum.motion = "修改";
+					}else{
+						datum.layerBtnShow = true;
+						datum.layerBtnName = "修改";
+						datum.motion = "浏览";
+						datum.corpData.WDCODE = datum.treeClass;
+						$.ajax({
+							url:"corpsPost",
+							data:datum.corpData,
+							type:"POST",
+							async:true,
+							success:function(json){
+								console.log(json);
+								datum.search();
+								layer.close(layer.index);
+							}
+						})
+					}
+				},
+				// 弹窗取消
+				layerCancel:function(){
+					if(!datum.layerBtnShow){
+						datum.corpData = datum.cacheData;
+						datum.layerBtnShow = true;
+						datum.layerBtnName = "修改";
+						datum.cacheData = {};
+						datum.motion = "浏览";
+						layer.close(layer.index);
+					}
+				},
+				// 弹窗删除
+				layerDel:function(){
+					$.ajax({
+						url:"corpsDel?ID=" + datum.corpData.ID,
+						type:"POST",
+						async:true,
+						success:function(json){
+							console.log(json);
+							datum.search();
+						}
+					});
+				},
+				// 弹窗退出
+				layerExit:function(){
+					layer.close(layer.index);
+				},
+				layerSave:{},
+				search:function(){
+					$.ajax({
+						url:"corpsFind?WDCODE="+datum.treeClass,//
+						type:"GET",
+						data:"",
+						success:function(json){
+							console.log(json.data)
+							if(!json.data.length){
+								datum.corpsData = [];
+							}else{
+								datum.pageNum = json.data.length;
+								datum.corpsData = json.data;
+							}
+						}
+					})
+				}
+			}
+		});
+
+		datum.inputSearch = function(e){
+			$.ajax({
+				url:"corpsFind?CNAME="+e,
+				type:"GET",
+				data:"",
+				success:function(json){
+					console.log(json.data);
+					if(!json.data.length){
+						datum.corpsData = [];
+					}else{
+						datum.corpsData = json.data;
+					}
+				}
+			})
+		}
+		datum.revise = function(){
+			var _index = datum.corpsArr[0];
+			datum.corpData = datum.corpsData[_index];
+			datum.layerBtnShow = false;
+			datum.layerBtnName = "保存";
+			datum.motion = "修改";
+		}
+		datum.details = function(item){
+			datum.corpData=item;
+			$(".bs-example-modal-lg").modal("show");
+		};
+		datum.inputClick = function(obj, num){
+			datum.liClass = 0;
+			datum.n = -1;
+			setTimeout(function(){
+				if(num==1){
+					datum.ifShow = 1;
+				}else if(num==2){
+					datum.ifShow = 2;
+				}else if(num==3){
+					datum.ifShow = 3;
+				}else if(num==4){
+					datum.ifShow = 4;
+				}else if(num==5){
+					datum.ifShow = 5;
+				}else if(num==6){
+					datum.ifShow = 6;
+				}else if(num==7){
+					datum.ifShow = 7;
+				}else if(num==8){
+					datum.ifShow = 8;
+				}else if(num==9){
+					datum.ifShow = 9;
+				}else if(num==10){
+					datum.ifShow = 10;
+				}else if(num==11){
+					datum.ifShow = 11;
+				}else if(num==12){
+					datum.ifShow = 12;
+				}
+			},120);
+		};
+		datum.keyChoiceLi = function (e, num) {
+			var downData =[];
+			if(num==1){
+				downData = datum.countryData;//
+			}else if(num==2){
+				downData = datum.statusData;//
+			}else if(num==3){
+				downData = datum.bssrcData;//
+			}else if(num==4){
+				downData = datum.fmdeptData;//
+			}else if(num==5){
+				downData = datum.salesData;//
+			}else if(num==6){
+				downData = datum.sales1Data;//
+			}else if(num==7){
+				downData = datum.sales2Data;//
+			}else if(num==8){
+				downData = datum.subcorpData;//
+			}else if(num==9){
+				downData = datum.corplevelData;//
+			}else if(num==10){
+				downData = datum.corpsData;//
+			}else if(num==11){
+				downData = datum.stltypeData;//
+			}else if(num==12){
+				downData = datum.taxtypeData;// 
+			}
+			console.log(downData)
+			if(!downData){
+			}else{
+				var length = downData.length;
+				if (e.keyCode == 40) {
+					if(datum.n >= length-1){
+						datum.n = -1;
+					}
+					datum.n = datum.n + 1;
+					datum.liClass = downData[datum.n].ID;
+					console.log(downData);
+				}
+				if (e.keyCode == 38) {
+					if(datum.n <= 0){
+						datum.n = length;
+					}
+					datum.n=datum.n-1;
+					datum.liClass = downData[datum.n].ID;
+				}
+				if (e.keyCode == 13) {
+					if(!downData[datum.n]){
+					}else{
+						if(datum.ifShow==1){
+							datum.corpData.COUNTRY = downData[datum.n].COUNTRY;
+							datum.corpData.COUNTRYID = downData[datum.n].ID;
+						}else if(datum.ifShow==2){
+							datum.corpData.STATUS = downData[datum.n].STATUS;
+							datum.corpData.ID = downData[datum.n].ID;
+						}else if(datum.ifShow==3){
+							datum.corpData.BSSRC = downData[datum.n].BSSRC;
+							datum.corpData.BSSRCID = downData[datum.n].ID;
+						}else if(datum.ifShow==4){
+							datum.corpData.FMDEPT = downData[datum.n].FMDEPT;
+							datum.corpData.FMDEPTID = downData[datum.n].ID;
+						}else if(datum.ifShow==5){
+							datum.corpData.SALES = downData[datum.n].SALES;						
+							datum.corpData.SALESID = downData[datum.n].ID;
+						}else if(datum.ifShow==6){
+							datum.corpData.SALES1 = downData[datum.n].SALES;
+							datum.corpData.SALESID1 = downData[datum.n].ID;
+						}else if(datum.ifShow==7){
+							datum.corpData.SALES2 = downData[datum.n].SALES;
+							datum.corpData.SALESID2 = downData[datum.n].ID;
+						}else if(datum.ifShow==8){
+							datum.corpData.SUBCORPNO = downData[datum.n].CORPNO;
+							datum.corpData.SUBCORPNAME = downData[datum.n].CNAME;
+							datum.corpData.SUBCORPID = downData[datum.n].ID;
+						}else if(datum.ifShow==9){
+							datum.corpData.CORPLEVEL = downData[datum.n].LEVEL;
+							datum.corpData.ID = downData[datum.n].ID;
+						}else if(datum.ifShow==10){
+							datum.corpData.SUBCORPNO = downData[datum.n].CORPNO;
+							datum.corpData.SUBCORPNAME = downData[datum.n].CNAME;
+							datum.corpData.SUBCORPID = downData[datum.n].ID;
+						}else if(datum.ifShow==11){
+							datum.corpData.STLTYPE = downData[datum.n].STLTYPE;
+							datum.corpData.ID = downData[datum.n].ID;
+						}else if(datum.ifShow==12){// 卸货
+							datum.corpData.TAXTYPE = downData[datum.n].TAXTYPE;
+							datum.corpData.ID = downData[datum.n].ID;
+						}
+					}
+					datum.ifShow = 0;
+				}
+			}
+		};
+		datum.choiceLi = function (item, num) {
+			if(num==1){
+				datum.corpData.COUNTRY = item.COUNTRY;
+				datum.corpData.COUNTRYID = item.ID;
+			}else if(num==2){
+				datum.corpData.STATUS = item.STATUS;
+				datum.corpData.ID = item.ID;
+			}else if(num==3){
+				datum.corpData.BSSRC = item.BSSRC;
+				datum.corpData.BSSRCID = item.ID;
+			}else if(num==4){
+				datum.corpData.FMDEPT = item.FMDEPT;
+				datum.corpData.FMDEPTID = item.ID;
+			}else if(num==5){
+				datum.corpData.SALES = item.SALES;
+				datum.corpData.SALESID = item.ID;
+			}else if(num==6){
+				datum.corpData.SALES1 = item.SALES;
+				datum.corpData.SALESID1 = item.ID;
+			}else if(num==7){
+				datum.corpData.SALES2 = item.SALES;
+				datum.corpData.SALESID2 = item.ID;
+			}else if(num==8){
+				datum.corpData.SUBCORPNO = item.CORPNO;
+				datum.corpData.SUBCORPNAME = item.CNAME;
+				datum.corpData.ID = item.ID;
+			}else if(num==9){
+				datum.corpData.CORPLEVEL = item.LEVEL;
+				datum.corpData.ID = item.ID;
+			}else if(num==10){
+				datum.corpData.SUBCORPNO = item.CORPNO;
+				datum.corpData.SUBCORPNAME = item.CNAME;
+				datum.corpData.SUBCORPID = item.ID;
+			}else if(num==11){
+				datum.corpData.STLTYPE = item.STLTYPE;
+				datum.corpData.ID = item.ID;
+			}else if(num==12){
+				datum.corpData.TAXTYPE = item.TAXTYPE;
+				datum.corpData.ID = item.ID;
+			}
+			datum.ifShow = 0;
+		};
+		datum.layerSave = function(){
+			console.log("单位类别", "treeName", datum.treeName);
+			console.log("客户", "CORPNO", datum.corp.CORPNO);
+			console.log("", "SNAME", datum.corpData.SNAME);
+			console.log("动作", "motion", datum.motion);
+			console.log("客户编号", "CORPNO", datum.corpData.CORPNO);
+			console.log("客户简称", "SNAME", datum.corpData.SNAME);
+			console.log("中文名称", "ENAME", datum.corpData.CNAME);
+			console.log("国家", "COUNTRY", datum.corpData.COUNTRY);
+			console.log("省/州", "STATE", datum.corpData.STATE);
+			console.log("中文地址", "CADDR", datum.corpData.CADDR);
+			console.log("开票地址", "INVCADDR", datum.corpData.INVCADDR);
+			console.log("开票电话", "INVTEL", datum.corpData.INVTEL);
+			console.log("船公司代码", "EDICORPNO", datum.corpData.EDICORPNO);
+			console.log("电话", "TEL", datum.corpData.TEL);
+			console.log("传真", "FAX", datum.corpData.FAX);
+			console.log("Email", "EMAIL", datum.corpData.EMAIL);
+			console.log("箱属代码", "CARRIERCODE", datum.corpData.CARRIERCODE);
+			console.log("退佣率", "SURRATE", datum.corpData.SURRATE);
+			console.log("详细信息", "DETAILS", datum.corpData.DETAILS);
+			console.log("国际代码", "CODENO", datum.corpData.CODENO);
+			console.log("海关代码", "HSCODENO", datum.corpData.HSCODENO);
+			console.log("状态", "STATUS", datum.corpData.STATUS);
+			console.log("英文名称", "ENAME", datum.corpData.ENAME);
+			console.log("城市", "CITY", datum.corpData.CITY);
+			console.log("负责人", "MANAGER", datum.corpData.MANAGER);
+			console.log("英文地址", "EADDR", datum.corpData.EADDR);
+			console.log("客户来源", "BSSRCID", datum.corpData.BSSRCID);
+			console.log("来源部门", "FMDEPTID", datum.corpData.FMDEPTID);
+			console.log("业务员1", "SALESID", datum.corpData.SALESID);
+			console.log("业务员2", "SALESID1", datum.corpData.SALESID1);
+			console.log("业务员3", "SALESID2", datum.corpData.SALESID2);
+			console.log("美线约号", "CONTRACTNO", datum.corpData.CONTRACTNO);
+			console.log("所属单位编号", "SUBCORPNO", datum.corpData.SUBCORPNO);
+			console.log("信誉等级", "CORPLEVEL", datum.corpData.CORPLEVEL);
+			console.log("名称", "SUBCORPNAME", datum.corpData.SUBCORPNAME);
+			console.log("结算类型", "STLTYPE", datum.corpData.STLTYPE);
+			console.log("每月某日后结", "DATETYPE", datum.corpData.DATETYPE);
+			console.log("船开后几天结", "DAYS", datum.corpData.DAYS);
+			console.log("协议号", "CONTRACTNO", datum.corpData.CONTRACTNO);
+			console.log("自", "FROMDATE", datum.corpData.FROMDATE);
+			console.log("——", "TODATE", datum.corpData.TODATE);
+			console.log("启用EDI", "IFEDI", datum.corpData.IFEDI);
+			console.log("外代船公司代码", "OUTERCORPNO", datum.corpData.OUTERCORPNO);
+			console.log("格式名称", "EDIFMT", datum.corpData.EDIFMT);
+			console.log("FTP地址", "EDIFTP", datum.corpData.EDIFTP);
+			console.log("Email", "EDIEMAIL", datum.corpData.EDIEMAIL);
+			console.log("开户名", "ACCOUNTNAME", datum.corpData.ACCOUNTNAME);
+			console.log("账号", "BANKACCNO", datum.corpData.BANKACCNO);
+			console.log("银行", "BANK", datum.corpData.BANK);
+			console.log("开户名1", "FCYACCOUNTNAME", datum.corpData.FCYACCOUNTNAME);
+			console.log("账号1", "FCYBANKACCNO", datum.corpData.FCYBANKACCNO);
+			console.log("银行1", "FCYBANK", datum.corpData.FCYBANK);
+			console.log("场站三字码", "IFSOFSCODE", datum.corpData.IFSOFSCODE);
+			console.log("CMA Laracode", "CMA_LARACODE", datum.corpData.CMA_LARACODE);
+			console.log("CMA CMA_LOCATION", "CMA_LOCATION", datum.corpData.CMA_LOCATION);
+			console.log("税号", "TAXNO", datum.corpData.TAXNO);
+			console.log("Inttra ICUA", "INTTRA_ICUA_ATTN", datum.corpData.INTTRA_ICUA_ATTN);
+			console.log("ZIM-CUCC", "CUCC", datum.corpData.CUCC);
+			console.log("联系人 Email", "INTTRA_ICUA_EMAIL", datum.corpData.INTTRA_ICUA_EMAIL);
+			console.log("纳税人类型", "IFTAX", datum.corpData.IFTAX);
+			console.log("增值税税率", "TAXRATE", datum.corpData.TAXRATE);
+			console.log("备注", "REMARKS", datum.corpData.REMARKS);
+			console.log("录入时间", "OPTIME", datum.corpData.OPTIME);
+			console.log("纳税简码", "CARRIERNO", datum.corpData.CARRIERNO);
+			console.log("附加费费率", "SURRATE", datum.corpData.SURRATE	);
+		}
+		
+			
+		$(function(){
+			datum.search();
+			datum.UserName = $("#username").val();
+			datum.Roles = $("#roles").val();
+			console.log($("#username").val());
+			console.log($("#roles").val());
+			console.log(datum.UserName);
+			console.log(datum.Roles);
+		})
+		// $("#datum .main .main-tree").css("height", parseInt($("#datum").css("height"))-70);
+		$("#datum .main .main-table").css("width", parseInt($("#datum").css("width"))-200);
+		$("#datum").parent().css("overflow","hidden");
+	</script>
+</body>
+
+</html>

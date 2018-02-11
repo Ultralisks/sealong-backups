@@ -1,0 +1,419 @@
+﻿<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<!--<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>-->
+<script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+<!--配箱-->
+<style>
+    *{margin:0;padding:0;}
+    #ocean-imported .layui-input{padding-right:10px;}
+    .labelS{width:90px;}
+    .inputH{}
+    .inputW{width:245px;}
+    div{}
+    .right{width:490px;}
+    .layui-table td, .layui-table th{white-space:nowrap;}
+    .layui-table input{width:100%;border:none;}
+    .ml-10{margin-left:10px;}
+    .mb-10{margin-bottom:10px;}
+    .ml-5{margin-left:5px;}
+    .layui-input-block,.layui-input-inline{margin-bottom:10px;}
+    #ocean-imported{}
+    .top span{padding:10px;line-height:38px;border-right:1px solid #E6E6E6; border-bottom:1px solid #E6E6E6;
+        background-color:#f2f2f2;}
+    .top .curr-nav{border-bottom:none !important; background-color:#fff;color:#000;}
+    .main{padding:10px 0;}
+    .layui-form-label{padding:6px 2px;}
+    .layui-textarea{min-height: 50px;}
+    .top div{padding:10px;background-color:#f2f2f2;}
+    .layui-btn-sm{height:30px;line-height:30px;}
+
+
+
+
+    /*.layui-table{width:534px;}*/
+    /*.layui-table th{padding:4px;}*/
+</style>
+<div id="ocean-imported">
+    <div class="top">
+        <span class="" @click="hrefClick(1)">
+            接单
+        </span>
+        <span class="" @click="hrefClick(2)">
+            订舱
+        </span>
+        <span class="curr-nav" @click="hrefClick(3)">
+            配箱
+        </span>
+        <span class="" @click="hrefClick(4)">
+            费用
+        </span>
+        <span class="" @click="hrefClick(5)">
+            报关/陆运/其他
+        </span>
+
+        <a href="oceanManage">
+            <div class="fr">退出</div>
+        </a>
+
+    </div>
+    <div class="main clear-both">
+        <div class=" ">
+            <div class="mb-10 over-hide">
+                编号：<span class="" v-text="bill.BILLNO"></span>
+                <span class="ml-20">  M B/L：<span class="" v-text="bill.BILLDATE"></span></span>
+
+                <div class="layui-btn" @click="app.editBox()">
+                    配箱
+                </div>
+                <div class="layui-btn" @click="editBox(2)">
+                    智能装箱
+                </div>
+                <div class="layui-btn" @click="post()">
+                    撤销
+                </div>
+                <div class="layui-btn" @click="post()">
+                    全部撤销
+                </div>
+                <div class="layui-btn" @click="post()">
+                    清除箱号
+                </div>
+                <div class="layui-btn" @click="app.del()">
+                    删除配箱
+                </div>
+                <div class="layui-btn" @click="post()">
+                    分箱明细
+                </div>
+            </div>
+
+            <div class="">
+                箱信息
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>箱型</th>
+                        <th>封号</th>
+                        <th>票数</th>
+                        <th>件数</th>
+                        <th>毛重</th>
+                        <th>尺码</th>
+                        <th>包装单位</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="item in jsonData">
+                        <th></th>
+                        <th>
+                            <span v-text="item.CNTR"></span>
+                        </th>
+                        <th> <input placeholder="封号" v-model="item.CNTRSEAL"/></th>
+                        <th> <input placeholder="票数" v-model="item.CFSCOUNT"/></th>
+                        <th> <input placeholder="件数"  @input="inputChange($event.target.value,item)" v-model="item.PKGS"/></th>
+                        <th> <input placeholder="毛重" @input="inputChange($event.target.value,item)" v-model="item.GROSSWEIGHT"/></th>
+                        <th> <input placeholder="尺码" @input="inputChange($event.target.value,item)" v-model="item.VOLUME"/></th>
+                        <th> <span> </span></th>
+                    </tr>
+                    <tr>
+                        <th>合计</th>
+                        <th></th>
+                        <th></th>
+                        <th ></th>
+                        <th v-text="PKGSNUM"></th>
+                        <th v-text="GROSSWEIGHTNUM"></th>
+                        <th v-text="VOLUMENUM"></th>
+                        <th></th>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
+            </div>
+            <div>
+                可装箱业务
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>业务编号</th>
+                        <th>客户</th>
+                        <th>主单号</th>
+                        <th>分单号</th>
+                        <th>目的港</th>
+                        <th>剩余件数</th>
+                        <th>剩余毛重</th>
+                        <th>剩余尺码</th>
+                        <th>包装单位</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th  v-text="bill.BILLNO"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th v-text="PKGSALL"></th>
+                        <th v-text="GROSSWEIGHTALL"></th>
+                        <th  v-text="VOLUMEALL"></th>
+                        <th></th>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+        </div>
+        <div class="clear-both">
+            <div class="layui-btn" @click="post()">
+                保存
+            </div>
+        </div>
+    </div>
+    <div class="model pos-abs" v-if="dataShow">
+        <div class="model-operation pos-abs">
+            <div class="model-title">
+                已经配箱，是否清除原有数据进行重新配箱
+            </div>
+            <div class="model-btn align-c">
+                <div class="layui-btn layui-btn-primary" @click="closeEdit()">关闭</div>
+                <div class="layui-btn layui-btn-normal " v-if="!btnNum" @click="app.ifDel()">确定</div>
+                <div class="layui-btn layui-btn-normal " v-if="btnNum" @click="app.ifDel(2)">确定</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#ocean-imported",
+        data: {
+            bill:{},
+            para:{},
+            where:{},
+            delNum:1,
+            btnNum:false,
+            ifData:false,
+            dataShow:false,
+            jsonData:[],
+            PKGSNUM:0,
+            PKGSALL:0,
+            GROSSWEIGHTALL:0,
+            GROSSWEIGHTNUM:0,
+            VOLUMEALL:0,
+            VOLUMENUM:0
+        },
+        methods: {
+            hrefClick:{},
+            editBox:{}
+        }
+    });
+    app.detail = function(){
+        var para = location.search;
+        if(!para){
+        }else{
+            para = para.slice(4);
+            app.where.ID = para;
+            app.para.ENTITYID = para;
+            console.log(para);
+            app.ajaxDetail(para);
+            app.ajaxBoxs(para);
+
+        }};
+
+    //请求详细
+    app.ajaxDetail = function(para){
+        console.log(para);
+        $.ajax({
+            url:"oceanFreightImportEditFind",
+            type:"get",
+            async:false,
+            data:{ID:para},
+            success:function(res){
+                app.bill = res.data[0];
+                console.log(app.bill);
+            },error:function(res){
+                console.log(res)
+            }
+        })
+    };
+    //请求箱量
+    app.ajaxBoxs = function(para){
+        console.log(para);
+        $.ajax({
+            url:"OFIBoxesNumberFind",
+            type:"get",
+            async:false,
+            data:{ENTITYID:para},
+            success:function(res){
+                console.log(res);
+                if(!res.data.length){
+                    app.BSCNTRQTYDATA = [];
+                }else{
+                    app.BSCNTRQTYDATA =res.data;
+
+
+                }
+            },error:function(res){
+                console.log(res)
+            }
+        });
+    };
+    app.detail();
+
+
+    app.editBox = function(num){
+        if(app.ifData==false){
+            app.ifDel(num);
+        }else if(app.ifData==true){
+            app.dataShow = true;
+            if(num==2){
+                app.btnNum = true;
+            }else{
+                app.btnNum = false;
+            }
+        }
+    };
+    app.closeEdit = function(){
+        app.dataShow = false;
+    };
+
+    app.find = function(){
+        app.ajaxGet("OFIBoxFind",{ENTITYID:(app.where.ID)})
+    };
+
+
+    app.PKGSALL = app.bill.PKGS;
+    app.GROSSWEIGHTALL = app.bill.GROSSWEIGHT;
+    app.VOLUMEALL = app.bill.VOLUME;
+    app.inputChange = function(e,item){
+//        if(item.PKGS==""){
+//            item.PKGS = 0;
+//        }else if(item.PKGS > 0){
+//            item.PKGS =item.PKGS;
+//        }
+        app.PKGSNUM = 0;
+        app.GROSSWEIGHTNUM = 0;
+        app.VOLUMENUM = 0;
+        for(var i=0;i<app.jsonData.length;i++){
+            app.PKGSNUM += parseInt(app.jsonData[i].PKGS);
+            app.GROSSWEIGHTNUM += parseInt(app.jsonData[i].GROSSWEIGHT);
+            app.VOLUMENUM += parseInt(app.jsonData[i].VOLUME);
+        }
+        app.PKGSALL = app.bill.PKGS - app.PKGSNUM;
+        app.GROSSWEIGHTALL = app.bill.GROSSWEIGHT - app.GROSSWEIGHTNUM;
+        app.VOLUMEALL = app.bill.VOLUME - app.VOLUMENUM;
+
+    };
+    app.ajaxGet = function(url,where){
+        $.ajax({
+            type:"get",
+            url:url,
+            data:where,
+            dataType:"json",
+            async:true,
+            success:function(res){
+                console.log(res.data.length);
+                if(!res.data.length){
+                    app.ifData = false;
+                    app.editBox();
+                }else{
+                    app.jsonData = res.data;
+                    app.ifData = true;
+                }
+                console.log(app.jsonData);
+            },error:function(res){
+
+            }
+        })
+    };
+
+    app.ajaxPost = function(url,para){
+        console.log(para);
+        $.ajax({
+            url:url,
+            type:"post",
+            data:para,
+            async:false,
+            success:function(res){
+                console.log(res);
+            },error:function(res){
+                console.log(res)
+            }
+        })
+    };
+
+
+    app.post = function(){
+        var url = "OFIBoxPost";
+        for(var i=0;i<app.jsonData.length;i++){
+            app.para = app.jsonData[i];
+            console.log(app.para);
+            app.ajaxPost(url,app.para);
+        }
+//            app.ajaxPost(url,app.para);
+
+    };
+    app.hrefClick = function(num){
+        if(num==1){
+            window.location.href = "oceanImported?ID="+app.where.ID;
+        }else if(num==2){
+
+        }else if(num==3){
+//            window.location.href = "oceanFreightImportCase"
+        }else if(num==4){
+            window.location.href =  "oceanFreightImportCost?ID="+app.where.ID;
+        }else if(num==5){
+
+        }
+    };
+    app.find();
+
+    app.del = function(){
+        for(var i=0;i<app.jsonData.length;i++){
+            app.ajaxPost("OFIBoxDel",{ID:(app.jsonData[i].ID)})
+        }
+    }
+    app.ifDel = function(num){
+        if(app.delNum!=1){
+            app.del();
+            app.delNum = 2;
+        }
+        app.jsonData = [];
+        var boxNum = 0;
+        if(num==2){
+            for(var f=0;f<app.BSCNTRQTYDATA.length;f++){
+                boxNum+=app.BSCNTRQTYDATA[f].CNTRQTY
+            }
+            var x = Math.floor(app.bill.PKGS/boxNum);
+            var n = Math.floor(app.bill.PKGS%boxNum);
+            var a = Math.floor(app.bill.GROSSWEIGHT/boxNum);
+            var b = Math.floor(app.bill.GROSSWEIGHT%boxNum);
+            var c = Math.floor(app.bill.VOLUME/boxNum);
+            var d = Math.floor(app.bill.VOLUME%boxNum);
+            for(var i=0;i<app.BSCNTRQTYDATA.length;i++){
+                for(var t=0;t<app.BSCNTRQTYDATA[i].CNTRQTY;t++){
+                    app.jsonData.push({CNTR:(app.BSCNTRQTYDATA[i].CNTR),PKGS:x,GROSSWEIGHT:a,VOLUME:c,ENTITYID:(app.para.ENTITYID)});
+                }
+            }
+            app.jsonData[boxNum-1].PKGS = x+n;
+            app.jsonData[boxNum-1].GROSSWEIGHT=a+b;
+            app.jsonData[boxNum-1].VOLUME=c+d;
+
+        }else{
+            for(var i=0;i<app.BSCNTRQTYDATA.length;i++){
+                for(var t=0;t<app.BSCNTRQTYDATA[i].CNTRQTY;t++){
+                    app.jsonData.push({CNTR:(app.BSCNTRQTYDATA[i].CNTR),PKGS:0,GROSSWEIGHT:0,VOLUME:0,ENTITYID:(app.para.ENTITYID)});
+                }
+            }
+        }
+        app.dataShow = false;
+    };
+    app.ifDel();
+</script>

@@ -1,0 +1,12 @@
+{
+	data:[{
+		num:1,
+		sex:a
+	},{
+		num:2,
+		sex:b
+	},{
+		num:3,
+		sex:c
+	}]
+}

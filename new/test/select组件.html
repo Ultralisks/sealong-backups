@@ -1,0 +1,21 @@
+<div class="fl">
+	<label class="layui-form-label">船名</label>
+	<div class="layui-input-inline pos-rel">
+		<input type="" placeholder="请输入" class="layui-input" v-model="where.shipName" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)" @keyup="keyChoiceLi($event,1)" @blur="falseBlur(1)">
+		<ul class="pos-abs drop-down"  v-if="1==ifShow">
+			<drop-down v-for="item in shipNameData" v-bind:item="item.NAME" v-bind:key="item.id" class="pointer" @click.native="choiceLi(item,1)" :class="{'curr':item.ID ==liClass}">
+			</drop-down>
+		</ul>
+	</div>
+</div>
+
+<div class="fl">
+	<label class="layui-form-label">船名</label>
+	<div class="layui-input-inline pos-rel">
+		<input type="" placeholder="请输入" class="layui-input" v-model="where.shipName" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)" @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)">
+		<ul class="pos-abs drop-down"  v-if="1==ifShow">
+			<drop-down v-for="item in shipNameData" v-bind:item="item.NAME" v-bind:key="item.id" class="pointer"  @click.native="choiceLi(item,1)" :class="{'curr':item.ID==liClass}">
+			</drop-down>
+		</ul>
+	</div>
+</div>

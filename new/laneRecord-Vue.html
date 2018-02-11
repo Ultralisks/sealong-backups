@@ -1,0 +1,138 @@
+<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<script type="text/javascript" src="static/layui/layui.all.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+<style type="text/css">
+	#laneRecord .main .layui-table td{padding:0;}
+	#laneRecord .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
+</style>
+<!-- 航线 -->
+<div id="laneRecord">
+	<div class="head">
+		<button class="layui-btn" @click="laneRecordCreate">新增</button>
+		<button class="layui-btn" @click="laneRecordSave">保存</button>
+		<button class="layui-btn" @click="laneRecordDel">删除</button>
+	</div>
+	<div class="main">
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
+					<th>航线编号</th>
+					<th>航线简称</th>
+					<th>航线全称</th>
+					<th>使用状态</th>
+					<th>备注</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="r in laneRecordsData">
+					<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.LANENO" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.SNAME" />
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.FNAME" />
+					</td>
+					<td>
+						<select class="layui-select" v-model="r.STATUS">
+							<option value="1">正常使用</option>
+							<option value="2">设计使用</option>
+							<option value="3">准备停用</option>
+							<option value="4">报废停用</option>
+						</select>
+					</td>
+					<td>
+						<input class="layui-input" type="text" v-model="r.REMARKS" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="page"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var laneRecord = new Vue({
+		el:"#laneRecord",
+		data:{
+			checked:false,
+			checkArr:[],
+			laneRecordsData:[],
+			pageNum:0,
+		},
+		methods:{
+			laneRecordSearch:function(){
+				$.ajax({
+					url:"laneRecordsFind",
+					type:"GET",
+					async:true,
+					success:function(json){
+						+
+						console.log(json);
+						if(json.data){
+							if(!json.data.length){
+								laneRecord.laneRecordsData = [];
+							}else{
+								laneRecord.laneRecordsData = json.data;
+								laneRecord.pageNum = json.data.length;
+							}
+						}
+					}
+				})
+			},
+			laneRecordCreate:function(){
+				laneRecord.laneRecordsData.push({ID:0, MSGTYPEID:1, MSGNAME:"", MSGDETAIL:"", REMARKS:""})
+			},
+			laneRecordSave:function(){
+				for(var i = 0; i < laneRecord.laneRecordsData.length; i++){
+					$.ajax({
+						url:"laneRecordsPost",
+						data:laneRecord.laneRecordsData[i],
+						type:"POST",
+						async:false,
+						success:function(json){
+							console.log(json);
+						}
+					})
+				}
+				laneRecord.laneRecordSearch();
+			},
+			laneRecordDel:function(){
+				for(var i = 0; i < laneRecord.checkArr.length; i++){
+					$.ajax({
+						url:"laneRecordsDel?ID="+laneRecord.checkArr[i],
+						type:"POST",
+						success:function(json){
+							console.log(json);
+							laneRecord.laneRecordSearch();
+						}
+					})
+				}
+				laneRecord.checkArr=[];
+			},
+			checkAll:function(){
+				if(!laneRecord.checked){
+					laneRecord.laneRecordsData.forEach(function(index){
+						laneRecord.checkArr.push(index.ID);
+					})
+				}else{
+					laneRecord.checkArr = [];
+				}
+				laneRecord.checked = !laneRecord.checked;
+			},
+		}
+	});
+	laneRecord.laneRecordSearch();
+	layui.use('laypage', function(){
+		var laypage = layui.laypage;
+		//执行一个laypage实例
+		laypage.render({
+			elem: 'page', //这里的page是ID，不用加#号
+			count: laneRecord.pageNum //数据总数，从服务端得到
+		});
+	});
+</script>
