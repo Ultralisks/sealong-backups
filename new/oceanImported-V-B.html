@@ -65,7 +65,6 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>客户</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.CUSTOMSCORP" />
 						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
 						<ul class="drop-down"  v-if="1==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
@@ -73,10 +72,9 @@
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.ST_DT_a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,2)" @click="inputClick(this,2)"  @keyup="keyChoiceLi($event,2)"  @blur="falseBlur(2)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="2==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,2)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -84,18 +82,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>发货人</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.HSHIPPERID" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,3)" @click="inputClick(this,3)"  @keyup="keyChoiceLi($event,3)"  @blur="falseBlur(3)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="3==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,3)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.HSHIPPERNAME" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,4)" @click="inputClick(this,4)"  @keyup="keyChoiceLi($event,4)"  @blur="falseBlur(4)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="4==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,4)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -106,18 +102,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>收货人</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.HCNEEID" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,5)" @click="inputClick(this,5)"  @keyup="keyChoiceLi($event,5)"  @blur="falseBlur(5)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="5==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,5)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.HCNEENAME" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,6)" @click="inputClick(this,6)"  @keyup="keyChoiceLi($event,6)"  @blur="falseBlur(6)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="6==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,6)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -128,18 +122,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>通知人</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.HNOTIFYID" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,7)" @click="inputClick(this,7)"  @keyup="keyChoiceLi($event,7)"  @blur="falseBlur(7)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="7==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,7)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.HNOTIFYID" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,8)" @click="inputClick(this,8)"  @keyup="keyChoiceLi($event,8)"  @blur="falseBlur(8)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="8==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,8)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -150,18 +142,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>收货地</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,9)" @click="inputClick(this,9)"  @keyup="keyChoiceLi($event,9)"  @blur="falseBlur(9)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="9==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,9)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,10)" @click="inputClick(this,10)"  @keyup="keyChoiceLi($event,10)"  @blur="falseBlur(10)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="10==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,10)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -169,18 +159,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>装货港</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,11)" @click="inputClick(this,11)"  @keyup="keyChoiceLi($event,11)"  @blur="falseBlur(11)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="11==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,11)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)"  @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="12==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,12)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -188,18 +176,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>卸货港</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,13)" @click="inputClick(this,13)"  @keyup="keyChoiceLi($event,13)"  @blur="falseBlur(13)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="13==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,13)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,14)" @click="inputClick(this,14)"  @keyup="keyChoiceLi($event,14)"  @blur="falseBlur(14)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="14==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,14)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -207,18 +193,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>目的地</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,15)" @click="inputClick(this,15)"  @keyup="keyChoiceLi($event,15)"  @blur="falseBlur(15)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="15==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,15)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,16)" @click="inputClick(this,16)"  @keyup="keyChoiceLi($event,16)"  @blur="falseBlur(16)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="16==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,16)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -226,18 +210,16 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>交货地</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,17)" @click="inputClick(this,17)"  @keyup="keyChoiceLi($event,17)"  @blur="falseBlur(17)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="17==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,17)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,18)" @click="inputClick(this,18)"  @keyup="keyChoiceLi($event,18)"  @blur="falseBlur(18)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="18==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,18)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -247,19 +229,17 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>制单</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,19)" @click="inputClick(this,19)"  @keyup="keyChoiceLi($event,19)"  @blur="falseBlur(19)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="19==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,19)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
 						<label>部门</label>
-						<input class="form-control" type="text" v-model="oceanImportedData.a" />
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						<input class="form-control" type="text" @input="inputChange($event.target.value,20)" @click="inputClick(this,20)"  @keyup="keyChoiceLi($event,20)"  @blur="falseBlur(20)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="20==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,20)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -391,12 +371,12 @@
 					</div>
 					<div class="form-group">
 						<label>船名</label>
-						<select class="form-control r-medium" v-model="oceanImportedData.a">
+						<!-- <select class="form-control r-medium" v-model="oceanImportedData.a">
 							<option></option>
-						</select>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						</select> -->
+						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,21)" @click="inputClick(this,21)"  @keyup="keyChoiceLi($event,21)"  @blur="falseBlur(21)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="21==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,21)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -420,12 +400,12 @@
 					</div>
 					<div class="form-group">
 						<label>调度员</label>
-						<select class="form-control r-medium" v-model="oceanImportedData.a">
+						<!-- <select class="form-control r-medium" v-model="oceanImportedData.a">
 							<option></option>
-						</select>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
-						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+						</select> -->
+						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,22)" @click="inputClick(this,22)"  @keyup="keyChoiceLi($event,22)"  @blur="falseBlur(22)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<ul class="drop-down"  v-if="22==ifShow">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,22)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
@@ -579,10 +559,11 @@
 	<script type="text/javascript">
 		Vue.component("drop-down", {
 			props: ["item"],
-			template:
+			template:`
 			'<li >' +
 			'<span v-text="item"></span>' +
 			'</li>'
+			`,
 		});
 		var oceanImported = new Vue({
 			el:"#oceanImported",
