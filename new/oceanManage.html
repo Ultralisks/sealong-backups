@@ -1,915 +1,915 @@
-﻿<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-<!--<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>-->
-<script type="text/javascript" src="static/layui/layui.js"></script>
-<script type="text/javascript" src="static/vue/dist/vue.js"></script>
-<style>
-	#oceanManage .main{
-	}
-	.model .model-main{width:600px;;margin-left:-300px;}
-	/*.dropsShow{top:0;left:0;height:100%;width:100%;z-index: 5;background-color:rgba(0,0,0,0.3);}*/
-	.checkbox{line-height:38px;padding:0 20px; }
-	.head .fl{margin-bottom:5px;}
-	.main{width:100%;overflow: auto;}
-	select{border:none;background-color:#f8f8f8;}
-	.model-operation ul{width:70%;line-height:25px;}
-	.model-operation .button{width:30%;}
-	.wid50{width:50%;}
-	.layui-input{width:163px;line-height: 38px;}
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+	<!--<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>-->
+	<script type="text/javascript" src="static/layui/layui.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<style>
+		#oceanManage .main{
+		}
+		.model .model-main{width:600px;;margin-left:-300px;}
+		/*.dropsShow{top:0;left:0;height:100%;width:100%;z-index: 5;background-color:rgba(0,0,0,0.3);}*/
+		.checkbox{line-height:38px;padding:0 20px; }
+		.head .fl{margin-bottom:5px;}
+		.main{width:100%;overflow: auto;}
+		select{border:none;background-color:#f8f8f8;}
+		.model-operation ul{width:70%;line-height:25px;}
+		.model-operation .button{width:30%;}
+		.wid50{width:50%;}
+		.layui-input{width:163px;line-height: 38px;}
+	</style>
+</head>
+<body>
+	<div id="ocean-manage">
+		<!--<div class="dropsShow pos-abs" v-if="dropsShow" @click="closeDrops()"></div>-->
+		<div class="head">
+			<div class="" v-if="findShow">
+				<div class="fl ">
+					<label class="layui-form-label">业务编号</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.BILLNO">
+					</div>
+				</div>
+				<div class="fl ">
+					<label class="layui-form-label">主单号</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.MBLNO" >
+					</div>
+				</div>
+				<div class="fl ">
+					<label class="layui-form-label">分单号</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.HBLNO " >
+					</div>
+				</div>
+				<div class="fl ">
+					<label class="layui-form-label">收货人</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.HCNEE">
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">船名</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.shipName" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"
+							   @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)">
+						<ul class="pos-abs drop-down"  v-if="1==ifShow">
+							<drop-down v-for="item in shipNameData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,1)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">委托人</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.clientName" @input="inputChange($event.target.value,2)" @click="inputClick(this,2)"
+							   @keyup="keyChoiceLi($event,2)"  @blur="falseBlur(2)">
+						<ul class="pos-abs drop-down"  v-if="2==ifShow">
+							<drop-down v-for="item in clientData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,2)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">船公司</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.shipCName" @input="inputChange($event.target.value,3)" @click="inputClick(this,3)"
+							   @keyup="keyChoiceLi($event,3)"  @blur="falseBlur(3)">
+						<ul class="pos-abs drop-down"  v-if="3==ifShow">
+							<drop-down v-for="item in shipCData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,3)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">目的港</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.protsName" @input="inputChange($event.target.value,4)" @click="inputClick(this,4)"
+							   @keyup="keyChoiceLi($event,4)"  @blur="falseBlur(4)">
+						<ul class="pos-abs drop-down"  v-if="4==ifShow">
+							<drop-down v-for="item in protData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,4)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">航线</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.laneName" @input="inputChange($event.target.value,5)" @click="inputClick(this,5)"
+							   @keyup="keyChoiceLi($event,5)"  @blur="falseBlur(5)">
+						<ul class="pos-abs drop-down"  v-if="5==ifShow">
+							<drop-down v-for="item in laneData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,5)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">场站</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.stationName" @input="inputChange($event.target.value,6)" @click="inputClick(this,6)"
+							   @keyup="keyChoiceLi($event,6)"  @blur="falseBlur(6)">
+						<ul class="pos-abs drop-down"  v-if="6==ifShow">
+							<drop-down v-for="item in stationData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,6)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">业务来源</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.busName" @input="inputChange($event.target.value,7)" @click="inputClick(this,7)"
+							   @keyup="keyChoiceLi($event,7)"  @blur="falseBlur(7)">
+						<ul class="pos-abs drop-down"  v-if="7==ifShow">
+							<drop-down v-for="item in busData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,7)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
 
+				<div class="fl">
+					<label class="layui-form-label">业务员</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.salesmanName" @input="inputChange($event.target.value,8)" @click="inputClick(this,8)"
+							   @keyup="keyChoiceLi($event,8)"  @blur="falseBlur(8)">
+						<ul class="pos-abs drop-down"  v-if="8==ifShow">
+							<drop-down v-for="item in salesmanData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,8)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">部门</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.departmentName" @input="inputChange($event.target.value,9)" @click="inputClick(this,9)"
+							   @keyup="keyChoiceLi($event,9)"  @blur="falseBlur(9)">
+						<ul class="pos-abs drop-down"  v-if="9==ifShow">
+							<drop-down v-for="item in departmentData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,9)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">车队</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.fleetName" @input="inputChange($event.target.value,10)" @click="inputClick(this,10)"
+							   @keyup="keyChoiceLi($event,10)"  @blur="falseBlur(10)">
+						<ul class="pos-abs drop-down"  v-if="10==ifShow">
+							<drop-down v-for="item in fleetData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,10)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">订舱代理</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.bookingName" @input="inputChange($event.target.value,11)" @click="inputClick(this,11)"
+							   @keyup="keyChoiceLi($event,11)"  @blur="falseBlur(11)">
+						<ul class="pos-abs drop-down"  v-if="11==ifShow">
+							<drop-down v-for="item in bookingData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,11)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl">
+					<label class="layui-form-label">签单方式</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="" placeholder="请输入" class="layui-input"
+							   v-model="where.modeName" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)"
+							   @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)">
+						<ul class="pos-abs drop-down"  v-if="12==ifShow">
+							<drop-down v-for="item in modeData" v-bind:item="item.NAME" v-bind:key="item.id"
+									   class="pointer"  @click.native="choiceLi(item,12)" :class="{'curr':item.ID==liClass}">
+							</drop-down>
+						</ul>
+					</div>
+				</div>
+				<div class="fl"> <!-- 注意：这一层元素并不是必须的 -->
+					<label class="layui-form-label">ETD</label>
+					<div class="layui-input-inline pos-rel fl">
+						<input type="date" class="layui-input " id="ETDS" >
+					</div>
+					<label class="layui-form-label align-c">—</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="date" class="layui-input time" id="ETDE">
+					</div>
+				</div>
+				<div class="fl"> <!-- 注意：这一层元素并不是必须的 -->
+					<label class="layui-form-label">ETA</label>
+					<div class="layui-input-inline pos-rel fl">
+						<input type="date" class="layui-input " id="ETAS">
+					</div>
+					<label class="layui-form-label align-c">—</label>
+					<div class="layui-input-inline pos-rel">
+						<input type="date" class="layui-input " id="ETAE" >
+					</div>
+				</div>
+				<div class="fl checkbox">
+						<span v-for="item in checkboxData" class="fl mr-20">
+							<input type="checkbox">
+							<span v-text="item.NAME"></span>
+						</span>
+					<div class="layui-btn layui-btn-warm fl" @click=""><i class="layui-icon">&#xe640;</i>清除</div>
 
-
-
-
-
-</style>
-<div id="ocean-manage">
-	<!--<div class="dropsShow pos-abs" v-if="dropsShow" @click="closeDrops()"></div>-->
-	<div class="head">
-		<div class="" v-if="findShow">
-			<div class="fl ">
-				<label class="layui-form-label">业务编号</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.BILLNO">
 				</div>
+				<div class="layui-btn layui-btn-normal fl" @click="find()"><i class="layui-icon">&#xe615;</i>查询</div>
+				<div 	class="layui-btn layui-btn-primary fl" @click="findShowClickF()">收起</div>
 			</div>
-			<div class="fl ">
-				<label class="layui-form-label">主单号</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.MBLNO" >
-				</div>
-			</div>
-			<div class="fl ">
-				<label class="layui-form-label">分单号</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.HBLNO " >
-				</div>
-			</div>
-			<div class="fl ">
-				<label class="layui-form-label">收货人</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.HCNEE">
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">船名</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.shipName" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"
-						   @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)">
-					<ul class="pos-abs drop-down"  v-if="1==ifShow">
-						<drop-down v-for="item in shipNameData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,1)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">委托人</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.clientName" @input="inputChange($event.target.value,2)" @click="inputClick(this,2)"
-						   @keyup="keyChoiceLi($event,2)"  @blur="falseBlur(2)">
-					<ul class="pos-abs drop-down"  v-if="2==ifShow">
-						<drop-down v-for="item in clientData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,2)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">船公司</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.shipCName" @input="inputChange($event.target.value,3)" @click="inputClick(this,3)"
-						   @keyup="keyChoiceLi($event,3)"  @blur="falseBlur(3)">
-					<ul class="pos-abs drop-down"  v-if="3==ifShow">
-						<drop-down v-for="item in shipCData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,3)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">目的港</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.protsName" @input="inputChange($event.target.value,4)" @click="inputClick(this,4)"
-						   @keyup="keyChoiceLi($event,4)"  @blur="falseBlur(4)">
-					<ul class="pos-abs drop-down"  v-if="4==ifShow">
-						<drop-down v-for="item in protData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,4)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">航线</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.laneName" @input="inputChange($event.target.value,5)" @click="inputClick(this,5)"
-						   @keyup="keyChoiceLi($event,5)"  @blur="falseBlur(5)">
-					<ul class="pos-abs drop-down"  v-if="5==ifShow">
-						<drop-down v-for="item in laneData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,5)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">场站</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.stationName" @input="inputChange($event.target.value,6)" @click="inputClick(this,6)"
-						   @keyup="keyChoiceLi($event,6)"  @blur="falseBlur(6)">
-					<ul class="pos-abs drop-down"  v-if="6==ifShow">
-						<drop-down v-for="item in stationData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,6)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">业务来源</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.busName" @input="inputChange($event.target.value,7)" @click="inputClick(this,7)"
-						   @keyup="keyChoiceLi($event,7)"  @blur="falseBlur(7)">
-					<ul class="pos-abs drop-down"  v-if="7==ifShow">
-						<drop-down v-for="item in busData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,7)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-
-			<div class="fl">
-				<label class="layui-form-label">业务员</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.salesmanName" @input="inputChange($event.target.value,8)" @click="inputClick(this,8)"
-						   @keyup="keyChoiceLi($event,8)"  @blur="falseBlur(8)">
-					<ul class="pos-abs drop-down"  v-if="8==ifShow">
-						<drop-down v-for="item in salesmanData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,8)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">部门</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.departmentName" @input="inputChange($event.target.value,9)" @click="inputClick(this,9)"
-						   @keyup="keyChoiceLi($event,9)"  @blur="falseBlur(9)">
-					<ul class="pos-abs drop-down"  v-if="9==ifShow">
-						<drop-down v-for="item in departmentData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,9)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">车队</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.fleetName" @input="inputChange($event.target.value,10)" @click="inputClick(this,10)"
-						   @keyup="keyChoiceLi($event,10)"  @blur="falseBlur(10)">
-					<ul class="pos-abs drop-down"  v-if="10==ifShow">
-						<drop-down v-for="item in fleetData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,10)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">订舱代理</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.bookingName" @input="inputChange($event.target.value,11)" @click="inputClick(this,11)"
-						   @keyup="keyChoiceLi($event,11)"  @blur="falseBlur(11)">
-					<ul class="pos-abs drop-down"  v-if="11==ifShow">
-						<drop-down v-for="item in bookingData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,11)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl">
-				<label class="layui-form-label">签单方式</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="" placeholder="请输入" class="layui-input"
-						   v-model="where.modeName" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)"
-						   @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)">
-					<ul class="pos-abs drop-down"  v-if="12==ifShow">
-						<drop-down v-for="item in modeData" v-bind:item="item.NAME" v-bind:key="item.id"
-								   class="pointer"  @click.native="choiceLi(item,12)" :class="{'curr':item.ID==liClass}">
-						</drop-down>
-					</ul>
-				</div>
-			</div>
-			<div class="fl"> <!-- 注意：这一层元素并不是必须的 -->
-				<label class="layui-form-label">ETD</label>
-				<div class="layui-input-inline pos-rel fl">
-					<input type="date" class="layui-input " id="ETDS" >
-				</div>
-				<label class="layui-form-label align-c">—</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="date" class="layui-input time" id="ETDE">
-				</div>
-			</div>
-			<div class="fl"> <!-- 注意：这一层元素并不是必须的 -->
-				<label class="layui-form-label">ETA</label>
-				<div class="layui-input-inline pos-rel fl">
-					<input type="date" class="layui-input " id="ETAS">
-				</div>
-				<label class="layui-form-label align-c">—</label>
-				<div class="layui-input-inline pos-rel">
-					<input type="date" class="layui-input " id="ETAE" >
-				</div>
-			</div>
-			<div class="fl checkbox">
-					<span v-for="item in checkboxData" class="fl mr-20">
-						<input type="checkbox">
-						<span v-text="item.NAME"></span>
-					</span>
-				<div class="layui-btn layui-btn-warm fl" @click=""><i class="layui-icon">&#xe640;</i>清除</div>
-
-			</div>
-			<div class="layui-btn layui-btn-normal fl" @click="find()"><i class="layui-icon">&#xe615;</i>查询</div>
-			<div 	class="layui-btn layui-btn-primary fl" @click="findShowClickF()">收起</div>
+			<div class="layui-btn layui-btn-normal fr mr-20" @click="findShowClick()" v-if="!findShow">详细查询</div>
+			<div class="layui-btn fr mr-20" @click="edit({id:0})">新增</div>
 		</div>
-		<div class="layui-btn layui-btn-normal fr mr-20" @click="findShowClick()" v-if="!findShow">详细查询</div>
-		<div class="layui-btn fr mr-20" @click="edit({id:0})">新增</div>
-	</div>
-	<div class="main clear-both">
-		<table class="layui-table">
-			<thead>
-			<tr @contextmenu.prevent="sortOpen()">
-				<th  v-for="item in theadData" >
-					<select v-if="item.NAME=='MONTH'">
-						<option>月份</option >
-						<option v-for="items in jsonData" v-text="items.MONTH">
-						</option>
-					</select>
-					<select v-if="item.NAME=='CUSTOMSCORP'">
-						<option>客户</option >
-						<option v-for="items in jsonData" v-text="items.CUSTOMSCORP">
-						</option>
-					</select>
-					<select v-if="item.NAME=='BILLKIND'">
-						<option>单据类型</option >
-						<option v-for="items in jsonData" v-text="items.BILLKIND">
-						</option>
-					</select>
-					<select v-if="item.NAME=='BILLNO'">
-						<option>业务编号</option >
-						<option v-for="items in jsonData" v-text="items.BILLNO">
-						</option>
-					</select>
-					<select v-if="item.NAME=='ASTEPSTATUS'">
-						<option>单步审核</option >
-						<option v-for="items in jsonData" v-text="items.ASTEPSTATUS">
-						</option>
-					</select>
-					<select v-if="item.NAME=='ENTITYID'">
-						<option>ENTITYID</option >
-						<option v-for="items in jsonData" v-text="items.ENTITYID">
-						</option>
-					</select>
-					<select v-if="item.NAME=='MBLNO'">
-						<option>MBLNO</option >
-						<option v-for="items in jsonData" v-text="items.MBLNO">
-						</option>
-					</select>
-					<select v-if="item.NAME=='SALESNAME'">
-						<option>业务员</option >
-						<option v-for="items in jsonData" v-text="items.SALESNAME">
-						</option>
-					</select>
-					<select v-if="item.NAME=='HSHIPPER'">
-						<option>发货人</option >
-						<option v-for="items in jsonData" v-text="items.HSHIPPER">
-						</option>
-					</select>
-					<select v-if="item.NAME=='HCNEE'">
-						<option>收货人</option >
-						<option v-for="items in jsonData" v-text="items.HCNEE">
-						</option>
-					</select>
-					<select v-if="item.NAME=='POD'">
-						<option>卸货港</option >
-						<option v-for="items in jsonData" v-text="items.POD">
-						</option>
-					</select>
-					<select v-if="item.NAME=='CONTAINERQTY'">
-						<option>箱量</option >
-						<option v-for="items in jsonData" v-text="items.CONTAINERQTY">
-						</option>
-					</select>
-					<select v-if="item.NAME=='ETD'">
-						<option>ETD</option >
-						<option v-for="items in jsonData" v-text="items.ETD">
-						</option>
-					</select>
-					<select v-if="item.NAME=='ATD'">
-						<option>ATD</option >
-						<option v-for="items in jsonData" v-text="items.ATD">
-						</option>
-					</select>
-				</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr v-for="item in jsonData" @dblclick="details(item)">
-				<td  v-for="items in theadData">
-					<span  v-if="items.NAME=='MONTH'"  @click="del(item)">删除</span>
-					<span  v-text="item.MONTH" v-if="items.NAME=='MONTH'"></span>
-					<span  v-text="item.CUSTOMSCORP" v-if="items.NAME=='CUSTOMSCORP'"></span>
-					<span  v-text="item.BILLKIND" v-if="items.NAME=='BILLKIND'"></span>
-					<span  v-text="item.BILLNO" v-if="items.NAME=='BILLNO'"></span>
-					<span  v-text="item.ASTEPSTATUS" v-if="items.NAME=='ASTEPSTATUS'"></span>
-					<span  v-text="item.ENTITYID" v-if="items.NAME=='ENTITYID'"></span>
-					<span  v-text="item.MBLNO" v-if="items.NAME=='MBLNO'"></span>
-					<span  v-text="item.SALESNAME" v-if="items.NAME=='SALESNAME'"></span>
-					<span  v-text="item.HSHIPPER" v-if="items.NAME=='HSHIPPER'"></span>
-					<span  v-text="item.HCNEE" v-if="items.NAME=='HCNEE'"></span>
-					<span  v-text="item.POD" v-if="items.NAME=='POD'"></span>
-					<span  v-text="item.CONTAINERQTY" v-if="items.NAME=='CONTAINERQTY'"></span>
-					<span  v-text="item.ETD" v-if="items.NAME=='ETD'"></span>
-					<span  v-text="item.ATD" v-if="items.NAME=='ATD'"></span>
+		<div class="main clear-both">
+			<table class="layui-table">
+				<thead>
+				<tr @contextmenu.prevent="sortOpen()">
+					<th  v-for="item in theadData" >
+						<select v-if="item.NAME=='MONTH'">
+							<option>月份</option >
+							<option v-for="items in jsonData" v-text="items.MONTH">
+							</option>
+						</select>
+						<select v-if="item.NAME=='CUSTOMSCORP'">
+							<option>客户</option >
+							<option v-for="items in jsonData" v-text="items.CUSTOMSCORP">
+							</option>
+						</select>
+						<select v-if="item.NAME=='BILLKIND'">
+							<option>单据类型</option >
+							<option v-for="items in jsonData" v-text="items.BILLKIND">
+							</option>
+						</select>
+						<select v-if="item.NAME=='BILLNO'">
+							<option>业务编号</option >
+							<option v-for="items in jsonData" v-text="items.BILLNO">
+							</option>
+						</select>
+						<select v-if="item.NAME=='ASTEPSTATUS'">
+							<option>单步审核</option >
+							<option v-for="items in jsonData" v-text="items.ASTEPSTATUS">
+							</option>
+						</select>
+						<select v-if="item.NAME=='ENTITYID'">
+							<option>ENTITYID</option >
+							<option v-for="items in jsonData" v-text="items.ENTITYID">
+							</option>
+						</select>
+						<select v-if="item.NAME=='MBLNO'">
+							<option>MBLNO</option >
+							<option v-for="items in jsonData" v-text="items.MBLNO">
+							</option>
+						</select>
+						<select v-if="item.NAME=='SALESNAME'">
+							<option>业务员</option >
+							<option v-for="items in jsonData" v-text="items.SALESNAME">
+							</option>
+						</select>
+						<select v-if="item.NAME=='HSHIPPER'">
+							<option>发货人</option >
+							<option v-for="items in jsonData" v-text="items.HSHIPPER">
+							</option>
+						</select>
+						<select v-if="item.NAME=='HCNEE'">
+							<option>收货人</option >
+							<option v-for="items in jsonData" v-text="items.HCNEE">
+							</option>
+						</select>
+						<select v-if="item.NAME=='POD'">
+							<option>卸货港</option >
+							<option v-for="items in jsonData" v-text="items.POD">
+							</option>
+						</select>
+						<select v-if="item.NAME=='CONTAINERQTY'">
+							<option>箱量</option >
+							<option v-for="items in jsonData" v-text="items.CONTAINERQTY">
+							</option>
+						</select>
+						<select v-if="item.NAME=='ETD'">
+							<option>ETD</option >
+							<option v-for="items in jsonData" v-text="items.ETD">
+							</option>
+						</select>
+						<select v-if="item.NAME=='ATD'">
+							<option>ATD</option >
+							<option v-for="items in jsonData" v-text="items.ATD">
+							</option>
+						</select>
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr v-for="item in jsonData" @dblclick="details(item)">
+					<td  v-for="items in theadData">
+						<span  v-if="items.NAME=='MONTH'"  @click="del(item)">删除</span>
+						<span  v-text="item.MONTH" v-if="items.NAME=='MONTH'"></span>
+						<span  v-text="item.CUSTOMSCORP" v-if="items.NAME=='CUSTOMSCORP'"></span>
+						<span  v-text="item.BILLKIND" v-if="items.NAME=='BILLKIND'"></span>
+						<span  v-text="item.BILLNO" v-if="items.NAME=='BILLNO'"></span>
+						<span  v-text="item.ASTEPSTATUS" v-if="items.NAME=='ASTEPSTATUS'"></span>
+						<span  v-text="item.ENTITYID" v-if="items.NAME=='ENTITYID'"></span>
+						<span  v-text="item.MBLNO" v-if="items.NAME=='MBLNO'"></span>
+						<span  v-text="item.SALESNAME" v-if="items.NAME=='SALESNAME'"></span>
+						<span  v-text="item.HSHIPPER" v-if="items.NAME=='HSHIPPER'"></span>
+						<span  v-text="item.HCNEE" v-if="items.NAME=='HCNEE'"></span>
+						<span  v-text="item.POD" v-if="items.NAME=='POD'"></span>
+						<span  v-text="item.CONTAINERQTY" v-if="items.NAME=='CONTAINERQTY'"></span>
+						<span  v-text="item.ETD" v-if="items.NAME=='ETD'"></span>
+						<span  v-text="item.ATD" v-if="items.NAME=='ATD'"></span>
 
-				</td>
-			</tr>
-			</tbody>
-		</table>
+					</td>
+				</tr>
+				</tbody>
+			</table>
 
 
 
 
-	</div>
-	<div class="model pos-abs" v-if="editShow">
-		<div class="model-main pos-abs">
-			<div class="model-title">
-				创建业务单据
-			</div>
-			<div class="model-cont">
-				<div>
-					<input type="checkbox"/>创建新业务
+		</div>
+		<div class="model pos-abs" v-if="editShow">
+			<div class="model-main pos-abs">
+				<div class="model-title">
+					创建业务单据
 				</div>
-				<div>
-					<input type="checkbox"/>由资料文件导入生成
-				</div>
-				<div>
-					<input type="checkbox"/>复制现有业务生成新业务
-				</div>
-				<div>
-					<input type="checkbox"/>导入业务模板
-				</div>
-				<div>
-					<div class="fl wid50">
-						<label class="layui-form-label">编号类别</label>
-						<div class="layui-input-inline">
-							<span class="layui-input">海运出口单据</span>
-							<!--<select class="layui-input">-->
-								<!--<option>海运出口单据</option>-->
-							<!--</select>-->
-						</div>
+				<div class="model-cont">
+					<div>
+						<input type="checkbox"/>创建新业务
 					</div>
-					<div class="fl wid50">
-						<label class="layui-form-label">业务日期</label>
-						<div class="layui-input-inline">
-							<input  v-model="para.BILLDATE" class="layui-input" type="date"/>
-						</div>
+					<div>
+						<input type="checkbox"/>由资料文件导入生成
 					</div>
-					<div class="fl wid50">
-						<label class="layui-form-label">名称</label>
-						<div class="layui-input-inline">
-							<select  class="layui-input">
-								<option>海运出口/航线部</option>
-							</select>
-						</div>
+					<div>
+						<input type="checkbox"/>复制现有业务生成新业务
 					</div>
-
-					<div class="fl wid50">
-						<label class="layui-form-label">部门</label>
-						<div class="layui-input-inline">
-							<select  class="layui-input" v-model="para.BILLDEPTID">
-								<option v-for="item in BILLDEPTDATA" v-text="item.NAME"  :value="item.ID">财务部</option>
-							</select>
-						</div>
+					<div>
+						<input type="checkbox"/>导入业务模板
 					</div>
-				</div>
-				<div>
-					<!--<table class="layui-table">-->
-						<!--<thead>-->
-						<!--<tr>-->
-							<!--<th>属性名称</th>-->
-							<!--<th>属性值</th>-->
-						<!--</tr>-->
-						<!--</thead>-->
-						<!--<tbody>-->
-						<!--<tr>-->
-							<!--<td>单据种类</td>-->
-							<!--<td>-->
-								<!--<select v-model="para.BILLKINDID" class="">-->
-									<!--<option v-for="item in BILLKINDDATA"  :value="item.ID" v-text="item.NAME"></option>-->
+					<div>
+						<div class="fl wid50">
+							<label class="layui-form-label">编号类别</label>
+							<div class="layui-input-inline">
+								<span class="layui-input">海运出口单据</span>
+								<!--<select class="layui-input">-->
+									<!--<option>海运出口单据</option>-->
 								<!--</select>-->
-							<!--</td>-->
-						<!--</tr>-->
-						<!--<tr>-->
-							<!--<td>默认起运港</td>-->
-							<!--<td></td>-->
-						<!--</tr>-->
-						<!--<tr>-->
-							<!--<td>归属团队</td>-->
-							<!--<td></td>-->
-						<!--</tr>-->
-						<!--<tr>-->
-							<!--<td>核算部门</td>-->
-							<!--<td></td>-->
-						<!--</tr>-->
-						<!--<tr>-->
-							<!--<td>航线</td>-->
-							<!--<td></td>-->
-						<!--</tr>-->
-						<!--</tbody>-->
-					<!--</table>-->
+							</div>
+						</div>
+						<div class="fl wid50">
+							<label class="layui-form-label">业务日期</label>
+							<div class="layui-input-inline">
+								<input  v-model="para.BILLDATE" class="layui-input" type="date"/>
+							</div>
+						</div>
+						<div class="fl wid50">
+							<label class="layui-form-label">名称</label>
+							<div class="layui-input-inline">
+								<select  class="layui-input">
+									<option>海运出口/航线部</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="fl wid50">
+							<label class="layui-form-label">部门</label>
+							<div class="layui-input-inline">
+								<select  class="layui-input" v-model="para.BILLDEPTID">
+									<option v-for="item in BILLDEPTDATA" v-text="item.NAME"  :value="item.ID">财务部</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div>
+						<!--<table class="layui-table">-->
+							<!--<thead>-->
+							<!--<tr>-->
+								<!--<th>属性名称</th>-->
+								<!--<th>属性值</th>-->
+							<!--</tr>-->
+							<!--</thead>-->
+							<!--<tbody>-->
+							<!--<tr>-->
+								<!--<td>单据种类</td>-->
+								<!--<td>-->
+									<!--<select v-model="para.BILLKINDID" class="">-->
+										<!--<option v-for="item in BILLKINDDATA"  :value="item.ID" v-text="item.NAME"></option>-->
+									<!--</select>-->
+								<!--</td>-->
+							<!--</tr>-->
+							<!--<tr>-->
+								<!--<td>默认起运港</td>-->
+								<!--<td></td>-->
+							<!--</tr>-->
+							<!--<tr>-->
+								<!--<td>归属团队</td>-->
+								<!--<td></td>-->
+							<!--</tr>-->
+							<!--<tr>-->
+								<!--<td>核算部门</td>-->
+								<!--<td></td>-->
+							<!--</tr>-->
+							<!--<tr>-->
+								<!--<td>航线</td>-->
+								<!--<td></td>-->
+							<!--</tr>-->
+							<!--</tbody>-->
+						<!--</table>-->
+					</div>
+
+				</div>
+				<div class="model-btn align-c">
+					<div class="layui-btn layui-btn-primary" @click="closeEdit()">关闭</div>
+					<div class="layui-btn layui-btn-normal "  @click="add()">确定</div>
 				</div>
 
 			</div>
-			<div class="model-btn align-c">
-				<div class="layui-btn layui-btn-primary" @click="closeEdit()">关闭</div>
-				<div class="layui-btn layui-btn-normal "  @click="add()">确定</div>
-			</div>
-
 		</div>
-	</div>
-	<div class="model pos-abs" v-if="operation">
-		<div class="model-operation pos-abs">
-			<div class="">
-				<ul class="fl">
-					<li v-for="item in theadData " class="pointer" @click="sortClick(item)" >
-						<span v-text="item.NAME"  :class="{'curr':item.ID==liClass}"></span>
-					</li>
-				</ul>
-				<div class="fl button">
-					<div>
-						<button class="layui-btn layui-btn-sm layui-btn-normal">∧</button>
-					</div>
-					<div>
-						<button class="layui-btn layui-btn-sm layui-btn-warm">∨</button>
+		<div class="model pos-abs" v-if="operation">
+			<div class="model-operation pos-abs">
+				<div class="">
+					<ul class="fl">
+						<li v-for="item in theadData " class="pointer" @click="sortClick(item)" >
+							<span v-text="item.NAME"  :class="{'curr':item.ID==liClass}"></span>
+						</li>
+					</ul>
+					<div class="fl button">
+						<div>
+							<button class="layui-btn layui-btn-sm layui-btn-normal">∧</button>
+						</div>
+						<div>
+							<button class="layui-btn layui-btn-sm layui-btn-warm">∨</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	<script>
+
+	    var app = new Vue({
+	        el: "#ocean-manage",
+	        data: {
+	            jsonData: [],
+	            dropData: [],
+	            shipNameData:[],//船名
+	            clientData:[],//委托人
+	            shipCData:[],//船公司
+	            protData:[],//港口
+	            laneData:[],//航线
+	            stationData:[],//场站
+	            busData:[],//业务来源
+	            BILLDEPTDATA:[],//部门
+	            fleetData:[],//车队
+	            bookingData:[],//订舱代理
+	            modeData:[],//签单方式
+	            checkboxData:[],//上方选择
+	            theadData:[],//表头
+	            pol:"",
+	            pod:"",
+	            country:"",
+	            polId:0,
+	            podId:0,
+	            countryId:0,
+	            cNameShow: false,//
+	            eNameShow: false,//
+	            countryShow:false,//
+	            editShow:false,
+	            operation:false,
+	            findShow:false,
+	            ifShow:0,
+	            itemLi: "-1",
+	            liClass: 0,
+	            n: -1,
+	            para:{},
+	            where:{},
+	            options:[{text:"起始港",value:"PolNum"},{text:"目的港",value:"PodNum"}],
+	            delID:0,
+	            tbody:{}
+
+	        },
+	        methods: {
+	            actionH: {},
+	            inputChange: {},
+	            inputClick: {},
+	            keyChoiceLi: {},
+	            choiceLi: {},
+	            find:{},
+	            findDrop:{},
+	            falseBlur:{},
+	            edit:{},
+	            closeEdit:{},
+	            post:{},
+	            del:{},
+	            ajaxGet:{},
+	            ajaxPost:{},
+	            closeDrops:{},
+	            findShowClick:{},
+	            findShowClickF:{},
+	            sortOpen:{},
+	            sortClick:{},
+	            add:{},//新增
+	            details:{}//双击列表
+	        }
+	    });
+	    app.findShowClick = function(){
+	        app.findShow = !app.findShow
+	    };
+	    app.findShowClickF = function(){
+	        app.findShow = !app.findShow;
+	    };
+	    //选择框
+		app.BILLKINDDATA = [{ID:1,NAME:" 直单"},{ID:2,NAME:" 主单"},{ID:3,NAME:" 主分单"},{ID:4,NAME:" 从分单"}];
+	    app.checkboxData = [{id:1,NAME:"统计AMEND"},{id:2,NAME:"是否报关"},{id:3,NAME:"是否报验"},{id:4,NAME:"是否陆运"},
+	        {id:5,NAME:"是否仓储"},{id:6,NAME:"是否签单"}, {id:7,NAME:"是否通关"},{id:8,NAME:"是否退关"},{id:9,NAME:"是否退仓"},
+	    ];
+	    //船名
+	    app.shipNameData = [{ID:1,NAME:" 驱逐舰"},{ID:2,NAME:" 巡洋舰"},{ID:3,NAME:" 黑珍珠"},{ID:4,NAME:" 航母"},{ID:5,NAME:" 战列舰"}];
+	    //委托人
+	    app.clientData = [{ID:1,NAME:" 张三"},{ID:2,NAME:"德鲁伊"},{ID:3,NAME:" 牧师"},{ID:4,NAME:" 死骑"},{ID:5,NAME:" 战士"}];
+	    //船公司
+	    app.shipCData =  [{ID:1,NAME:"船公司1"},{ID:2,NAME:"船公司2"},{ID:3,NAME:" 船公司3"},{ID:4,NAME:" 船公司4"},{ID:5,NAME:" 船公司5"}];
+	    //港口
+	    app.protData =  [{ID:1,NAME:"港口1"},{ID:2,NAME:"港口2"},{ID:3,NAME:" 港口3"},{ID:4,NAME:" 港口4"},{ID:5,NAME:" 港口5"}];
+	    //航线
+	    app.laneData =  [{ID:1,NAME:"航线1"},{ID:2,NAME:"航线2"},{ID:3,NAME:" 航线3"},{ID:4,NAME:" 航线4"},{ID:5,NAME:" 航线5"}];
+	    //场站
+	    app.stationData =  [{ID:1,NAME:"场站1"},{ID:2,NAME:"场站2"},{ID:3,NAME:" 场站3"},{ID:4,NAME:" 场站4"},{ID:5,NAME:" 场站5"}];
+	    //业务来源
+	    app.busData = [{ID:1,NAME:"业务来源1"},{ID:2,NAME:"业务来源2"},{ID:3,NAME:" 业务来源3"},{ID:4,NAME:" 业务来源4"},{ID:5,NAME:" 业务来源5"}];
+	    //业务员
+	    app.salesmanData = [{ID:1,NAME:"业务员1"},{ID:2,NAME:"业务员2"},{ID:3,NAME:" 业务员3"},{ID:4,NAME:" 业务员4"},{ID:5,NAME:" 业务员5"}];
+	    //部门
+	    app.BILLDEPTDATA= [{ID:1,NAME:"财务部"},{ID:2,NAME:"操作部"},{ID:3,NAME:"海运部"},{ID:4,NAME:"报关部"},{ID:5,NAME:"空运部"}];
+	    //车队
+	    app.fleetData = [{ID:1,NAME:"车队1"},{ID:2,NAME:"车队2"},{ID:3,NAME:" 车队3"},{ID:4,NAME:" 车队4"},{ID:5,NAME:" 车队5"}];
+	    //订舱代理
+	    app.bookingData = [{ID:1,NAME:"订舱代理1"},{ID:2,NAME:"订舱代理2"},{ID:3,NAME:" 订舱代理3"},{ID:4,NAME:"订舱代理4"},{ID:5,NAME:"订舱代理5"}];
+	    //签订方式
+	    app.modeData = [{ID:1,NAME:"签订方式1"},{ID:2,NAME:"签订方式2"},{ID:3,NAME:" 签订方式3"},{ID:4,NAME:" 签订方式4"},{ID:5,NAME:" 签订方式5"}];
+	    //表头
+	    app.theadData =[
+	        {ID:1,NAME:"MONTH",TITLE:"月份",ORDERID:'1'},{ID:2,NAME:"CUSTOMSCORP",TITLE:"客户",ORDERID:'2'},
+	        {ID:3,NAME:"ASTEPSTATUS",TITLE:"单步审核",ORDERID:'3'},{ID:4,NAME:"BILLKIND",TITLE:"单据类型",ORDERID:'4'},
+	        {ID:5,NAME:"BILLNO",TITLE:"业务编号",ORDERID:'5'},{ID:6,NAME:"ENTITYID",TITLE:"ENTITYID",ORDERID:'6'},
+	        {ID:7,NAME:"MBLNO",TITLE:"MBLNO",ORDERID:'7'},{ID:8,NAME:"SALESNAME",TITLE:"业务员",ORDERID:'8'},
+	        {ID:9,NAME:"HSHIPPER",TITLE:"发货人",ORDERID:'9'},{ID:10,NAME:"HCNEE",TITLE:"收货人",ORDERID:'10'},
+	        {ID:11,NAME:"POD" ,TITLE:"卸货港",ORDERID:'11'} ,{ID:12,NAME:"CONTAINERQTY" ,TITLE:"箱量",ORDERID:'12'},
+	        {ID:13,NAME:"ETD"  ,TITLE:"ETD",ORDERID:'13'},{ID:14,NAME:"ATD"  ,TITLE:"ATD",ORDERID:'14'}
+	    ];
 
 
-<script>
+	    //键盘事件
+	    app.keyChoiceLi = function (e, num) {
+	        var downData =[];
+	        if(num==1){
+	            downData = app.shipNameData;//船名
+	        }else if(num==2){
+	            downData = app.clientData;//委托人
+	        }else if(num==3){
+	            downData = app.shipCData;//船公司
+	        }else if(num==4){
+	            downData = app.protData;//港口
+	        }else if(num==5){
+	            downData = app.laneData;//航线
+	        }else if(num==6){
+	            downData = app.stationData;//场站
+	        }else if(num==7){
+	            downData = app.busData;//业务来源
+	        }else if(num==8){
+	            downData = app.salesmanData;//业务员
+	        }else if(num==9){
+	            downData = app.departmentData;//部门
+	        }else if(num==10){
+	            downData = app.fleetData;//车队
+	        }else if(num==11){
+	            downData = app.bookingData;//订舱代理
+	        }else if(num==12){
+	            downData = app.modeData;//签订方式
+	        }
+	        if(!downData){
+	        }else{
+	            var length = downData.length;
+	            if (e.keyCode == 40) {
+	                if(app.n >= length-1){
+	                    app.n = -1;
+	                }
+	                app.n = app.n + 1;
+	                app.liClass = downData[app.n].ID;
+	                console.log(downData);
+	            }
+	            if (e.keyCode == 38) {
+	                if(app.n <= 0){
+	                    app.n = length;
+	                }
+	                app.n=app.n-1;
+	                app.liClass = downData[app.n].ID;
+	            }
+	            if (e.keyCode == 13) {
+	                if(!downData[app.n]){
+	                }else{
+	                    console.log(app.ifShow);
 
-    var app = new Vue({
-        el: "#ocean-manage",
-        data: {
-            jsonData: [],
-            dropData: [],
-            shipNameData:[],//船名
-            clientData:[],//委托人
-            shipCData:[],//船公司
-            protData:[],//港口
-            laneData:[],//航线
-            stationData:[],//场站
-            busData:[],//业务来源
-            BILLDEPTDATA:[],//部门
-            fleetData:[],//车队
-            bookingData:[],//订舱代理
-            modeData:[],//签单方式
-            checkboxData:[],//上方选择
-            theadData:[],//表头
-            pol:"",
-            pod:"",
-            country:"",
-            polId:0,
-            podId:0,
-            countryId:0,
-            cNameShow: false,//
-            eNameShow: false,//
-            countryShow:false,//
-            editShow:false,
-            operation:false,
-            findShow:false,
-            ifShow:0,
-            itemLi: "-1",
-            liClass: 0,
-            n: -1,
-            para:{},
-            where:{},
-            options:[{text:"起始港",value:"PolNum"},{text:"目的港",value:"PodNum"}],
-            delID:0,
-            tbody:{}
+	                    if(app.ifShow==1){
+	                        app.where.shipName = downData[app.n].NAME;
+	                    }else if(app.ifShow==2){
+	                        app.where.clientName = downData[app.n].NAME;
+	                    }else if(app.ifShow==3){
+	                        app.where.shipCName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==4){
+	                        app.where.protsName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==5){
+	                        app.where.laneName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==6){
+	                        app.where.stationName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==7){
+	                        app.where.busName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==8){
+	                        app.where.salesmanName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==9){
+	                        app.where.departmentName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==11){
+	                        app.where.bookingName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==12){
+	                        app.where.modeName  = downData[app.n].NAME;
+	                    }else if(app.ifShow==10){
+	                        app.where.fleetName  = downData[app.n].NAME;
+	                    }
+	                }
+	                app.ifShow = 0;
+	            }
+	        }
 
-        },
-        methods: {
-            actionH: {},
-            inputChange: {},
-            inputClick: {},
-            keyChoiceLi: {},
-            choiceLi: {},
-            find:{},
-            findDrop:{},
-            falseBlur:{},
-            edit:{},
-            closeEdit:{},
-            post:{},
-            del:{},
-            ajaxGet:{},
-            ajaxPost:{},
-            closeDrops:{},
-            findShowClick:{},
-            findShowClickF:{},
-            sortOpen:{},
-            sortClick:{},
-            add:{},//新增
-            details:{}//双击列表
-        }
-    });
-    app.findShowClick = function(){
-        app.findShow = !app.findShow
-    };
-    app.findShowClickF = function(){
-        app.findShow = !app.findShow;
-    };
-    //选择框
-	app.BILLKINDDATA = [{ID:1,NAME:" 直单"},{ID:2,NAME:" 主单"},{ID:3,NAME:" 主分单"},{ID:4,NAME:" 从分单"}];
-    app.checkboxData = [{id:1,NAME:"统计AMEND"},{id:2,NAME:"是否报关"},{id:3,NAME:"是否报验"},{id:4,NAME:"是否陆运"},
-        {id:5,NAME:"是否仓储"},{id:6,NAME:"是否签单"}, {id:7,NAME:"是否通关"},{id:8,NAME:"是否退关"},{id:9,NAME:"是否退仓"},
-    ];
-    //船名
-    app.shipNameData = [{ID:1,NAME:" 驱逐舰"},{ID:2,NAME:" 巡洋舰"},{ID:3,NAME:" 黑珍珠"},{ID:4,NAME:" 航母"},{ID:5,NAME:" 战列舰"}];
-    //委托人
-    app.clientData = [{ID:1,NAME:" 张三"},{ID:2,NAME:"德鲁伊"},{ID:3,NAME:" 牧师"},{ID:4,NAME:" 死骑"},{ID:5,NAME:" 战士"}];
-    //船公司
-    app.shipCData =  [{ID:1,NAME:"船公司1"},{ID:2,NAME:"船公司2"},{ID:3,NAME:" 船公司3"},{ID:4,NAME:" 船公司4"},{ID:5,NAME:" 船公司5"}];
-    //港口
-    app.protData =  [{ID:1,NAME:"港口1"},{ID:2,NAME:"港口2"},{ID:3,NAME:" 港口3"},{ID:4,NAME:" 港口4"},{ID:5,NAME:" 港口5"}];
-    //航线
-    app.laneData =  [{ID:1,NAME:"航线1"},{ID:2,NAME:"航线2"},{ID:3,NAME:" 航线3"},{ID:4,NAME:" 航线4"},{ID:5,NAME:" 航线5"}];
-    //场站
-    app.stationData =  [{ID:1,NAME:"场站1"},{ID:2,NAME:"场站2"},{ID:3,NAME:" 场站3"},{ID:4,NAME:" 场站4"},{ID:5,NAME:" 场站5"}];
-    //业务来源
-    app.busData = [{ID:1,NAME:"业务来源1"},{ID:2,NAME:"业务来源2"},{ID:3,NAME:" 业务来源3"},{ID:4,NAME:" 业务来源4"},{ID:5,NAME:" 业务来源5"}];
-    //业务员
-    app.salesmanData = [{ID:1,NAME:"业务员1"},{ID:2,NAME:"业务员2"},{ID:3,NAME:" 业务员3"},{ID:4,NAME:" 业务员4"},{ID:5,NAME:" 业务员5"}];
-    //部门
-    app.BILLDEPTDATA= [{ID:1,NAME:"财务部"},{ID:2,NAME:"操作部"},{ID:3,NAME:"海运部"},{ID:4,NAME:"报关部"},{ID:5,NAME:"空运部"}];
-    //车队
-    app.fleetData = [{ID:1,NAME:"车队1"},{ID:2,NAME:"车队2"},{ID:3,NAME:" 车队3"},{ID:4,NAME:" 车队4"},{ID:5,NAME:" 车队5"}];
-    //订舱代理
-    app.bookingData = [{ID:1,NAME:"订舱代理1"},{ID:2,NAME:"订舱代理2"},{ID:3,NAME:" 订舱代理3"},{ID:4,NAME:"订舱代理4"},{ID:5,NAME:"订舱代理5"}];
-    //签订方式
-    app.modeData = [{ID:1,NAME:"签订方式1"},{ID:2,NAME:"签订方式2"},{ID:3,NAME:" 签订方式3"},{ID:4,NAME:" 签订方式4"},{ID:5,NAME:" 签订方式5"}];
-    //表头
-    app.theadData =[
-        {ID:1,NAME:"MONTH",TITLE:"月份",ORDERID:'1'},{ID:2,NAME:"CUSTOMSCORP",TITLE:"客户",ORDERID:'2'},
-        {ID:3,NAME:"ASTEPSTATUS",TITLE:"单步审核",ORDERID:'3'},{ID:4,NAME:"BILLKIND",TITLE:"单据类型",ORDERID:'4'},
-        {ID:5,NAME:"BILLNO",TITLE:"业务编号",ORDERID:'5'},{ID:6,NAME:"ENTITYID",TITLE:"ENTITYID",ORDERID:'6'},
-        {ID:7,NAME:"MBLNO",TITLE:"MBLNO",ORDERID:'7'},{ID:8,NAME:"SALESNAME",TITLE:"业务员",ORDERID:'8'},
-        {ID:9,NAME:"HSHIPPER",TITLE:"发货人",ORDERID:'9'},{ID:10,NAME:"HCNEE",TITLE:"收货人",ORDERID:'10'},
-        {ID:11,NAME:"POD" ,TITLE:"卸货港",ORDERID:'11'} ,{ID:12,NAME:"CONTAINERQTY" ,TITLE:"箱量",ORDERID:'12'},
-        {ID:13,NAME:"ETD"  ,TITLE:"ETD",ORDERID:'13'},{ID:14,NAME:"ATD"  ,TITLE:"ATD",ORDERID:'14'}
-    ];
+	    };
+	    //点击下拉li
+	    app.choiceLi = function (item, num) {
+	        console.log(item);console.log(num);
+	        if(num==1){
+	            app.where.shipName = item.NAME;
+	        }else if(num==2){
+	            app.where.clientName = item.NAME;
+	        }else if(num==3){
+	            app.where.shipCName = item.NAME;
+	        }else if(num==4){
+	            app.where.protsName  = item.NAME;
+	        }else if(num==5){
+	            app.where.laneName  = item.NAME;
+	        }else if(num==6){
+	            app.where.stationName  = item.NAME;
+	        }else if(num==7){
+	            app.where.busName  = item.NAME;
+	        }else if(num==8){
+	            app.where.salesmanName  = item.NAME;
+	        }else if(num==9){
+	            app.where.departmentName  = item.NAME;
+	        }else if(num==10){
+	            app.where.fleetName  = item.NAME;
+	        }else if(num==11){
+	            app.where.bookingName  = item.NAME;
+	        }else if(num==12){
+	            app.where.modeName  = item.NAME;
+	        }
 
+	        app.ifShow = 0;
+	    };
+	    //失去焦点
+	    app.falseBlur = function(num){
+	        alert(0);
+	        setTimeout(function (){
+	            if(num==1){
+	                app.ifShow = -1;
+	            }
+	            app.eNameShow = false;
+	            app.cNameShow = false;
+	            app.countryShow = false;
+	        }, 100);
 
-    //键盘事件
-    app.keyChoiceLi = function (e, num) {
-        var downData =[];
-        if(num==1){
-            downData = app.shipNameData;//船名
-        }else if(num==2){
-            downData = app.clientData;//委托人
-        }else if(num==3){
-            downData = app.shipCData;//船公司
-        }else if(num==4){
-            downData = app.protData;//港口
-        }else if(num==5){
-            downData = app.laneData;//航线
-        }else if(num==6){
-            downData = app.stationData;//场站
-        }else if(num==7){
-            downData = app.busData;//业务来源
-        }else if(num==8){
-            downData = app.salesmanData;//业务员
-        }else if(num==9){
-            downData = app.departmentData;//部门
-        }else if(num==10){
-            downData = app.fleetData;//车队
-        }else if(num==11){
-            downData = app.bookingData;//订舱代理
-        }else if(num==12){
-            downData = app.modeData;//签订方式
-        }
-        if(!downData){
-        }else{
-            var length = downData.length;
-            if (e.keyCode == 40) {
-                if(app.n >= length-1){
-                    app.n = -1;
-                }
-                app.n = app.n + 1;
-                app.liClass = downData[app.n].ID;
-                console.log(downData);
-            }
-            if (e.keyCode == 38) {
-                if(app.n <= 0){
-                    app.n = length;
-                }
-                app.n=app.n-1;
-                app.liClass = downData[app.n].ID;
-            }
-            if (e.keyCode == 13) {
-                if(!downData[app.n]){
-                }else{
-                    console.log(app.ifShow);
+	    };
+	    //下拉组件
+	    Vue.component("drop-down", {
+	        props: ["item"],
+	        template:
+	        '<li >' +
+	        '<span v-text="item"></span>' +
+	        '</li>'
+	    });
+	    app.details = function(item){
+	        window.location.href = "oceanImported?ID="+item.ID;
+	    };
 
-                    if(app.ifShow==1){
-                        app.where.shipName = downData[app.n].NAME;
-                    }else if(app.ifShow==2){
-                        app.where.clientName = downData[app.n].NAME;
-                    }else if(app.ifShow==3){
-                        app.where.shipCName  = downData[app.n].NAME;
-                    }else if(app.ifShow==4){
-                        app.where.protsName  = downData[app.n].NAME;
-                    }else if(app.ifShow==5){
-                        app.where.laneName  = downData[app.n].NAME;
-                    }else if(app.ifShow==6){
-                        app.where.stationName  = downData[app.n].NAME;
-                    }else if(app.ifShow==7){
-                        app.where.busName  = downData[app.n].NAME;
-                    }else if(app.ifShow==8){
-                        app.where.salesmanName  = downData[app.n].NAME;
-                    }else if(app.ifShow==9){
-                        app.where.departmentName  = downData[app.n].NAME;
-                    }else if(app.ifShow==11){
-                        app.where.bookingName  = downData[app.n].NAME;
-                    }else if(app.ifShow==12){
-                        app.where.modeName  = downData[app.n].NAME;
-                    }else if(app.ifShow==10){
-                        app.where.fleetName  = downData[app.n].NAME;
-                    }
-                }
-                app.ifShow = 0;
-            }
-        }
+	    //关闭新增修改
+	    app.closeEdit = function(){
+	        app.editShow = false;
+	    };
 
-    };
-    //点击下拉li
-    app.choiceLi = function (item, num) {
-        console.log(item);console.log(num);
-        if(num==1){
-            app.where.shipName = item.NAME;
-        }else if(num==2){
-            app.where.clientName = item.NAME;
-        }else if(num==3){
-            app.where.shipCName = item.NAME;
-        }else if(num==4){
-            app.where.protsName  = item.NAME;
-        }else if(num==5){
-            app.where.laneName  = item.NAME;
-        }else if(num==6){
-            app.where.stationName  = item.NAME;
-        }else if(num==7){
-            app.where.busName  = item.NAME;
-        }else if(num==8){
-            app.where.salesmanName  = item.NAME;
-        }else if(num==9){
-            app.where.departmentName  = item.NAME;
-        }else if(num==10){
-            app.where.fleetName  = item.NAME;
-        }else if(num==11){
-            app.where.bookingName  = item.NAME;
-        }else if(num==12){
-            app.where.modeName  = item.NAME;
-        }
+	    //删除
 
-        app.ifShow = 0;
-    };
-    //失去焦点
-    app.falseBlur = function(num){
-        alert(0);
-        setTimeout(function (){
-            if(num==1){
-                app.ifShow = -1;
-            }
-            app.eNameShow = false;
-            app.cNameShow = false;
-            app.countryShow = false;
-        }, 100);
+	    app.del = function(item){
+	        console.log(item.ID);
+	        app.ajaxPost("oceanFreightImportDel",{ID:item.ID});
+	        app.find();
+	        app.closeOperation();
 
-    };
-    //下拉组件
-    Vue.component("drop-down", {
-        props: ["item"],
-        template:
-        '<li >' +
-        '<span v-text="item"></span>' +
-        '</li>'
-    });
-    app.details = function(item){
-        window.location.href = "oceanImported?ID="+item.ID;
-    };
+	    };
+	    //打开operation
+	    app.openOperation = function(item){
+	        app.delID = item.ID;
+	        app.operation = true;
+	    };
+	    //关闭operation
+	    app.closeOperation = function(){
+	        app.operation = false;
+	    };
 
-    //关闭新增修改
-    app.closeEdit = function(){
-        app.editShow = false;
-    };
+	    app.ajaxGet = function(url,where){
+	        $.ajax({
+	            type:"get",
+	            url:url,
+	            data:where,
+	            dataType:"json",
+	            async:false,
+	            success:function(res){
+	                if(!res.data.length){
+	                    app.jsonData = [];
+	                }else{
+	                    app.jsonData = res.data;
+	                }
+	                console.log(app.jsonData);
 
-    //删除
+	            },error:function(res){
 
-    app.del = function(item){
-        console.log(item.ID);
-        app.ajaxPost("oceanFreightImportDel",{ID:item.ID});
-        app.find();
-        app.closeOperation();
+	            }
+	        })
+	    };
+	    app.ajaxGetDrop = function(url,where){
+	        $.ajax({
+	            type:"get",
+	            url:url,
+	            data:where,
+	            dataType:"json",
+	            async:false,
+	            success:function(res){
+	                if(!res.data.length){
+	                    app.jsonData = [];
+	                }else{
+	                    app.jsonData = res.data;
+	                }
+	                console.log(app.jsonData);
+	            },error:function(res){
 
-    };
-    //打开operation
-    app.openOperation = function(item){
-        app.delID = item.ID;
-        app.operation = true;
-    };
-    //关闭operation
-    app.closeOperation = function(){
-        app.operation = false;
-    };
+	            }
+	        })
+	    };
 
-    app.ajaxGet = function(url,where){
-        $.ajax({
-            type:"get",
-            url:url,
-            data:where,
-            dataType:"json",
-            async:false,
-            success:function(res){
-                if(!res.data.length){
-                    app.jsonData = [];
-                }else{
-                    app.jsonData = res.data;
-                }
-                console.log(app.jsonData);
+	    app.ajaxPost = function(url,para,num){
+	        console.log(para);
+	        $.ajax({
+	            url:url,
+	            type:"post",
+	            data:para,
+				async:false,
+	            success:function(res){
+	                console.log(res);
+	                if(num==2){
+	                   window.location.href = "oceanImported?ID="+ res.data.id;
+					}
+	            },error:function(res){
+	                console.log(res)
+	            }
+	        })
+	    };
+	    //保存
+	    app.post = function(para){
+	        var url = "oceanFreightImportEdit";
+	        app.ajaxPost(url,para,2);
+	    };
 
-            },error:function(res){
-
-            }
-        })
-    };
-    app.ajaxGetDrop = function(url,where){
-        $.ajax({
-            type:"get",
-            url:url,
-            data:where,
-            dataType:"json",
-            async:false,
-            success:function(res){
-                if(!res.data.length){
-                    app.jsonData = [];
-                }else{
-                    app.jsonData = res.data;
-                }
-                console.log(app.jsonData);
-            },error:function(res){
-
-            }
-        })
-    };
-
-    app.ajaxPost = function(url,para,num){
-        console.log(para);
-        $.ajax({
-            url:url,
-            type:"post",
-            data:para,
-			async:false,
-            success:function(res){
-                console.log(res);
-                if(num==2){
-                   window.location.href = "oceanImported?ID="+ res.data.id;
-				}
-            },error:function(res){
-                console.log(res)
-            }
-        })
-    };
-    //保存
-    app.post = function(para){
-        var url = "oceanFreightImportEdit";
-        app.ajaxPost(url,para,2);
-    };
-
-    //新增修改框
-    app.edit = function(item){
-        app.editShow = true;
-    };
-    app.add = function(){
-        var para = {ID:0,BILLDATE:(app.para.BILLDATE),BILLNO:(new Date()).valueOf(),BILLDEPTID:app.para.BILLDEPTID};
-        app.post(para);
-    };
+	    //新增修改框
+	    app.edit = function(item){
+	        app.editShow = true;
+	    };
+	    app.add = function(){
+	        var para = {ID:0,BILLDATE:(app.para.BILLDATE),BILLNO:(new Date()).valueOf(),BILLDEPTID:app.para.BILLDEPTID};
+	        app.post(para);
+	    };
 
 
 
 
 
-    //查询列表
-    app.find = function(){
-        var url = "oceanFreightImportEditFind";
-        console.log(url,app.where);
-        app.ajaxGet(url,app.where);
-        app.cNameShow=false;//
-        app.eNameShow=false;//
-        app.countryShow=false;//
-        app.dropsShow=false;
+	    //查询列表
+	    app.find = function(){
+	        var url = "oceanFreightImportEditFind";
+	        console.log(url,app.where);
+	        app.ajaxGet(url,app.where);
+	        app.cNameShow=false;//
+	        app.eNameShow=false;//
+	        app.countryShow=false;//
+	        app.dropsShow=false;
 
-    };
-    app.findDrop = function(){
-        var url = "findBasicInfo";
-        app.ajaxGetDrop(url,app.where);
-    };
-    //监听input
-    app.inputChange = function(e,num){
-        if(num==1){
-            app.where.CNAME = e;
-        }else if(num==2){
-            app.where.ENAME = e;
-        }else if(num==3){
-            app.where.COUNTRY = e;
-        }
-        //app.findDrop("findBasicInfo",app.where);
-//        app.where
-    };
-    app.falseBlur = function(num){
-        setTimeout(function (){
-            app.ifShow = false;
-//            if(num==1){
-//
-//            }else if(num==2){
-//                app.eNameShow = false;
-//            }else if(num==3){
-//                app.countryShow = false;
-//            }
+	    };
+	    app.findDrop = function(){
+	        var url = "findBasicInfo";
+	        app.ajaxGetDrop(url,app.where);
+	    };
+	    //监听input
+	    app.inputChange = function(e,num){
+	        if(num==1){
+	            app.where.CNAME = e;
+	        }else if(num==2){
+	            app.where.ENAME = e;
+	        }else if(num==3){
+	            app.where.COUNTRY = e;
+	        }
+	        //app.findDrop("findBasicInfo",app.where);
+	//        app.where
+	    };
+	    app.falseBlur = function(num){
+	        setTimeout(function (){
+	            app.ifShow = false;
+	//            if(num==1){
+	//
+	//            }else if(num==2){
+	//                app.eNameShow = false;
+	//            }else if(num==3){
+	//                app.countryShow = false;
+	//            }
 
-        }, 100);
-    };
-    app.inputClick = function (obj,num) {
-        app.liClass = 0;
-        app.n = -1;
-        // app.ajaxGetDrop("findBasicInfo",{CNAME:"",ENAME:"",CONUTRY:""});
-        setTimeout(function(){
-            if(num==1){
-                app.ifShow = 1;
-            }else if(num==2){
-                app.ifShow = 2;
-            }else if(num==3){
-                app.ifShow = 3;
-            }else if(num==4){
-                app.ifShow = 4;
-            }else if(num==5){
-                app.ifShow = 5;
-            }else if(num==6){
-                app.ifShow = 6;
-            }else if(num==7){
-                app.ifShow = 7;
-            }else if(num==8){
-                app.ifShow = 8;
-            }else if(num==9){
-                app.ifShow = 9;
-            }else if(num==10){
-                app.ifShow = 10;
-            }else if(num==11){
-                app.ifShow = 11;
-            }else if(num==12){
-                app.ifShow = 12;
-            }
-        },110);
-    };
-    app.find();
-    //    app.findDrop();
-    app.sortOpen = function(){
-        app.operation = true;
-    };
-    app.sortClick = function(item){
-        app.liClass = item.ID;
-    };
-    //    layui.use('laydate', function(){
-    //        var laydate = layui.laydate;
-    //学好程序发家致富，再也不用担心养不起儿子
-    //        //执行一个laydate实例
-    //        laydate.render({
-    //            elem: '.time' //指定元素
-    //        });
-    //    });
-</script>
+	        }, 100);
+	    };
+	    app.inputClick = function (obj,num) {
+	        app.liClass = 0;
+	        app.n = -1;
+	        // app.ajaxGetDrop("findBasicInfo",{CNAME:"",ENAME:"",CONUTRY:""});
+	        setTimeout(function(){
+	            if(num==1){
+	                app.ifShow = 1;
+	            }else if(num==2){
+	                app.ifShow = 2;
+	            }else if(num==3){
+	                app.ifShow = 3;
+	            }else if(num==4){
+	                app.ifShow = 4;
+	            }else if(num==5){
+	                app.ifShow = 5;
+	            }else if(num==6){
+	                app.ifShow = 6;
+	            }else if(num==7){
+	                app.ifShow = 7;
+	            }else if(num==8){
+	                app.ifShow = 8;
+	            }else if(num==9){
+	                app.ifShow = 9;
+	            }else if(num==10){
+	                app.ifShow = 10;
+	            }else if(num==11){
+	                app.ifShow = 11;
+	            }else if(num==12){
+	                app.ifShow = 12;
+	            }
+	        },110);
+	    };
+	    app.find();
+	    //    app.findDrop();
+	    app.sortOpen = function(){
+	        app.operation = true;
+	    };
+	    app.sortClick = function(item){
+	        app.liClass = item.ID;
+	    };
+	    //    layui.use('laydate', function(){
+	    //        var laydate = layui.laydate;
+	    //学好程序发家致富，再也不用担心养不起儿子
+	    //        //执行一个laydate实例
+	    //        laydate.render({
+	    //            elem: '.time' //指定元素
+	    //        });
+	    //    });
+	</script>
+</body>
+</html>

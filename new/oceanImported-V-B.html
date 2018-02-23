@@ -65,14 +65,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>客户</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,1)" @click="inputClick(this,1)"  @keyup="keyChoiceLi($event,1)"  @blur="falseBlur(1)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.CORPNO" />
 						<ul class="drop-down"  v-if="1==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.CORPNO" :key="c.CORPID" @click.native="choiceLi(c,1)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,2)" @click="inputClick(this,2)"  @keyup="keyChoiceLi($event,2)"  @blur="falseBlur(2)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,2)" @click="inputClick(this,2)"  @keyup="keyChoiceLi($event,2)"  @blur="falseBlur(2)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.CORPNAME" />
 						<ul class="drop-down"  v-if="2==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,2)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -82,14 +82,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>发货人</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,3)" @click="inputClick(this,3)"  @keyup="keyChoiceLi($event,3)"  @blur="falseBlur(3)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,3)" @click="inputClick(this,3)"  @keyup="keyChoiceLi($event,3)"  @blur="falseBlur(3)" v-bind:name="oceanImportedData.HSHIPPERID" v-model="oceanImportedData.HSHIPPERNO" />
 						<ul class="drop-down"  v-if="3==ifShow">
-							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,3)" :class="{'active':c.CORPID==liClass}">
+							<drop-down class="pointer" v-for="c in corpsData" :item="c.CORPNO" :key="c.CORPID" @click.native="choiceLi(c,3)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,4)" @click="inputClick(this,4)"  @keyup="keyChoiceLi($event,4)"  @blur="falseBlur(4)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,4)" @click="inputClick(this,4)"  @keyup="keyChoiceLi($event,4)"  @blur="falseBlur(4)" v-bind:name="oceanImportedData.HSHIPPERID" v-model="oceanImportedData.HSHIPPERNAME" />
 						<ul class="drop-down"  v-if="4==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,4)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -102,14 +102,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>收货人</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,5)" @click="inputClick(this,5)"  @keyup="keyChoiceLi($event,5)"  @blur="falseBlur(5)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,5)" @click="inputClick(this,5)"  @keyup="keyChoiceLi($event,5)"  @blur="falseBlur(5)" v-bind:name="oceanImportedData.HCNEEID" v-model="oceanImportedData.HCNEENO" />
 						<ul class="drop-down"  v-if="5==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,5)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,6)" @click="inputClick(this,6)"  @keyup="keyChoiceLi($event,6)"  @blur="falseBlur(6)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,6)" @click="inputClick(this,6)"  @keyup="keyChoiceLi($event,6)"  @blur="falseBlur(6)" v-bind:name="oceanImportedData.HCNEEID" v-model="oceanImportedData.HCNEENAME" />
 						<ul class="drop-down"  v-if="6==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,6)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -122,14 +122,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>通知人</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,7)" @click="inputClick(this,7)"  @keyup="keyChoiceLi($event,7)"  @blur="falseBlur(7)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,7)" @click="inputClick(this,7)"  @keyup="keyChoiceLi($event,7)"  @blur="falseBlur(7)" v-bind:name="oceanImportedData.HNOTIFYID" v-model="oceanImportedData.HNOTIFYNO" />
 						<ul class="drop-down"  v-if="7==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,7)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,8)" @click="inputClick(this,8)"  @keyup="keyChoiceLi($event,8)"  @blur="falseBlur(8)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,8)" @click="inputClick(this,8)"  @keyup="keyChoiceLi($event,8)"  @blur="falseBlur(8)" v-bind:name="oceanImportedData.HNOTIFYID" v-model="oceanImportedData.HNOTIFYNAME" />
 						<ul class="drop-down"  v-if="8==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,8)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -142,14 +142,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>收货地</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,9)" @click="inputClick(this,9)"  @keyup="keyChoiceLi($event,9)"  @blur="falseBlur(9)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,9)" @click="inputClick(this,9)"  @keyup="keyChoiceLi($event,9)"  @blur="falseBlur(9)" v-bind:name="oceanImportedData.PLACERECEIPTID" v-model="oceanImportedData.PLACERECEIPTNO" />
 						<ul class="drop-down"  v-if="9==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,9)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,10)" @click="inputClick(this,10)"  @keyup="keyChoiceLi($event,10)"  @blur="falseBlur(10)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,10)" @click="inputClick(this,10)"  @keyup="keyChoiceLi($event,10)"  @blur="falseBlur(10)" v-bind:name="oceanImportedData.PLACERECEIPTID" v-model="oceanImportedData.PLACERECEIPT" />
 						<ul class="drop-down"  v-if="10==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,10)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -159,14 +159,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>装货港</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,11)" @click="inputClick(this,11)"  @keyup="keyChoiceLi($event,11)"  @blur="falseBlur(11)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,11)" @click="inputClick(this,11)"  @keyup="keyChoiceLi($event,11)"  @blur="falseBlur(11)" v-bind:name="oceanImportedData.POLID" v-model="oceanImportedData.POLNO" />
 						<ul class="drop-down"  v-if="11==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,11)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)"  @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,12)" @click="inputClick(this,12)"  @keyup="keyChoiceLi($event,12)"  @blur="falseBlur(12)" v-bind:name="oceanImportedData.POL" v-model="oceanImportedData.POL" />
 						<ul class="drop-down"  v-if="12==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,12)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -176,14 +176,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>卸货港</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,13)" @click="inputClick(this,13)"  @keyup="keyChoiceLi($event,13)"  @blur="falseBlur(13)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,13)" @click="inputClick(this,13)"  @keyup="keyChoiceLi($event,13)"  @blur="falseBlur(13)" v-bind:name="oceanImportedData.PODID" v-model="oceanImportedData.PODNO" />
 						<ul class="drop-down"  v-if="13==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,13)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,14)" @click="inputClick(this,14)"  @keyup="keyChoiceLi($event,14)"  @blur="falseBlur(14)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,14)" @click="inputClick(this,14)"  @keyup="keyChoiceLi($event,14)"  @blur="falseBlur(14)" v-bind:name="oceanImportedData.POD" v-model="oceanImportedData.POD" />
 						<ul class="drop-down"  v-if="14==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,14)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -193,14 +193,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>目的地</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,15)" @click="inputClick(this,15)"  @keyup="keyChoiceLi($event,15)"  @blur="falseBlur(15)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,15)" @click="inputClick(this,15)"  @keyup="keyChoiceLi($event,15)"  @blur="falseBlur(15)" v-bind:name="oceanImportedData.PLACEDESTID" v-model="oceanImportedData.PLACEDESTID" />
 						<ul class="drop-down"  v-if="15==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,15)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,16)" @click="inputClick(this,16)"  @keyup="keyChoiceLi($event,16)"  @blur="falseBlur(16)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,16)" @click="inputClick(this,16)"  @keyup="keyChoiceLi($event,16)"  @blur="falseBlur(16)" v-bind:name="oceanImportedData.PLACEDEST" v-model="oceanImportedData.PLACEDEST" />
 						<ul class="drop-down"  v-if="16==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,16)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -210,14 +210,14 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>交货地</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,17)" @click="inputClick(this,17)"  @keyup="keyChoiceLi($event,17)"  @blur="falseBlur(17)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,17)" @click="inputClick(this,17)"  @keyup="keyChoiceLi($event,17)"  @blur="falseBlur(17)" v-bind:name="oceanImportedData.PLACEDELIVERYID" v-model="oceanImportedData.PLACEDELIVERYNO" />
 						<ul class="drop-down"  v-if="17==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,17)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
 						</ul>
 					</div>
 					<div class="form-group">
-						<input class="form-control" type="text" @input="inputChange($event.target.value,18)" @click="inputClick(this,18)"  @keyup="keyChoiceLi($event,18)"  @blur="falseBlur(18)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,18)" @click="inputClick(this,18)"  @keyup="keyChoiceLi($event,18)"  @blur="falseBlur(18)" v-bind:name="oceanImportedData.PLACEDELIVERY" v-model="oceanImportedData.PLACEDELIVERY" />
 						<ul class="drop-down"  v-if="18==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,18)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -229,7 +229,7 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>制单</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,19)" @click="inputClick(this,19)"  @keyup="keyChoiceLi($event,19)"  @blur="falseBlur(19)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,19)" @click="inputClick(this,19)"  @keyup="keyChoiceLi($event,19)"  @blur="falseBlur(19)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.a" />
 						<ul class="drop-down"  v-if="19==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,19)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -237,7 +237,7 @@
 					</div>
 					<div class="form-group">
 						<label>部门</label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,20)" @click="inputClick(this,20)"  @keyup="keyChoiceLi($event,20)"  @blur="falseBlur(20)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control" type="text" @input="inputChange($event.target.value,20)" @click="inputClick(this,20)"  @keyup="keyChoiceLi($event,20)"  @blur="falseBlur(20)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.a" />
 						<ul class="drop-down"  v-if="20==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,20)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -247,18 +247,20 @@
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>业务来源</label>
-						<select class="form-control c-medium" v-model="oceanImportedData.a">
-							<option></option>
+						<select class="form-control c-medium" v-model="oceanImportedData.BSSRCID">
+							<option value="1">代理</option>
+							<option value="2">公司</option>
+							<option value="3">业务员</option>
 						</select>
-						<select class="form-control c-medium" v-model="oceanImportedData.a">
-							<option></option>
+						<select class="form-control c-medium" v-model="oceanImportedData.SALESNAME" @click="">
+							<option v-for=""></option>
 						</select>
 					</div>
 				</div>
 				<div class="form-inline form-group">
 					<div class="form-group">
 						<label>HB/L NO</label>
-						<input class="form-control c-medium" type="text" v-model="oceanImportedData.a" />
+						<input class="form-control c-medium" type="text" v-model="oceanImportedData.HBLNO" />
 						<select class="form-control c-medium" v-model="oceanImportedData.a">
 							<option></option>
 						</select>
@@ -374,7 +376,7 @@
 						<!-- <select class="form-control r-medium" v-model="oceanImportedData.a">
 							<option></option>
 						</select> -->
-						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,21)" @click="inputClick(this,21)"  @keyup="keyChoiceLi($event,21)"  @blur="falseBlur(21)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,21)" @click="inputClick(this,21)"  @keyup="keyChoiceLi($event,21)"  @blur="falseBlur(21)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.a" />
 						<ul class="drop-down"  v-if="21==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,21)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -403,7 +405,7 @@
 						<!-- <select class="form-control r-medium" v-model="oceanImportedData.a">
 							<option></option>
 						</select> -->
-						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,22)" @click="inputClick(this,22)"  @keyup="keyChoiceLi($event,22)"  @blur="falseBlur(22)" v-bind:name="oceanImportedData.i_CORPID" v-model="oceanImportedData.a" />
+						<input class="form-control r-medium" type="text" @input="inputChange($event.target.value,22)" @click="inputClick(this,22)"  @keyup="keyChoiceLi($event,22)"  @blur="falseBlur(22)" v-bind:name="oceanImportedData.CORPID" v-model="oceanImportedData.a" />
 						<ul class="drop-down"  v-if="22==ifShow">
 							<drop-down class="pointer" v-for="c in corpsData" :item="c.SNAME" :key="c.CORPID" @click.native="choiceLi(c,22)" :class="{'active':c.CORPID==liClass}">
 							</drop-down>
@@ -601,9 +603,193 @@
 			methods:{
 				navClick:function(item){
 					oceanImported.navClass = item.id;
-				}
+				},
+				inputChange:function(val, num){
+					console.log(val, num);
+					if(num==1){
+						app.corpsData = app.getAjax("corpsFind",{SNAME:val});
+					}else if(num==2){
+						app.goodsData = app.getAjax("goodsFind",{CNAME:val});
+					}else if(num==3){
+						app.goodTypesData = app.getAjax("goodTypesFind",{CNAME:val});
+					}
+				},
+				falseBlur:function(num){
+					setTimeout(function (){
+						datum.ifShow = -1;
+					}, 150);
+				},
+				inputClick:{},
+				keyChoiceLi:{},
+				choiceLi:{},
 			}
 		})
+		oceanImported.inputClick = function(obj, num){
+			oceanImported.liClass = 0;
+			oceanImported.n = -1;
+			setTimeout(function(){
+				if(num==1){
+					oceanImported.ifShow = 1;
+				}else if(num==2){
+					oceanImported.ifShow = 2;
+				}else if(num==3){
+					oceanImported.ifShow = 3;
+				}else if(num==4){
+					oceanImported.ifShow = 4;
+				}else if(num==5){
+					oceanImported.ifShow = 5;
+				}else if(num==6){
+					oceanImported.ifShow = 6;
+				}else if(num==7){
+					oceanImported.ifShow = 7;
+				}else if(num==8){
+					oceanImported.ifShow = 8;
+				}else if(num==9){
+					oceanImported.ifShow = 9;
+				}else if(num==10){
+					oceanImported.ifShow = 10;
+				}else if(num==11){
+					oceanImported.ifShow = 11;
+				}else if(num==12){
+					oceanImported.ifShow = 12;
+				}
+			},120);
+		};
+		oceanImported.keyChoiceLi = function (e, num) {
+			var downData =[];
+			if(num==1){
+				downData = oceanImported.countryData;//
+			}else if(num==2){
+				downData = oceanImported.statusData;//
+			}else if(num==3){
+				downData = oceanImported.bssrcData;//
+			}else if(num==4){
+				downData = oceanImported.fmdeptData;//
+			}else if(num==5){
+				downData = oceanImported.salesData;//
+			}else if(num==6){
+				downData = oceanImported.sales1Data;//
+			}else if(num==7){
+				downData = oceanImported.sales2Data;//
+			}else if(num==8){
+				downData = oceanImported.subcorpData;//
+			}else if(num==9){
+				downData = oceanImported.corplevelData;//
+			}else if(num==10){
+				downData = oceanImported.corpsData;//
+			}else if(num==11){
+				downData = oceanImported.stltypeData;//
+			}else if(num==12){
+				downData = oceanImported.taxtypeData;// 
+			}
+			console.log(downData)
+			if(!downData){
+			}else{
+				var length = downData.length;
+				if (e.keyCode == 40) {
+					if(oceanImported.n >= length-1){
+						oceanImported.n = -1;
+					}
+					oceanImported.n = oceanImported.n + 1;
+					oceanImported.liClass = downData[oceanImported.n].ID;
+					console.log(downData);
+				}
+				if (e.keyCode == 38) {
+					if(oceanImported.n <= 0){
+						oceanImported.n = length;
+					}
+					oceanImported.n=oceanImported.n-1;
+					oceanImported.liClass = downData[oceanImported.n].ID;
+				}
+				if (e.keyCode == 13) {
+					if(!downData[oceanImported.n]){
+					}else{
+						if(oceanImported.ifShow==1){
+							oceanImported.corpData.COUNTRY = downData[oceanImported.n].COUNTRY;
+							oceanImported.corpData.COUNTRYID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==2){
+							oceanImported.corpData.STATUS = downData[oceanImported.n].STATUS;
+							oceanImported.corpData.ID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==3){
+							oceanImported.corpData.BSSRC = downData[oceanImported.n].BSSRC;
+							oceanImported.corpData.BSSRCID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==4){
+							oceanImported.corpData.FMDEPT = downData[oceanImported.n].FMDEPT;
+							oceanImported.corpData.FMDEPTID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==5){
+							oceanImported.corpData.SALES = downData[oceanImported.n].SALES;						
+							oceanImported.corpData.SALESID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==6){
+							oceanImported.corpData.SALES1 = downData[oceanImported.n].SALES;
+							oceanImported.corpData.SALESID1 = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==7){
+							oceanImported.corpData.SALES2 = downData[oceanImported.n].SALES;
+							oceanImported.corpData.SALESID2 = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==8){
+							oceanImported.corpData.SUBCORPNO = downData[oceanImported.n].CORPNO;
+							oceanImported.corpData.SUBCORPNAME = downData[oceanImported.n].CNAME;
+							oceanImported.corpData.SUBCORPID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==9){
+							oceanImported.corpData.CORPLEVEL = downData[oceanImported.n].LEVEL;
+							oceanImported.corpData.ID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==10){
+							oceanImported.corpData.SUBCORPNO = downData[oceanImported.n].CORPNO;
+							oceanImported.corpData.SUBCORPNAME = downData[oceanImported.n].CNAME;
+							oceanImported.corpData.SUBCORPID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==11){
+							oceanImported.corpData.STLTYPE = downData[oceanImported.n].STLTYPE;
+							oceanImported.corpData.ID = downData[oceanImported.n].ID;
+						}else if(oceanImported.ifShow==12){// 卸货
+							oceanImported.corpData.TAXTYPE = downData[oceanImported.n].TAXTYPE;
+							oceanImported.corpData.ID = downData[oceanImported.n].ID;
+						}
+					}
+					oceanImported.ifShow = 0;
+				}
+			}
+		};
+		oceanImported.choiceLi = function (item, num) {
+			if(num==1){
+				oceanImported.corpData.COUNTRY = item.COUNTRY;
+				oceanImported.corpData.COUNTRYID = item.ID;
+			}else if(num==2){
+				oceanImported.corpData.STATUS = item.STATUS;
+				oceanImported.corpData.ID = item.ID;
+			}else if(num==3){
+				oceanImported.corpData.BSSRC = item.BSSRC;
+				oceanImported.corpData.BSSRCID = item.ID;
+			}else if(num==4){
+				oceanImported.corpData.FMDEPT = item.FMDEPT;
+				oceanImported.corpData.FMDEPTID = item.ID;
+			}else if(num==5){
+				oceanImported.corpData.SALES = item.SALES;
+				oceanImported.corpData.SALESID = item.ID;
+			}else if(num==6){
+				oceanImported.corpData.SALES1 = item.SALES;
+				oceanImported.corpData.SALESID1 = item.ID;
+			}else if(num==7){
+				oceanImported.corpData.SALES2 = item.SALES;
+				oceanImported.corpData.SALESID2 = item.ID;
+			}else if(num==8){
+				oceanImported.corpData.SUBCORPNO = item.CORPNO;
+				oceanImported.corpData.SUBCORPNAME = item.CNAME;
+				oceanImported.corpData.ID = item.ID;
+			}else if(num==9){
+				oceanImported.corpData.CORPLEVEL = item.LEVEL;
+				oceanImported.corpData.ID = item.ID;
+			}else if(num==10){
+				oceanImported.corpData.SUBCORPNO = item.CORPNO;
+				oceanImported.corpData.SUBCORPNAME = item.CNAME;
+				oceanImported.corpData.SUBCORPID = item.ID;
+			}else if(num==11){
+				oceanImported.corpData.STLTYPE = item.STLTYPE;
+				oceanImported.corpData.ID = item.ID;
+			}else if(num==12){
+				oceanImported.corpData.TAXTYPE = item.TAXTYPE;
+				oceanImported.corpData.ID = item.ID;
+			}
+			oceanImported.ifShow = 0;
+		};
 	</script>
 </body>
 </html>

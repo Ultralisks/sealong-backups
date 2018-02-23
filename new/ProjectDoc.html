@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <title>青岛世隆软件有限公司</title>
+  <link rel="stylesheet" type="text/css" href="static/css/prjdoc.css" />
+  <link class="codestyle" rel="stylesheet" href="static/css/default.css" />
+</head>
+<body>
+  <!-- 开发手册样式页 -->
+<div class="document">
+  <div class="documentwrapper">
+    <div class="bodywrapper">
+      <div class="body">
+        <h1 align="center">{{main.project.DocName}}</h1>
+<br>
+{{! 定义汉字空格}}
+{{<BlankChar}}　{{/BlankChar}}
+{{<BlankChar2}}　　{{/BlankChar2}}
+{{<BlankChar5}}　　　　　{{/BlankChar5}}
+
+{{! 定义章节标题}}
+{{<sec_title_first}}
+<b>{{secNo}}{{>BlankChar}}<a href="#SEC-{{ID}}">{{&secTitle}}</a></b>
+{{/sec_title_first}}
+
+{{<sec_title}}
+{{secNo}}{{>BlankChar}}<a href="#SEC-{{ID}}">{{&secTitle}}</a>
+{{/sec_title}}
+
+{{! 定义一级章节内容}}
+{{<sec_content_1}}
+<br>
+<h1>{{secNo}}{{>BlankChar}}<span id="SEC-{{ID}}" name="SEC-{{ID}}"></span>{{&secTitle}}</h1>
+<p>
+{{&SecContent}}
+</p>
+{{/sec_content_1}}
+
+{{! 定义二级章节内容}}
+{{<sec_content_2}}
+<br>
+<h2>{{>BlankChar}}{{secNo}}{{>BlankChar}}<span id="SEC-{{ID}}" name="SEC-{{ID}}"></span>{{&secTitle}}</h2>
+<p>
+{{&SecContent}}
+</p>
+{{/sec_content_2}}
+
+{{! 定义三级章节内容}}
+{{<sec_content_3}}
+<br>
+<h3>{{>BlankChar}}{{secNo}}{{>BlankChar}}<span id="SEC-{{ID}}" name="SEC-{{ID}}"></span>{{&secTitle}}</h3>
+<p>
+{{&SecContent}}
+</p>
+{{/sec_content_3}}
+
+{{! 定义四级及以上章节内容}}
+{{<sec_content_4}}
+<br>
+<h4>{{>BlankChar}}{{secNo}}{{>BlankChar}}<span id="SEC-{{ID}}" name="SEC-{{ID}}"></span>{{&secTitle}}</h4>
+<p>
+{{&SecContent}}
+</p>
+{{/sec_content_4}}
+
+{{#main.project}}
+<table class="docutils" align="center" width="100%">
+  <colgroup><col width="30%"><col width="70%"></colgroup>
+  <tbody>
+    <tr><td>项目名称:</td><td><b>{{PrjTitle}}</b></td></tr>
+    <tr><td>文档名称:</td><td><b>{{DocName}}</b></td></tr>
+    <tr><td>修订版本:</td><td><b>{{DocRevision}}</b></td></tr>
+    <tr><td>创建时间:</td><td><b>{{DateLocalFmt CreateTime,"yyyy-MM-dd"}}</b></td></tr>
+    <tr><td>项目负责人:</td><td><b>{{PrjManager}}</b></td></tr>
+  </tbody>
+</table>
+{{/main.project}}
+
+<p><b>文档版权声明</b></p>
+<div>
+{{main.project.DocLicense}}
+</div>
+
+<p><b>商标声明</b></p>
+<div>
+{{main.project.TrademarkNotice}}
+</div>
+
+<p><b>文档目的</b></p>
+<div>
+{{main.project.DocPurpose}}
+</div>
+
+<p><b>文档编制人员</b></p>
+<table class="docutils" align="center" width="100%">
+  <colgroup><col width="30%"><col width="30%"><col width="20%"><col width="20%"></colgroup>
+  <tbody>
+    <tr><td><b>姓名</b></td><td><b>头衔</b></td><td><b>签名</b></td><td><b>日期</b></td></tr>
+    {{#main.preparedby}}
+    <tr><td>{{PreByName}}</td><td>{{Title}}</td><td>{{Signature}}</td><td></td></tr>
+    {{/main.preparedby}}
+    {{^main.preparedby}}
+    <tr><td colspan="4" style="text-align: center;">无</td></tr>
+    {{/main.preparedby}}
+  </tbody>
+</table>
+
+<p><b>相关文档</b></p>
+<table class="docutils" align="center" width="100%">
+  <colgroup><col width="30%"><col width="30%"><col width="20%"><col width="20%"></colgroup>
+  <tbody>
+    <tr><td><b>名称</b></td><td><b>说明</b></td><td><b>版本</b></td><td><b>日期</b></td></tr>
+    {{#main.related}}
+    <tr><td>{{&DocNameLinked}}</td><td>{{DocDescription}}</td><td>{{DocRevision}}</td><td></td></tr>
+    {{/main.related}}
+    {{^main.related}}
+    <tr><td colspan="4" style="text-align: center;">无</td></tr>
+    {{/main.related}}
+  </tbody>
+</table>
+
+<p><b>其他说明</b></p>
+<div>
+{{main.project.DocOther}}
+</div>
+
+<h1>目录</h1>
+
+{{#main.foreword}}
+{{#-first}}
+<br>
+<a href="#fw-{{ID}}"><b>前言</b></a>
+{{/-first}}
+{{^-first}}
+{{>BlankChar}}<a href="#fw-{{ID}}">{{Title}}</a>
+{{/-first}}
+<br>
+{{/main.foreword}}
+
+{{#main.sections}}
+  <br>
+  {{! 1级}}
+  {{>sec_title_first}}
+  {{#SubSections}}
+    <br>
+    {{! 2级}}
+    {{>BlankChar}}{{>sec_title}}
+    {{#SubSections}}
+      <br>
+      {{! 3级}}
+      {{>BlankChar2}}{{>sec_title}}
+      {{#SubSections}}
+        <br>
+        {{! 4级}}
+        {{>BlankChar}}{{>BlankChar2}}{{>sec_title}}
+        {{#SubSections}}
+          <br>
+          {{! 5级}}
+          {{>BlankChar2}}{{>BlankChar2}}{{>sec_title}}
+          {{#SubSections}}
+            <br>
+            {{! 6级}}
+            {{>BlankChar5}}{{>sec_title}}
+            {{#SubSections}}
+              <br>
+              {{! 7级}}
+              {{>BlankChar5}}{{>BlankChar}}{{>sec_title}}
+              {{#SubSections}}
+                <br>
+                {{! 8级}}
+                {{>BlankChar5}}{{>BlankChar2}}{{>sec_title}}
+                {{#SubSections}}
+                  <br>
+                  {{! 9级}}
+                  {{>BlankChar5}}{{>BlankChar}}{{>BlankChar2}}{{>sec_title}}
+                  {{#SubSections}}
+                    <br>
+                    {{! 10级}}
+                    {{>BlankChar5}}{{>BlankChar2}}{{>BlankChar2}}{{>sec_title}}
+                    {{#SubSections}}
+                      <br>
+                      {{! 11级}}
+                      {{>BlankChar5}}{{>BlankChar5}}{{>sec_title}}
+                      {{#SubSections}}
+                        <br>
+                        {{! 12级}}
+                        {{>BlankChar5}}{{>BlankChar5}}{{>BlankChar}}{{>sec_title}}
+                      {{/SubSections}}
+                    {{/SubSections}}
+                  {{/SubSections}}
+                {{/SubSections}}
+              {{/SubSections}}
+            {{/SubSections}}
+          {{/SubSections}}
+        {{/SubSections}}
+      {{/SubSections}}
+    {{/ SubSections}}
+  {{/SubSections}}
+  <br>
+{{/main.sections}}
+
+{{#main.keywords}}
+{{#-first}}
+<br>
+<h2>关键字</h2>
+<p>关键字快速检索指南</p>
+{{/-first}}
+<table class="docutils" align="center" width="100%">
+  <colgroup><col width="30%"><col width="70%"></colgroup>
+  <tbody>
+    <tr>
+      <td>{{keyword}}</td>
+      <td>
+        {{#positions}}
+        <a href="#{{name}}"><span class="label">{{Index}}</span></a>
+        {{/positions}}
+      </td>
+    </tr>
+  </tbody>
+</table>
+{{/main.keywords}}
+
+{{#main.foreword}}
+{{#-first}}
+<br>
+<h1><span id="fw-{{ID}}" name="fw-{{ID}}"></span>前言</h1>
+{{/-first}}
+{{^-first}}
+<h1>{{>BlankChar}}<span id="fw-{{ID}}" name="fw-{{ID}}"></span>{{Title}}</h1>
+{{/-first}}
+<p>
+{{&Content}}
+</p>
+{{/main.foreword}}
+
+{{#main.sections}}
+  {{! 1级}}
+  {{>sec_content_1}}
+  {{#SubSections}}
+    {{! 2级}}
+    {{>sec_content_2}}
+    {{#SubSections}}
+      {{! 3级}}
+      {{>sec_content_3}}
+      {{#SubSections}}
+        {{! 4级}}
+        {{>sec_content_4}}
+        {{#SubSections}}
+          {{! 5级}}
+          {{>sec_content_4}}
+          {{#SubSections}}
+            {{! 6级}}
+            {{>sec_content_4}}
+            {{#SubSections}}
+              {{! 7级}}
+              {{>sec_content_4}}
+              {{#SubSections}}
+                {{! 8级}}
+                {{>sec_content_4}}
+                {{#SubSections}}
+                  {{! 9级}}
+                  {{>sec_content_4}}
+                  {{#SubSections}}
+                    {{! 10级}}
+                    {{>sec_content_4}}
+                    {{#SubSections}}
+                      {{! 11级}}
+                      {{>sec_content_4}}
+                      {{#SubSections}}
+                        {{! 12级}}
+                        {{>sec_content_4}}
+                      {{/SubSections}}
+                    {{/SubSections}}
+                  {{/SubSections}}
+                {{/SubSections}}
+              {{/SubSections}}
+            {{/SubSections}}
+          {{/SubSections}}
+        {{/SubSections}}
+      {{/SubSections}}
+    {{/SubSections}}
+  {{/SubSections}}
+  <br>
+{{/main.sections}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="folter">
+<div class="versioninfo" style="text-align: center;">世隆科技</div>
+
+</div>
+<script >hljs.initHighlightingOnLoad();</script>  
+</body>
+</html>

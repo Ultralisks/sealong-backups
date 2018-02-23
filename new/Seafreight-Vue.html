@@ -1,106 +1,205 @@
-<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<script type="text/javascript" src="static/layui/layui.all.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="static/vue/dist/vue.js"></script>
-<!-- <script type="text/javascript" src="static/js/login.js"></script> -->
-<!-- 海运费 -->
-<style type="text/css">
-	#sea .layui-input-block{margin-left:70px;}
-	#sea .head .layui-input-inline{width:150px;}
-	#sea .head .layui-select{width:100%;}
-	#sea #increase .layui-input-block{min-height:30px;}
-	#sea #increase .layui-input-inline{min-height:30px;}
-	#sea #increase .layui-form-item{margin-bottom:5px;}
-	#sea .head .head-t{width:100%;}
-	#sea .head .head-d{width:100%;}
-	#sea .head .head-b .fl button{margin:0 10px;}
-	#sea .head .head-b .fr{margin-right:10px;}
-	#sea #increase .form{width:560px;padding:5px 10px;}
-	#sea #increase .increase-b{width:540px;height:38px;}
-	#sea #increase .increase-b .increase-btn{width:252px;height:38px; margin:auto;}
-	#sea #increase .increase-b .increase-btn .fl{margin:0 10px;}
-	#sea .layer{height:0px;width:0px;overflow:hidden;}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/layui/layui.all.js"></script>
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<!-- <script type="text/javascript" src="static/js/login.js"></script> -->
+	<!-- 海运费 -->
+	<style type="text/css">
+		#sea .layui-input-block{margin-left:70px;}
+		#sea .head .layui-input-inline{width:150px;}
+		#sea .head .layui-select{width:100%;}
+		#sea #increase .layui-input-block{min-height:30px;}
+		#sea #increase .layui-input-inline{min-height:30px;}
+		#sea #increase .layui-form-item{margin-bottom:5px;}
+		#sea .head .head-t{width:100%;}
+		#sea .head .head-d{width:100%;}
+		#sea .head .head-b .fl button{margin:0 10px;}
+		#sea .head .head-b .fr{margin-right:10px;}
+		#sea #increase .form{width:560px;padding:5px 10px;}
+		#sea #increase .increase-b{width:540px;height:38px;}
+		#sea #increase .increase-b .increase-btn{width:252px;height:38px; margin:auto;}
+		#sea #increase .increase-b .increase-btn .fl{margin:0 10px;}
+		#sea .layer{height:0px;width:0px;overflow:hidden;}
 
-</style>
-<input style="display:none" value="{{main.session.roles}}" id="roles" />
-<input style="display:none" value="{{main.session.UserName}}" id="username" />
-<div id="sea">
-	<div class="layer">
-		<div id="increase" v-show="layerShow">
-			<div class="form">
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">有效期起</label>
-						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.INUREFROM" />
+	</style>
+</head>
+<body>
+	<input style="display:none" value="{{main.session.roles}}" id="roles" />
+	<input style="display:none" value="{{main.session.UserName}}" id="username" />
+	<div id="sea">
+		<div class="layer">
+			<div id="increase" v-show="layerShow">
+				<div class="form">
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">有效期起</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.INUREFROM" />
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">有效期止</label>
-						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.INURETO" />
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">有效期止</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.INURETO" />
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">起运港</label>
-						<div class="layui-input-inline">
-							<input type="text" placeholder="起运港" class="layui-input" @input="inputChange($event.target.value, 6)" @click="inputClick(this, 6)" @keyup="keyChoiceLi($event, 6)"  @blur="falseBlur(6)" v-bind="{name:seaFreightData.POLID, value:seaFreightData.POLNAME}" />
-							<ul class="pos-abs drop-down"  v-if="6==ifShow">
-								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 6)" :class="{'curr':c.ID==liClass}">
-								</drop-down>
-							</ul>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">起运港</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="起运港" class="layui-input" @input="inputChange($event.target.value, 6)" @click="inputClick(this, 6)" @keyup="keyChoiceLi($event, 6)"  @blur="falseBlur(6)" v-bind="{name:seaFreightData.POLID, value:seaFreightData.POLNAME}" />
+								<ul class="pos-abs drop-down"  v-if="6==ifShow">
+									<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 6)" :class="{'curr':c.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">中转港</label>
-						<div class="layui-input-inline">
-							<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 7)" @click="inputClick(this, 7)" @keyup="keyChoiceLi($event, 7)"  @blur="falseBlur(7)" v-bind="{name:seaFreightData.TRANSPORTID, value:seaFreightData.TRANSPORTNAME}" />
-							<ul class="pos-abs drop-down"  v-if="7==ifShow">
-								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 7)" :class="{'curr':c.ID==liClass}">
-								</drop-down>
-							</ul>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">中转港</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 7)" @click="inputClick(this, 7)" @keyup="keyChoiceLi($event, 7)"  @blur="falseBlur(7)" v-bind="{name:seaFreightData.TRANSPORTID, value:seaFreightData.TRANSPORTNAME}" />
+								<ul class="pos-abs drop-down"  v-if="7==ifShow">
+									<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 7)" :class="{'curr':c.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">目的港</label>
-						<div class="layui-input-inline">
-							<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 8)" @click="inputClick(this, 8)" @keyup="keyChoiceLi($event, 8)"  @blur="falseBlur(8)" v-bind="{name:seaFreightData.POLID, value:seaFreightData.POLNAME}" />
-							<ul class="pos-abs drop-down"  v-if="8==ifShow">
-								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 8)" :class="{'curr':c.ID==liClass}">
-								</drop-down>
-							</ul>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">目的港</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 8)" @click="inputClick(this, 8)" @keyup="keyChoiceLi($event, 8)"  @blur="falseBlur(8)" v-bind="{name:seaFreightData.POLID, value:seaFreightData.POLNAME}" />
+								<ul class="pos-abs drop-down"  v-if="8==ifShow">
+									<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 8)" :class="{'curr':c.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">承运人</label>
-						<div class="layui-input-inline">
-							<input type="text" placeholder="承运人" class="layui-input" @input="inputChange($event.target.value, 9)" @click="inputClick(this, 9)" @keyup="keyChoiceLi($event, 9)"  @blur="falseBlur(9)" v-bind="{name:seaFreightData.CARRIERID, value:seaFreightData.CARRIERNAME}" />
-							<ul class="pos-abs drop-down"  v-if="9==ifShow">
-								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 9)" :class="{'curr':c.ID==liClass}">
-								</drop-down>
-							</ul>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">承运人</label>
+							<div class="layui-input-inline">
+								<input type="text" placeholder="承运人" class="layui-input" @input="inputChange($event.target.value, 9)" @click="inputClick(this, 9)" @keyup="keyChoiceLi($event, 9)"  @blur="falseBlur(9)" v-bind="{name:seaFreightData.CARRIERID, value:seaFreightData.CARRIERNAME}" />
+								<ul class="pos-abs drop-down"  v-if="9==ifShow">
+									<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 9)" :class="{'curr':c.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="fl">
-					<div class="layui-form-item">
-						<label class="layui-form-label">航线</label>
-						<div class="layui-input-inline">
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">航线</label>
+							<div class="layui-input-inline">
 
-							<input type="text" placeholder="航线" class="layui-input" @input="inputChange($event.target.value, 10)" @click="inputClick(this, 10)" @keyup="keyChoiceLi($event, 10)"  @blur="falseBlur(10)" v-bind="{name:seaFreightData.LANEID, value:seaFreightData.LANENAME}" />
-							<ul class="pos-abs drop-down"  v-if="10==ifShow">
-								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 10)" :class="{'curr':c.ID==liClass}">
+								<input type="text" placeholder="航线" class="layui-input" @input="inputChange($event.target.value, 10)" @click="inputClick(this, 10)" @keyup="keyChoiceLi($event, 10)"  @blur="falseBlur(10)" v-bind="{name:seaFreightData.LANEID, value:seaFreightData.LANENAME}" />
+								<ul class="pos-abs drop-down"  v-if="10==ifShow">
+									<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 10)" :class="{'curr':c.ID==liClass}">
+									</drop-down>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">船期</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.VESWEEK" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">航程</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.VOYAGE" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">20</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.H20GP" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">40</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.H40GP" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">40HQ</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.H40HQ" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">45</label>
+							<div class="layui-input-inline">
+								<input type="text" class="layui-input" v-model="seaFreightData.H45GP" />
+							</div>
+						</div>
+					</div>
+					<div class="fl">
+						<div class="layui-form-item">
+							<label class="layui-form-label">货物类型</label>
+							<div class="layui-input-inline">
+								<select class="layui-select" style="width:190px;" v-model="seaFreightData.CARGOTYPE">
+									<option v-for="x in cargosData" :value="x.cargo" v-text="x.cargo"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">备注</label>
+						<div class="layui-input-block" style="width:460px;">
+							<input type="text" class="layui-input" v-model="seaFreightData.REMARKS">
+						</div>
+					</div>
+					<div class="increase-b">
+						<ul class="increase-btn">
+							<li class="fl">
+								<button class="layui-btn" @click="search">保存</button>
+							</li>
+							<li class="fl">
+								<button class="layui-btn" @click="search">删除</button>
+							</li>
+							<li class="fl">
+								<button class="layui-btn" @click="search">取消</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="head">
+			<div class="head-t">
+				<div class="fl">
+					<div class="layui-form-item">
+						<div class="layui-input-inline">
+							<input type="text" placeholder="起运港" class="layui-input" @input="inputChange($event.target.value, 1)" @click="inputClick(this, 1)" @keyup="keyChoiceLi($event, 1)"  @blur="falseBlur(1)" v-bind="{name:searchData.POLID, value:searchData.POLNAME}" />
+							<ul class="pos-abs drop-down"  v-if="1==ifShow">
+								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 1)" :class="{'curr':c.ID==liClass}">
 								</drop-down>
 							</ul>
 						</div>
@@ -108,475 +207,384 @@
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">船期</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.VESWEEK" />
+							<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 2)" @click="inputClick(this, 2)" @keyup="keyChoiceLi($event, 2)"  @blur="falseBlur(2)" v-bind="{name:searchData.PODID, value:searchData.PODNAME}" />
+							<ul class="pos-abs drop-down"  v-if="2==ifShow">
+								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 2)" :class="{'curr':c.ID==liClass}">
+								</drop-down>
+							</ul>
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">航程</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.VOYAGE" />
+							<input type="text" placeholder="承运人" class="layui-input" @input="inputChange($event.target.value, 3)" @click="inputClick(this, 3)" @keyup="keyChoiceLi($event, 3)"  @blur="falseBlur(3)" v-bind="{name:searchData.CARRIERID, value:searchData.CARRIERNAME}" />
+							<ul class="pos-abs drop-down"  v-if="3==ifShow">
+								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 3)" :class="{'curr':c.ID==liClass}">
+								</drop-down>
+							</ul>
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">20</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.H20GP" />
+							<input type="text" placeholder="航线" class="layui-input" @input="inputChange($event.target.value, 4)" @click="inputClick(this, 4)" @keyup="keyChoiceLi($event, 4)"  @blur="falseBlur(4)" v-bind="{name:searchData.LANEID, value:searchData.LANENAME}" />
+							<ul class="pos-abs drop-down"  v-if="4==ifShow">
+								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 4)" :class="{'curr':c.ID==liClass}">
+								</drop-down>
+							</ul>
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">40</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.H40GP" />
+							<input type="text" placeholder="录入人" class="layui-input" @input="inputChange($event.target.value, 5)" @click="inputClick(this, 5)" @keyup="keyChoiceLi($event, 5)"  @blur="falseBlur(5)" :value="searchData.WRITER" />
+							<ul class="pos-abs drop-down"  v-if="4==ifShow">
+								<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 5)" :class="{'curr':c.ID==liClass}">
+								</drop-down>
+							</ul>
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">40HQ</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.H40HQ" />
+							<input type="date" class="layui-input" v-model="searchData.INUREFROM" />
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">45</label>
+						<label class="layui-form-label" style="width:20px;">至</label>
 						<div class="layui-input-inline">
-							<input type="text" class="layui-input" v-model="seaFreightData.H45GP" />
+							<input type="date" class="layui-input" v-model="searchData.INURETO" />
 						</div>
 					</div>
 				</div>
 				<div class="fl">
 					<div class="layui-form-item">
-						<label class="layui-form-label">货物类型</label>
 						<div class="layui-input-inline">
-							<select class="layui-select" style="width:190px;" v-model="seaFreightData.CARGOTYPE">
-								<option v-for="x in cargosData" :value="x.cargo" v-text="x.cargo"></option>
+							<select class="layui-select" v-model="searchData.ACTIVED">
+								<option v-for="x in activedsData" :value="x.ID" v-text="x.active"></option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">备注</label>
-					<div class="layui-input-block" style="width:460px;">
-						<input type="text" class="layui-input" v-model="seaFreightData.REMARKS">
+			</div>
+			<div class="head-b">
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">查询</button>
 					</div>
 				</div>
-				<div class="increase-b">
-					<ul class="increase-btn">
-						<li class="fl">
-							<button class="layui-btn" @click="search">保存</button>
-						</li>
-						<li class="fl">
-							<button class="layui-btn" @click="search">删除</button>
-						</li>
-						<li class="fl">
-							<button class="layui-btn" @click="search">取消</button>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="head">
-		<div class="head-t">
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="text" placeholder="起运港" class="layui-input" @input="inputChange($event.target.value, 1)" @click="inputClick(this, 1)" @keyup="keyChoiceLi($event, 1)"  @blur="falseBlur(1)" v-bind="{name:searchData.POLID, value:searchData.POLNAME}" />
-						<ul class="pos-abs drop-down"  v-if="1==ifShow">
-							<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 1)" :class="{'curr':c.ID==liClass}">
-							</drop-down>
-						</ul>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">新增</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="text" placeholder="目的港" class="layui-input" @input="inputChange($event.target.value, 2)" @click="inputClick(this, 2)" @keyup="keyChoiceLi($event, 2)"  @blur="falseBlur(2)" v-bind="{name:searchData.PODID, value:searchData.PODNAME}" />
-						<ul class="pos-abs drop-down"  v-if="2==ifShow">
-							<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 2)" :class="{'curr':c.ID==liClass}">
-							</drop-down>
-						</ul>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">重置查询</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="text" placeholder="承运人" class="layui-input" @input="inputChange($event.target.value, 3)" @click="inputClick(this, 3)" @keyup="keyChoiceLi($event, 3)"  @blur="falseBlur(3)" v-bind="{name:searchData.CARRIERID, value:searchData.CARRIERNAME}" />
-						<ul class="pos-abs drop-down"  v-if="3==ifShow">
-							<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 3)" :class="{'curr':c.ID==liClass}">
-							</drop-down>
-						</ul>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">置顶</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="text" placeholder="航线" class="layui-input" @input="inputChange($event.target.value, 4)" @click="inputClick(this, 4)" @keyup="keyChoiceLi($event, 4)"  @blur="falseBlur(4)" v-bind="{name:searchData.LANEID, value:searchData.LANENAME}" />
-						<ul class="pos-abs drop-down"  v-if="4==ifShow">
-							<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 4)" :class="{'curr':c.ID==liClass}">
-							</drop-down>
-						</ul>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">取消置顶</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="text" placeholder="录入人" class="layui-input" @input="inputChange($event.target.value, 5)" @click="inputClick(this, 5)" @keyup="keyChoiceLi($event, 5)"  @blur="falseBlur(5)" :value="searchData.WRITER" />
-						<ul class="pos-abs drop-down"  v-if="4==ifShow">
-							<drop-down v-for="c in countrysData" v-bind:item="c.COUNTRY" v-bind:key="c.ID" class="pointer" @click.native="choiceLi(c, 5)" :class="{'curr':c.ID==liClass}">
-							</drop-down>
-						</ul>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">模板</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<input type="date" class="layui-input" v-model="searchData.INUREFROM" />
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">删除选中</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<label class="layui-form-label" style="width:20px;">至</label>
-					<div class="layui-input-inline">
-						<input type="date" class="layui-input" v-model="searchData.INURETO" />
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">有效</button>
 					</div>
 				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<div class="layui-input-inline">
-						<select class="layui-select" v-model="searchData.ACTIVED">
-							<option v-for="x in activedsData" :value="x.ID" v-text="x.active"></option>
-						</select>
+				<div class="fl">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">请核</button>
+					</div>
+				</div>
+				<div class="fr">
+					<div class="layui-form-item">
+						<button class="layui-btn" @click="search">回收站</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="head-b">
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">查询</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">新增</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">重置查询</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">置顶</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">取消置顶</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">模板</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">删除选中</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">有效</button>
-				</div>
-			</div>
-			<div class="fl">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">请核</button>
-				</div>
-			</div>
-			<div class="fr">
-				<div class="layui-form-item">
-					<button class="layui-btn" @click="search">回收站</button>
-				</div>
-			</div>
+		<div class="main">
+			<table class="main-sea layui-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" /></th>
+						<th v-for="thead in theadsData" v-text="thead.thead"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="">
+						<td><input type="checkbox" /></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+						<td v-text="seaFreightData.A"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
-	<div class="main">
-		<table class="main-sea layui-table">
-			<thead>
-				<tr>
-					<th><input type="checkbox" /></th>
-					<th v-for="thead in theadsData" v-text="thead.thead"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="">
-					<td><input type="checkbox" /></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-					<td v-text="seaFreightData.A"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-<script type="text/javascript">
-	Vue.component("drop-down", {
-		props: ["item"],
-		template:
-		'<li >' +
-		'<span v-text="item"></span>' +
-		'</li>'
-	});
-	var Sea = new Vue({
-		el: "#sea",
-		data:{
-			ifShow:0,
-			layerShow:false,
-			liClass:0,
-			seaFreightData:{
-				CARGOTYPE:"普通",
-			},
-			searchData:{
-				ACTIVED:1,
-			},
-			activedsData:[{ID:1, active:"有效"},
-				{ID:2, active:"无效"},
-				{ID:3, active:"待审"},],
-			cargosData:[{ID:1, cargo:"普通"},
-				{ID:2, cargo:"栋柜"}],
-			corpsData:[{ID:1, CORPNO:"1", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
-				{ID:2, CORPNO:"2", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
-				{ID:3, CORPNO:"3", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
-				{ID:4, CORPNO:"4", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
-				{ID:5, CORPNO:"5", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
-				{ID:6, CORPNO:"6", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},],
-			countrysData:[{ID:1, COUNTRY:"China"},
-				{ID:2, COUNTRY:"USA"}],
-			theadsData:[{ID:1, thead:"有效期"},
-				{ID:2, thead:"航线"},
-				{ID:3, thead:"起运港"},
-				{ID:4, thead:"目的港"},
-				{ID:5, thead:"船期"},
-				{ID:6, thead:"航程"},
-				{ID:7, thead:"中转港"},
-				{ID:8, thead:"20"},
-				{ID:9, thead:"40"},
-				{ID:10, thead:"40HQ"},
-				{ID:11, thead:"45"},
-				{ID:12, thead:"货物类型"},
-				{ID:13, thead:"承运人"},
-				{ID:14, thead:"备注"},
-				{ID:15, thead:"审核人"},
-				{ID:16, thead:"审核时间"},
-				{ID:17, thead:"录入人"},
-				{ID:18, thead:"驳回原因"},
-				{ID:10, thead:"修改"},],
-
-		},
-		methods:{
-			inputClick: function(val, num){
-				Sea.liClass = 0;
-				Sea.n = -1;
-				setTimeout(function(){
-					if(num==1){
-						Sea.ifShow = 1;
-					}else if(num==2){
-						Sea.ifShow = 2;
-					}else if(num==3){
-						Sea.ifShow = 3;
-					}else if(num==4){
-						Sea.ifShow = 4;
-					}else if(num==5){
-						Sea.ifShow = 5;
-					}else if(num==6){
-						Sea.ifShow = 6;
-					}else if(num==7){
-						Sea.ifShow = 7;
-					}else if(num==8){
-						Sea.ifShow = 8;
-					}else if(num==9){
-						Sea.ifShow = 9;
-					}else if(num==10){
-						Sea.ifShow = 10;
-					}
-				},110);
-			},
-			search:function(){
-
-			},
-			falseBlur:function(num){
-				setTimeout(function (){
-					if(num){
-						Sea.ifShow = 0;
-					}
-				}, 100);
-			},
-			choiceLi:function(item, num){
-				if(num==1){
-					Sea.seaFreightData.COUNTRY = item.COUNTRY;
-					Sea.seaFreightData.COUNTRYID = item.ID;
-				}else if(num==2){
-					Sea.seaFreightData.STATUS = item.STATUS;
-					Sea.seaFreightData.ID = item.ID;
-				}else if(num==3){
-					Sea.seaFreightData.BSSRC = item.BSSRC;
-					Sea.seaFreightData.BSSRCID = item.ID;
-				}else if(num==4){
-					Sea.seaFreightData.FMDEPT = item.FMDEPT;
-					Sea.seaFreightData.FMDEPTID = item.ID;
-				}else if(num==5){
-					Sea.seaFreightData.SALES = item.SALES;
-					Sea.seaFreightData.SALESID = item.ID;
-				}else if(num==6){
-					Sea.seaFreightData.COUNTRY = item.COUNTRY;
-					Sea.seaFreightData.COUNTRYID = item.ID;
-				}else if(num==7){
-					Sea.seaFreightData.STATUS = item.STATUS;
-					Sea.seaFreightData.ID = item.ID;
-				}else if(num==8){
-					Sea.seaFreightData.BSSRC = item.BSSRC;
-					Sea.seaFreightData.BSSRCID = item.ID;
-				}else if(num==9){
-					Sea.seaFreightData.FMDEPT = item.FMDEPT;
-					Sea.seaFreightData.FMDEPTID = item.ID;
-				}else if(num==10){
-					Sea.seaFreightData.FMDEPT = item.FMDEPT;
-					Sea.seaFreightData.FMDEPTID = item.ID;
-				}
-				Sea.ifShow = 0;
-			},
-			keyChoiceLi:function(e, num){
-				var downData =[];
-				if(num==1){
-					downData = Sea.countrysData;
-				}else if(num==2){
-					downData = Sea.statusData;
-				}else if(num==3){
-					downData = Sea.bssrcData;
-				}else if(num==4){
-					downData = Sea.fmdeptData;
-				}else if(num==5){
-					downData = Sea.salesData;
-				}else if(num==6){
-					downData = Sea.countrysData;
-				}else if(num==7){
-					downData = Sea.statusData;
-				}else if(num==8){
-					downData = Sea.bssrcData;
-				}else if(num==9){
-					downData = Sea.fmdeptData;
-				}else if(num==10){
-					downData = Sea.fmdeptData;
-				}
-				console.log(downData)
-				if(!downData){
-				}else{
-					var length = downData.length;
-					if (e.keyCode == 40) {
-						if(Sea.n >= length-1){
-							Sea.n = -1;
-						}
-						Sea.n = Sea.n + 1;
-						Sea.liClass = downData[Sea.n].ID;
-						console.log(downData);
-					}
-					if (e.keyCode == 38) {
-						if(Sea.n <= 0){
-							Sea.n = length;
-						}
-						Sea.n=Sea.n-1;
-						Sea.liClass = downData[Sea.n].ID;
-					}
-					if (e.keyCode == 13) {
-						if(!downData[Sea.n]){
-						}else{
-							if(Sea.ifShow==1){
-								Sea.seaFreightData.COUNTRY = downData[Sea.n].COUNTRY;
-								Sea.seaFreightData.COUNTRYID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==2){
-								Sea.seaFreightData.STATUS = downData[Sea.n].STATUS;
-								Sea.seaFreightData.ID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==3){
-								Sea.seaFreightData.BSSRC = downData[Sea.n].BSSRC;
-								Sea.seaFreightData.BSSRCID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==4){
-								Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
-								Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==5){
-								Sea.seaFreightData.SALES = downData[Sea.n].SALES;						
-								Sea.seaFreightData.SALESID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==6){
-								Sea.seaFreightData.COUNTRY = downData[Sea.n].COUNTRY;
-								Sea.seaFreightData.COUNTRYID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==7){
-								Sea.seaFreightData.STATUS = downData[Sea.n].STATUS;
-								Sea.seaFreightData.ID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==8){
-								Sea.seaFreightData.BSSRC = downData[Sea.n].BSSRC;
-								Sea.seaFreightData.BSSRCID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==9){
-								Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
-								Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
-							}else if(Sea.ifShow==10){
-								Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
-								Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
-							}
-						}
-						Sea.ifShow = 0;
-					}
-				}
-			}
-		},
-	});
-	var seaLayer = function(){
-
-		layui.use('layer', function(){
-			var layer = layui.layer;
-			layer.open({
-				type:1,
-				title: '往来单位管理',
-				content: $("#increase"),
-				area: ['580px', '440px'],
-			});
+	<script type="text/javascript">
+		Vue.component("drop-down", {
+			props: ["item"],
+			template:
+			'<li >' +
+			'<span v-text="item"></span>' +
+			'</li>'
 		});
+		var Sea = new Vue({
+			el: "#sea",
+			data:{
+				ifShow:0,
+				layerShow:false,
+				liClass:0,
+				seaFreightData:{
+					CARGOTYPE:"普通",
+				},
+				searchData:{
+					ACTIVED:1,
+				},
+				activedsData:[{ID:1, active:"有效"},
+					{ID:2, active:"无效"},
+					{ID:3, active:"待审"},],
+				cargosData:[{ID:1, cargo:"普通"},
+					{ID:2, cargo:"栋柜"}],
+				corpsData:[{ID:1, CORPNO:"1", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:2, CORPNO:"2", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:3, CORPNO:"3", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:4, CORPNO:"4", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:5, CORPNO:"5", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},
+					{ID:6, CORPNO:"6", SNAME:"港捷", CNAME:"大连港捷", ENAME:"daliangangjie", CADDR:"大连", EADDR:"dalian",KPDZ:"青岛"},],
+				countrysData:[{ID:1, COUNTRY:"China"},
+					{ID:2, COUNTRY:"USA"}],
+				theadsData:[{ID:1, thead:"有效期"},
+					{ID:2, thead:"航线"},
+					{ID:3, thead:"起运港"},
+					{ID:4, thead:"目的港"},
+					{ID:5, thead:"船期"},
+					{ID:6, thead:"航程"},
+					{ID:7, thead:"中转港"},
+					{ID:8, thead:"20"},
+					{ID:9, thead:"40"},
+					{ID:10, thead:"40HQ"},
+					{ID:11, thead:"45"},
+					{ID:12, thead:"货物类型"},
+					{ID:13, thead:"承运人"},
+					{ID:14, thead:"备注"},
+					{ID:15, thead:"审核人"},
+					{ID:16, thead:"审核时间"},
+					{ID:17, thead:"录入人"},
+					{ID:18, thead:"驳回原因"},
+					{ID:10, thead:"修改"},],
 
-	}
-	seaLayer();
-</script>
+			},
+			methods:{
+				inputClick: function(val, num){
+					Sea.liClass = 0;
+					Sea.n = -1;
+					setTimeout(function(){
+						if(num==1){
+							Sea.ifShow = 1;
+						}else if(num==2){
+							Sea.ifShow = 2;
+						}else if(num==3){
+							Sea.ifShow = 3;
+						}else if(num==4){
+							Sea.ifShow = 4;
+						}else if(num==5){
+							Sea.ifShow = 5;
+						}else if(num==6){
+							Sea.ifShow = 6;
+						}else if(num==7){
+							Sea.ifShow = 7;
+						}else if(num==8){
+							Sea.ifShow = 8;
+						}else if(num==9){
+							Sea.ifShow = 9;
+						}else if(num==10){
+							Sea.ifShow = 10;
+						}
+					},110);
+				},
+				search:function(){
+
+				},
+				falseBlur:function(num){
+					setTimeout(function (){
+						if(num){
+							Sea.ifShow = 0;
+						}
+					}, 100);
+				},
+				choiceLi:function(item, num){
+					if(num==1){
+						Sea.seaFreightData.COUNTRY = item.COUNTRY;
+						Sea.seaFreightData.COUNTRYID = item.ID;
+					}else if(num==2){
+						Sea.seaFreightData.STATUS = item.STATUS;
+						Sea.seaFreightData.ID = item.ID;
+					}else if(num==3){
+						Sea.seaFreightData.BSSRC = item.BSSRC;
+						Sea.seaFreightData.BSSRCID = item.ID;
+					}else if(num==4){
+						Sea.seaFreightData.FMDEPT = item.FMDEPT;
+						Sea.seaFreightData.FMDEPTID = item.ID;
+					}else if(num==5){
+						Sea.seaFreightData.SALES = item.SALES;
+						Sea.seaFreightData.SALESID = item.ID;
+					}else if(num==6){
+						Sea.seaFreightData.COUNTRY = item.COUNTRY;
+						Sea.seaFreightData.COUNTRYID = item.ID;
+					}else if(num==7){
+						Sea.seaFreightData.STATUS = item.STATUS;
+						Sea.seaFreightData.ID = item.ID;
+					}else if(num==8){
+						Sea.seaFreightData.BSSRC = item.BSSRC;
+						Sea.seaFreightData.BSSRCID = item.ID;
+					}else if(num==9){
+						Sea.seaFreightData.FMDEPT = item.FMDEPT;
+						Sea.seaFreightData.FMDEPTID = item.ID;
+					}else if(num==10){
+						Sea.seaFreightData.FMDEPT = item.FMDEPT;
+						Sea.seaFreightData.FMDEPTID = item.ID;
+					}
+					Sea.ifShow = 0;
+				},
+				keyChoiceLi:function(e, num){
+					var downData =[];
+					if(num==1){
+						downData = Sea.countrysData;
+					}else if(num==2){
+						downData = Sea.statusData;
+					}else if(num==3){
+						downData = Sea.bssrcData;
+					}else if(num==4){
+						downData = Sea.fmdeptData;
+					}else if(num==5){
+						downData = Sea.salesData;
+					}else if(num==6){
+						downData = Sea.countrysData;
+					}else if(num==7){
+						downData = Sea.statusData;
+					}else if(num==8){
+						downData = Sea.bssrcData;
+					}else if(num==9){
+						downData = Sea.fmdeptData;
+					}else if(num==10){
+						downData = Sea.fmdeptData;
+					}
+					console.log(downData)
+					if(!downData){
+					}else{
+						var length = downData.length;
+						if (e.keyCode == 40) {
+							if(Sea.n >= length-1){
+								Sea.n = -1;
+							}
+							Sea.n = Sea.n + 1;
+							Sea.liClass = downData[Sea.n].ID;
+							console.log(downData);
+						}
+						if (e.keyCode == 38) {
+							if(Sea.n <= 0){
+								Sea.n = length;
+							}
+							Sea.n=Sea.n-1;
+							Sea.liClass = downData[Sea.n].ID;
+						}
+						if (e.keyCode == 13) {
+							if(!downData[Sea.n]){
+							}else{
+								if(Sea.ifShow==1){
+									Sea.seaFreightData.COUNTRY = downData[Sea.n].COUNTRY;
+									Sea.seaFreightData.COUNTRYID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==2){
+									Sea.seaFreightData.STATUS = downData[Sea.n].STATUS;
+									Sea.seaFreightData.ID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==3){
+									Sea.seaFreightData.BSSRC = downData[Sea.n].BSSRC;
+									Sea.seaFreightData.BSSRCID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==4){
+									Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
+									Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==5){
+									Sea.seaFreightData.SALES = downData[Sea.n].SALES;						
+									Sea.seaFreightData.SALESID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==6){
+									Sea.seaFreightData.COUNTRY = downData[Sea.n].COUNTRY;
+									Sea.seaFreightData.COUNTRYID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==7){
+									Sea.seaFreightData.STATUS = downData[Sea.n].STATUS;
+									Sea.seaFreightData.ID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==8){
+									Sea.seaFreightData.BSSRC = downData[Sea.n].BSSRC;
+									Sea.seaFreightData.BSSRCID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==9){
+									Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
+									Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
+								}else if(Sea.ifShow==10){
+									Sea.seaFreightData.FMDEPT = downData[Sea.n].FMDEPT;
+									Sea.seaFreightData.FMDEPTID = downData[Sea.n].ID;
+								}
+							}
+							Sea.ifShow = 0;
+						}
+					}
+				}
+			},
+		});
+		var seaLayer = function(){
+
+			layui.use('layer', function(){
+				var layer = layui.layer;
+				layer.open({
+					type:1,
+					title: '往来单位管理',
+					content: $("#increase"),
+					area: ['580px', '440px'],
+				});
+			});
+
+		}
+		seaLayer();
+	</script>
+</body>
+</html>

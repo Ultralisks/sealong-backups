@@ -1,334 +1,342 @@
-<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<script type="text/javascript" src="static/layui/layui.all.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="static/vue/dist/vue.js"></script>
-<style type="text/css">
-	#shipRecord .main .layui-table td{padding:0;}
-	#shipRecord .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
-	#shipRecord .main{overflow:scroll;}
-	#shipRecord .main .layui-table{width:6000px;}
-</style>
-<!-- 船舶信息 -->
-<div id="shipRecord">
-	<div class="head">
-		<button class="layui-btn" @click="shipRecordCreate">新增</button>
-		<button class="layui-btn" @click="shipRecordSave">保存</button>
-		<button class="layui-btn" @click="shipRecordDel">删除</button>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/layui/layui.all.js"></script>
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<style type="text/css">
+		#shipRecord .main .layui-table td{padding:0;}
+		#shipRecord .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
+		#shipRecord .main{overflow:scroll;}
+		#shipRecord .main .layui-table{width:6000px;}
+	</style>
+</head>
+<body>
+	<!-- 船舶信息 -->
+	<div id="shipRecord">
+		<div class="head">
+			<button class="layui-btn" @click="shipRecordCreate">新增</button>
+			<button class="layui-btn" @click="shipRecordSave">保存</button>
+			<button class="layui-btn" @click="shipRecordDel">删除</button>
+		</div>
+		<div class="main">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
+						<th>船名编号</th>
+						<th>中文名称</th>
+						<th>英文全称</th>
+						<th>P&O</th>
+						<th>HMM</th>
+						<th>国家</th>
+						<th>船公司</th>
+						<th>状态</th>
+						<th>操作员</th>
+						<th>操作时间</th>
+						<th>备注</th>
+						<th>LloydsCode</th>
+						<th>船主船东</th>
+						<th>（船舶的）信号</th>
+						<th>建造时间</th>
+						<th>船籍港</th>
+						<th>船籍与编号</th>
+						<th>类别</th>
+						<th>总吨和净吨</th>
+						<th>NWT</th>
+						<th>载重量</th>
+						<th>总长/型长</th>
+						<th>宽/深</th>
+						<th>吃水</th>
+						<th>排水量</th>
+						<th>最大倾斜度</th>
+						<th>集装箱控制</th>
+						<th>甲板层数</th>
+						<th>舱盖类型</th>
+						<th>舱口尺寸</th>
+						<th>起重机</th>
+						<th>船速</th>
+						<th>船舱容量</th>
+						<th>发动机推进器</th>
+						<th>REFEERP插头</th>
+						<th>发动机型号</th>
+						<th>发动机输出功率</th>
+						<th>燃料仓CAPA</th>
+						<th>沙囊CAPA</th>
+						<th>沙囊盛水量</th>
+						<th>救援系统</th>
+						<th>耐久度</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="r in shipRecordsData">
+						<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.VSLNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CNAME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.ENAME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.POVSLNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.HMMVSLNO" />
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.COUNTRYID">
+								<option v-for="c in countrysData" :value="c.COUNTRYID" v-text="c.COUNTRYNO"></option>
+							</select>
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.OWNERID">
+								<option v-for="c in corpsData" :value="c.CORPID" v-text="c.CORPNO"></option>
+							</select>
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.STATUS">
+								<option value="1">正常使用</option>
+								<option value="2">设计使用</option>
+								<option value="3">准备停用</option>
+								<option value="4">报废停用</option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.OPERATOR" />
+						</td>
+						<td>
+							<input class="layui-input" type="date" v-model="r.OPTIME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.REMARKS" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.LLOYDSCODE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.OWNER" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CALLSIGN" />
+						</td>
+						<td>
+							<input class="layui-input" type="date" v-model="r.BUILTDATE" />
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.REGPORTID">
+								<option v-for="c in portsData" :value="c.PORTID" v-text="c.PORTNO"></option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CLASSIFICATION" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.SHIPTYPE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.GWT" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.NWT" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.DWT" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.LOALBP" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.BREADTH" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.DRAFTLADEN" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.DISPLACEMENT" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.MAXHEIGHTKEEL" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CONTAINERHOLD" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.DECKTYENO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.HATCHTYPE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.HATCHSIZE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.NOSCRANE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.SPEED" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CAPACITY" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.BOWTHRUSTER" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.REFEERPLUGS" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.MAINENGINE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.OUTPUTPOWER" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.BUNKERCAPA" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.FWCAPA" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.BALLASTWATER" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.INMARSAT" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.ENDURANCE" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="page"></div>
 	</div>
-	<div class="main">
-		<table class="layui-table">
-			<thead>
-				<tr>
-					<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
-					<th>船名编号</th>
-					<th>中文名称</th>
-					<th>英文全称</th>
-					<th>P&O</th>
-					<th>HMM</th>
-					<th>国家</th>
-					<th>船公司</th>
-					<th>状态</th>
-					<th>操作员</th>
-					<th>操作时间</th>
-					<th>备注</th>
-					<th>LloydsCode</th>
-					<th>船主船东</th>
-					<th>（船舶的）信号</th>
-					<th>建造时间</th>
-					<th>船籍港</th>
-					<th>船籍与编号</th>
-					<th>类别</th>
-					<th>总吨和净吨</th>
-					<th>NWT</th>
-					<th>载重量</th>
-					<th>总长/型长</th>
-					<th>宽/深</th>
-					<th>吃水</th>
-					<th>排水量</th>
-					<th>最大倾斜度</th>
-					<th>集装箱控制</th>
-					<th>甲板层数</th>
-					<th>舱盖类型</th>
-					<th>舱口尺寸</th>
-					<th>起重机</th>
-					<th>船速</th>
-					<th>船舱容量</th>
-					<th>发动机推进器</th>
-					<th>REFEERP插头</th>
-					<th>发动机型号</th>
-					<th>发动机输出功率</th>
-					<th>燃料仓CAPA</th>
-					<th>沙囊CAPA</th>
-					<th>沙囊盛水量</th>
-					<th>救援系统</th>
-					<th>耐久度</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="r in shipRecordsData">
-					<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.VSLNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CNAME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.ENAME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.POVSLNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.HMMVSLNO" />
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.COUNTRYID">
-							<option v-for="c in countrysData" :value="c.COUNTRYID" v-text="c.COUNTRYNO"></option>
-						</select>
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.OWNERID">
-							<option v-for="c in corpsData" :value="c.CORPID" v-text="c.CORPNO"></option>
-						</select>
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.STATUS">
-							<option value="1">正常使用</option>
-							<option value="2">设计使用</option>
-							<option value="3">准备停用</option>
-							<option value="4">报废停用</option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.OPERATOR" />
-					</td>
-					<td>
-						<input class="layui-input" type="date" v-model="r.OPTIME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.REMARKS" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.LLOYDSCODE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.OWNER" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CALLSIGN" />
-					</td>
-					<td>
-						<input class="layui-input" type="date" v-model="r.BUILTDATE" />
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.REGPORTID">
-							<option v-for="c in portsData" :value="c.PORTID" v-text="c.PORTNO"></option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CLASSIFICATION" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.SHIPTYPE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.GWT" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.NWT" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.DWT" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.LOALBP" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.BREADTH" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.DRAFTLADEN" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.DISPLACEMENT" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.MAXHEIGHTKEEL" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CONTAINERHOLD" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.DECKTYENO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.HATCHTYPE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.HATCHSIZE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.NOSCRANE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.SPEED" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CAPACITY" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.BOWTHRUSTER" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.REFEERPLUGS" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.MAINENGINE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.OUTPUTPOWER" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.BUNKERCAPA" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.FWCAPA" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.BALLASTWATER" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.INMARSAT" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.ENDURANCE" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div id="page"></div>
-</div>
-<script type="text/javascript">
-	var shipRecord = new Vue({
-		el:"#shipRecord",
-		data:{
-			checked:false,
-			pageNum:0,
-			checkArr:[],
-			shipRecordsData:[],
-			countrysData:[],
-			portsData:[],
-			corpsData:[]
-		},
-		methods:{
-			shipRecordSearch:function(){
-				$.ajax({
-					url:"shipRecordsFind",
-					type:"GET",
-					async:true,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								shipRecord.shipRecordsData = [];
-							}else{
-								shipRecord.shipRecordsData = json.data;
-								shipRecord.pageNum = json.data;length;
+	<script type="text/javascript">
+		var shipRecord = new Vue({
+			el:"#shipRecord",
+			data:{
+				checked:false,
+				pageNum:0,
+				checkArr:[],
+				shipRecordsData:[],
+				countrysData:[],
+				portsData:[],
+				corpsData:[]
+			},
+			methods:{
+				shipRecordSearch:function(){
+					$.ajax({
+						url:"shipRecordsFind",
+						type:"GET",
+						async:true,
+						success:function(json){
+							console.log(json);
+							if(json.data){
+								if(!json.data.length){
+									shipRecord.shipRecordsData = [];
+								}else{
+									shipRecord.shipRecordsData = json.data;
+									shipRecord.pageNum = json.data;length;
+								}
 							}
 						}
+					})
+				},
+				shipRecordCreate:function(){
+					shipRecord.shipRecordsData.push({ID:0, LCELENO:"", LCELEDESC:"", IFCONST:"T", RELATABLE:"", RELAKEYFLD:"", RELARESULTFLD:"", STATUS:1, REMARKS:""})
+				},
+				shipRecordSave:function(){
+					shipRecord.shipRecordsData.forEach(function(item){
+						$.ajax({
+							url:"shipRecordsPost",
+							data:item,
+							type:"POST",
+							async:false,
+							success:function(json){
+								console.log(json);
+							}
+						})
+					})
+					shipRecord.shipRecordSearch();
+				},
+				shipRecordDel:function(){
+					for(var i = 0; i < shipRecord.checkArr.length; i++){
+						$.ajax({
+							url:"shipRecordsDel?ID="+shipRecord.checkArr[i],
+							type:"POST",
+							success:function(json){
+								console.log(json);
+								shipRecord.shipRecordSearch();
+							}
+						})
 					}
-				})
-			},
-			shipRecordCreate:function(){
-				shipRecord.shipRecordsData.push({ID:0, LCELENO:"", LCELEDESC:"", IFCONST:"T", RELATABLE:"", RELAKEYFLD:"", RELARESULTFLD:"", STATUS:1, REMARKS:""})
-			},
-			shipRecordSave:function(){
-				shipRecord.shipRecordsData.forEach(function(item){
+					shipRecord.checkArr=[];
+				},
+				checkAll:function(){
+					if(!shipRecord.checked){
+						shipRecord.shipRecordsData.forEach(function(index){
+							shipRecord.checkArr.push(index.ID);
+						})
+					}else{
+						shipRecord.checkArr = [];
+					}
+					shipRecord.checked = !shipRecord.checked;
+				},
+				///////////////////////////////////////////////////////////////////////
+				searchData:function(){
 					$.ajax({
-						url:"shipRecordsPost",
-						data:item,
+						url:"countrysFind",
+						data:"",
 						type:"POST",
 						async:false,
 						success:function(json){
 							console.log(json);
+							if(json.data){
+								if(!json.data.length){
+									shipRecord.countrysData = [];
+								}else{
+									shipRecord.countrysData = json.data;
+								}
+							}
 						}
-					})
-				})
-				shipRecord.shipRecordSearch();
-			},
-			shipRecordDel:function(){
-				for(var i = 0; i < shipRecord.checkArr.length; i++){
+					});
 					$.ajax({
-						url:"shipRecordsDel?ID="+shipRecord.checkArr[i],
+						url:"corpsFind?WDCODE=2",
+						data:"",
 						type:"POST",
+						async:false,
 						success:function(json){
 							console.log(json);
-							shipRecord.shipRecordSearch();
-						}
-					})
-				}
-				shipRecord.checkArr=[];
-			},
-			checkAll:function(){
-				if(!shipRecord.checked){
-					shipRecord.shipRecordsData.forEach(function(index){
-						shipRecord.checkArr.push(index.ID);
-					})
-				}else{
-					shipRecord.checkArr = [];
-				}
-				shipRecord.checked = !shipRecord.checked;
-			},
-			///////////////////////////////////////////////////////////////////////
-			searchData:function(){
-				$.ajax({
-					url:"countrysFind",
-					data:"",
-					type:"POST",
-					async:false,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								shipRecord.countrysData = [];
-							}else{
-								shipRecord.countrysData = json.data;
+							if(json.data){
+								if(!json.data.length){
+									shipRecord.portsData = [];
+								}else{
+									shipRecord.portsData = json.data;
+								}
 							}
 						}
-					}
-				});
-				$.ajax({
-					url:"corpsFind?WDCODE=2",
-					data:"",
-					type:"POST",
-					async:false,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								shipRecord.portsData = [];
-							}else{
-								shipRecord.portsData = json.data;
-							}
-						}
-					}
-				});
+					});
+				}
 			}
-		}
-	});
-	shipRecord.shipRecordSearch();
-	layui.use('laypage', function(){
-		var laypage = layui.laypage;
-		//执行一个laypage实例
-		laypage.render({
-			elem: 'page', //这里的page是ID，不用加#号
-			count: shipRecord.pageNum //数据总数，从服务端得到
 		});
-	});
-	$(function(){
-		$(".layui-select").css("width", $(".layui-input").css("width"));
-	})
-</script>
+		shipRecord.shipRecordSearch();
+		layui.use('laypage', function(){
+			var laypage = layui.laypage;
+			//执行一个laypage实例
+			laypage.render({
+				elem: 'page', //这里的page是ID，不用加#号
+				count: shipRecord.pageNum //数据总数，从服务端得到
+			});
+		});
+		$(function(){
+			$(".layui-select").css("width", $(".layui-input").css("width"));
+		})
+	</script>
+</body>
+</html>

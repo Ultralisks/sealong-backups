@@ -1,155 +1,162 @@
-<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<script type="text/javascript" src="static/layui/layui.all.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="static/vue/dist/vue.js"></script>
-<!-- <script type="text/javascript" src="static/js/login.js"></script> -->
-<style type="text/css">
-	#track .main{padding:10px;}
-</style>
-<!-- 货物追踪 -->
-<div id="track">
-	<div class="head">
-		<div class="layui-col-md12 layui-col-lg12">
-			<label class="layui-form-label">提单号</label>
-			<div class="layui-input-inline pos-rel"><input class="layui-input" type="text" placeholder="请输入提单号" v-model="mblno" @keyup.13="onEnter" /></div>
-			<button class="layui-btn layui-btn-normal" @click="search">查询</button>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/layui/layui.all.js"></script>
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<!-- <script type="text/javascript" src="static/js/login.js"></script> -->
+	<style type="text/css">
+		#track .main{padding:10px;}
+	</style>
+</head>
+<body>
+	<!-- 货物追踪 -->
+	<div id="track">
+		<div class="head">
+			<div class="layui-col-md12 layui-col-lg12">
+				<label class="layui-form-label">提单号</label>
+				<div class="layui-input-inline pos-rel"><input class="layui-input" type="text" placeholder="请输入提单号" v-model="mblno" @keyup.13="onEnter" /></div>
+				<button class="layui-btn layui-btn-normal" @click="search">查询</button>
+			</div>
+		</div>
+		<div class="main">
+			<table class="main-total layui-table" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>承运人</th>
+						<th>提单号</th>
+						<th>船名/航次</th>
+						<th>箱量</th>
+						<th>起运港</th>
+						<th>目的港</th>
+						<th>目的地</th>
+						<th>E.T.D</th>
+						<th>E.T.A</th>
+						<th>A.T.D</th>
+						<th>A.T.A</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td v-text="data.bills.carriername"></td>
+						<td v-text="data.bills.mblno"></td>
+						<td v-text="data.bills.vesselname+'/'+data.bills.voyageno"></td>
+						<td v-text="data.bills.containercount"></td>
+						<td v-text="data.bills.pol"></td>
+						<td v-text="data.bills.pod"></td>
+						<td v-text="data.bills.destination"></td>
+						<td v-text="data.bills.etd"></td>
+						<td v-text="data.bills.eta"></td>
+						<td v-text="data.bills.atd"></td>
+						<td v-text="data.bills.ata"></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="main-details layui-table" :class="{acitved:show}" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>最新状态</th>
+						<th>箱号</th>
+						<th>封号</th>
+						<th>件数</th>
+						<th>毛重</th>
+						<th>尺码</th>
+						<th>关区代码</th>
+						<th>海关回执事件</th>
+						<th>海关回执描述</th>
+						<th>A.T.D</th>
+						<th>A.T.A</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(item,index) in data.containers" :key="index" @click="follow(index)">
+						<td v-text="item.currentstatus_cn"></td>
+						<td v-text="item.containerno"></td>
+						<td v-text="item.containersealno"></td>
+						<td v-text="item.packages"></td>
+						<td v-text="item.grossweight"></td>
+						<td v-text="item.volume"></td>
+						<td v-text="item.customno"></td>
+						<td v-text="item.customreceipttime"></td>
+						<td v-text="item.customreceiptmessage"></td>
+						<td v-text="item.atd"></td>
+						<td v-text="item.ata"></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="main-follow layui-table" cellpadding="0" cellspacing="0" v-if="show">
+				<thead>
+					<tr>
+						<th colspan="3">状态</th>
+						<th>发生地点</th>
+						<th>发生时间</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(f,index) in followData" :key="index">
+						<td v-text="f.currentstatus"></td>
+						<td v-text="f.currentstatus_en"></td>
+						<td v-text="f.currentstatus_cn"></td>
+						<td v-text="f.currentlocale"></td>
+						<td v-text="f.occurrencetime"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
-	<div class="main">
-		<table class="main-total layui-table" cellpadding="0" cellspacing="0">
-			<thead>
-				<tr>
-					<th>承运人</th>
-					<th>提单号</th>
-					<th>船名/航次</th>
-					<th>箱量</th>
-					<th>起运港</th>
-					<th>目的港</th>
-					<th>目的地</th>
-					<th>E.T.D</th>
-					<th>E.T.A</th>
-					<th>A.T.D</th>
-					<th>A.T.A</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td v-text="data.bills.carriername"></td>
-					<td v-text="data.bills.mblno"></td>
-					<td v-text="data.bills.vesselname+'/'+data.bills.voyageno"></td>
-					<td v-text="data.bills.containercount"></td>
-					<td v-text="data.bills.pol"></td>
-					<td v-text="data.bills.pod"></td>
-					<td v-text="data.bills.destination"></td>
-					<td v-text="data.bills.etd"></td>
-					<td v-text="data.bills.eta"></td>
-					<td v-text="data.bills.atd"></td>
-					<td v-text="data.bills.ata"></td>
-				</tr>
-			</tbody>
-		</table>
-		<table class="main-details layui-table" :class="{acitved:show}" cellpadding="0" cellspacing="0">
-			<thead>
-				<tr>
-					<th>最新状态</th>
-					<th>箱号</th>
-					<th>封号</th>
-					<th>件数</th>
-					<th>毛重</th>
-					<th>尺码</th>
-					<th>关区代码</th>
-					<th>海关回执事件</th>
-					<th>海关回执描述</th>
-					<th>A.T.D</th>
-					<th>A.T.A</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="(item,index) in data.containers" :key="index" @click="follow(index)">
-					<td v-text="item.currentstatus_cn"></td>
-					<td v-text="item.containerno"></td>
-					<td v-text="item.containersealno"></td>
-					<td v-text="item.packages"></td>
-					<td v-text="item.grossweight"></td>
-					<td v-text="item.volume"></td>
-					<td v-text="item.customno"></td>
-					<td v-text="item.customreceipttime"></td>
-					<td v-text="item.customreceiptmessage"></td>
-					<td v-text="item.atd"></td>
-					<td v-text="item.ata"></td>
-				</tr>
-			</tbody>
-		</table>
-		<table class="main-follow layui-table" cellpadding="0" cellspacing="0" v-if="show">
-			<thead>
-				<tr>
-					<th colspan="3">状态</th>
-					<th>发生地点</th>
-					<th>发生时间</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="(f,index) in followData" :key="index">
-					<td v-text="f.currentstatus"></td>
-					<td v-text="f.currentstatus_en"></td>
-					<td v-text="f.currentstatus_cn"></td>
-					<td v-text="f.currentlocale"></td>
-					<td v-text="f.occurrencetime"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-<script type="text/javascript">
-	var track = new Vue({
-		el:"#track",
-		data:{
-			mblno: "OOLU2595370820",
-			data: {
-				bills:{
-					carriername:"",
-					mblno: "",
-					vesselname:"",
-					voyageno:"",
-					containercount:"",
-					pol:"",
-					pod:"",
-					destination:"",
-					etd:"",
-					eta:"",
-					atd:"",
-					ata:""
+	<script type="text/javascript">
+		var track = new Vue({
+			el:"#track",
+			data:{
+				mblno: "OOLU2595370820",
+				data: {
+					bills:{
+						carriername:"",
+						mblno: "",
+						vesselname:"",
+						voyageno:"",
+						containercount:"",
+						pol:"",
+						pod:"",
+						destination:"",
+						etd:"",
+						eta:"",
+						atd:"",
+						ata:""
+					},
+					containers:[],
 				},
-				containers:[],
+				followData:[],
+				show: false,
 			},
-			followData:[],
-			show: false,
-		},
-		methods:{
-			search: function(){
-				$.ajax({
-					url:"searchTrack?url=http://202.136.55.138:8096/sldc/ContainerTracking/json?mblno="+track.mblno,
-					type: "GET",
-					dataType: "json",
-					async: false,
-					success: function(json){
-						console.log(json);
-						if(json.HttpGet.response.main.data){
-							track.data = json.HttpGet.response.main.data;
+			methods:{
+				search: function(){
+					$.ajax({
+						url:"searchTrack?url=http://202.136.55.138:8096/sldc/ContainerTracking/json?mblno="+track.mblno,
+						type: "GET",
+						dataType: "json",
+						async: false,
+						success: function(json){
+							console.log(json);
+							if(json.HttpGet.response.main.data){
+								track.data = json.HttpGet.response.main.data;
+							}
+							console.log(track.data)
 						}
-						console.log(track.data)
-					}
-				})
-			},
-			follow: function(index){
-				track.followData = track.data.containers[index].podtimes;
-				track.show = true;
-			},
-			onEnter: function(){
-				track.search();
+					})
+				},
+				follow: function(index){
+					track.followData = track.data.containers[index].podtimes;
+					track.show = true;
+				},
+				onEnter: function(){
+					track.search();
+				}
 			}
-		}
-	});
-
-</script>
+		});
+	</script>
+</body>
+</html>

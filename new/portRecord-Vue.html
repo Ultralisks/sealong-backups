@@ -1,246 +1,254 @@
-<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<script type="text/javascript" src="static/layui/layui.all.js"></script>
-<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="static/vue/dist/vue.js"></script>
-<style type="text/css">
-	#portRecord .main .layui-table td{padding:0;}
-	#portRecord .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
-	#portRecord .main{overflow:scroll;}
-	#portRecord .main .layui-table{width:3000px;}
-</style>
-<!-- 港口 -->
-<div id="portRecord">
-	<div class="head">
-		<button class="layui-btn" @click="portRecordCreate">新增</button>
-		<button class="layui-btn" @click="portRecordSave">保存</button>
-		<button class="layui-btn" @click="portRecordDel">删除</button>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+	<script type="text/javascript" src="static/layui/layui.all.js"></script>
+	<script type="text/javascript" src="static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
+	<style type="text/css">
+		#portRecord .main .layui-table td{padding:0;}
+		#portRecord .main .layui-table td .layui-input,.layui-select{border:0;width:100%;}
+		#portRecord .main{overflow:scroll;}
+		#portRecord .main .layui-table{width:3000px;}
+	</style>
+</head>
+<body>
+	<!-- 港口 -->
+	<div id="portRecord">
+		<div class="head">
+			<button class="layui-btn" @click="portRecordCreate">新增</button>
+			<button class="layui-btn" @click="portRecordSave">保存</button>
+			<button class="layui-btn" @click="portRecordDel">删除</button>
+		</div>
+		<div class="main">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
+						<th>港口类型</th>
+						<th>港口编号</th>
+						<th>港口简称</th>
+						<th>中文名称</th>
+						<th>英文名称</th>
+						<th>INTTRA</th>
+						<th>MAERSK</th>
+						<th>QQCT</th>
+						<th>国家通讯码</th>
+						<th>国家</th>
+						<th>省份</th>
+						<th>城市</th>
+						<th>默认航线</th>
+						<th>HB/LNO</th>
+						<th>状态</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="r in portRecordsData">
+						<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
+						<td>
+							<select class="layui-select" v-model="r.PORTTYPENO">
+								<option value="1">海空港</option>
+								<option value="2">海港</option>
+								<option value="3">空港</option>
+								<option value="4">内陆港</option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.PORTNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.SNAME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CNAME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.ENAME" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.INTRAPORTNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.MAERSKPORTNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.QQCTNO" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.NUMCODE" />
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.COUNTRYID">
+								<option v-for="c in countrysData" :value="c.ID" v-text="c.CNAME"></option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.PROVINCE" />
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.CITY" />
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.LANEID">
+								<option v-for="c in lanesData" :value="c.ID" v-text="c.SNAME"></option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.HBLNOPORTNO" />
+						</td>
+						<td>
+							<select class="layui-select" v-model="r.STATUS">
+								<option value="A">正常使用</option>
+								<option value="B">设计使用</option>
+								<option value="C">准备停用</option>
+								<option value="D">报废停用</option>
+							</select>
+						</td>
+						<td>
+							<input class="layui-input" type="text" v-model="r.REMARKS" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="page"></div>
 	</div>
-	<div class="main">
-		<table class="layui-table">
-			<thead>
-				<tr>
-					<th><input type="checkbox" v-model="checked" @click="checkAll" /></th>
-					<th>港口类型</th>
-					<th>港口编号</th>
-					<th>港口简称</th>
-					<th>中文名称</th>
-					<th>英文名称</th>
-					<th>INTTRA</th>
-					<th>MAERSK</th>
-					<th>QQCT</th>
-					<th>国家通讯码</th>
-					<th>国家</th>
-					<th>省份</th>
-					<th>城市</th>
-					<th>默认航线</th>
-					<th>HB/LNO</th>
-					<th>状态</th>
-					<th>备注</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="r in portRecordsData">
-					<td style="padding-left:15px;"><input type="checkbox" :value="r.ID" v-model="checkArr" /></td>
-					<td>
-						<select class="layui-select" v-model="r.PORTTYPENO">
-							<option value="1">海空港</option>
-							<option value="2">海港</option>
-							<option value="3">空港</option>
-							<option value="4">内陆港</option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.PORTNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.SNAME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CNAME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.ENAME" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.INTRAPORTNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.MAERSKPORTNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.QQCTNO" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.NUMCODE" />
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.COUNTRYID">
-							<option v-for="c in countrysData" :value="c.ID" v-text="c.CNAME"></option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.PROVINCE" />
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.CITY" />
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.LANEID">
-							<option v-for="c in lanesData" :value="c.ID" v-text="c.SNAME"></option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.HBLNOPORTNO" />
-					</td>
-					<td>
-						<select class="layui-select" v-model="r.STATUS">
-							<option value="A">正常使用</option>
-							<option value="B">设计使用</option>
-							<option value="C">准备停用</option>
-							<option value="D">报废停用</option>
-						</select>
-					</td>
-					<td>
-						<input class="layui-input" type="text" v-model="r.REMARKS" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div id="page"></div>
-</div>
-<script type="text/javascript">
-	var portRecord = new Vue({
-		el:"#portRecord",
-		data:{
-			checked:false,
-			pageNum:0,
-			checkArr:[],
-			portRecordsData:[{}],
-			countrysData:[],
-			lanesData:[],
-		},
-		methods:{
-			portRecordSearch:function(){
-				$.ajax({
-					url:"portRecordsFind",
-					type:"GET",
-					async:true,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								portRecord.portRecordsData = [];
-							}else{
-								portRecord.portRecordsData = json.data;
-								portRecord.pageNum = json.data;length;
-							}
-						}
-						portRecord.pageNum = json.pagging.RowCount;
-						layui.use('laypage', function(){
-							var laypage = layui.laypage;
-							//执行一个laypage实例
-							laypage.render({
-								elem: 'page', //这里的page是ID，不用加#号
-								count: portRecord.pageNum, //数据总数，从服务端得到
-								jump: function(obj, first){
-									console.log(obj);
-									console.log(first);
-									if(!first){
-										$.ajax({
-											url:"portRecordsFind?page=" + obj.curr,
-											type:"GET",
-											async:true,
-											success:function(json){
-												console.log(json);
-												portRecord.portRecordsData = json.data;
-											}
-										})
-									}
+	<script type="text/javascript">
+		var portRecord = new Vue({
+			el:"#portRecord",
+			data:{
+				checked:false,
+				pageNum:0,
+				checkArr:[],
+				portRecordsData:[{}],
+				countrysData:[],
+				lanesData:[],
+			},
+			methods:{
+				portRecordSearch:function(){
+					$.ajax({
+						url:"portRecordsFind",
+						type:"GET",
+						async:true,
+						success:function(json){
+							console.log(json);
+							if(json.data){
+								if(!json.data.length){
+									portRecord.portRecordsData = [];
+								}else{
+									portRecord.portRecordsData = json.data;
+									portRecord.pageNum = json.data;length;
 								}
+							}
+							portRecord.pageNum = json.pagging.RowCount;
+							layui.use('laypage', function(){
+								var laypage = layui.laypage;
+								//执行一个laypage实例
+								laypage.render({
+									elem: 'page', //这里的page是ID，不用加#号
+									count: portRecord.pageNum, //数据总数，从服务端得到
+									jump: function(obj, first){
+										console.log(obj);
+										console.log(first);
+										if(!first){
+											$.ajax({
+												url:"portRecordsFind?page=" + obj.curr,
+												type:"GET",
+												async:true,
+												success:function(json){
+													console.log(json);
+													portRecord.portRecordsData = json.data;
+												}
+											})
+										}
+									}
+								});
 							});
-						});
-					}
-				})
-			},
-			portRecordCreate:function(){
-				portRecord.portRecordsData.push({ID:0})
-			},
-			portRecordSave:function(){
-				portRecord.portRecordsData.forEach(function(item){
-					$.ajax({
-						url:"portRecordsPost",
-						data:item,
-						type:"POST",
-						async:false,
-						success:function(json){
-							console.log(json);
 						}
 					})
-				})
-				portRecord.portRecordSearch();
-			},
-			portRecordDel:function(){
-				for(var i = 0; i < portRecord.checkArr.length; i++){
+				},
+				portRecordCreate:function(){
+					portRecord.portRecordsData.push({ID:0})
+				},
+				portRecordSave:function(){
+					portRecord.portRecordsData.forEach(function(item){
+						$.ajax({
+							url:"portRecordsPost",
+							data:item,
+							type:"POST",
+							async:false,
+							success:function(json){
+								console.log(json);
+							}
+						})
+					})
+					portRecord.portRecordSearch();
+				},
+				portRecordDel:function(){
+					for(var i = 0; i < portRecord.checkArr.length; i++){
+						$.ajax({
+							url:"portRecordsDel?ID="+portRecord.checkArr[i],
+							type:"POST",
+							success:function(json){
+								console.log(json);
+								portRecord.portRecordSearch();
+							}
+						})
+					}
+					portRecord.checkArr=[];
+				},
+				checkAll:function(){
+					if(!portRecord.checked){
+						portRecord.portRecordsData.forEach(function(index){
+							portRecord.checkArr.push(index.ID);
+						})
+					}else{
+						portRecord.checkArr = [];
+					}
+					portRecord.checked = !portRecord.checked;
+				},
+				searchData:function(){
 					$.ajax({
-						url:"portRecordsDel?ID="+portRecord.checkArr[i],
-						type:"POST",
+						url:"countrysFind",
+						type:"GET",
+						async:true,
 						success:function(json){
 							console.log(json);
-							portRecord.portRecordSearch();
+							if(json.data){
+								if(!json.data.length){
+									portRecord.countrysData = [];
+								}else{
+									portRecord.countrysData = json.data;
+								}
+							}
+						}
+					});
+					$.ajax({
+						url:"laneRecordsFind",
+						type:"GET",
+						async:true,
+						success:function(json){
+							console.log(json);
+							if(json.data){
+								if(!json.data.length){
+									portRecord.lanesData = [];
+								}else{
+									portRecord.lanesData = json.data;
+								}
+							}
 						}
 					})
 				}
-				portRecord.checkArr=[];
-			},
-			checkAll:function(){
-				if(!portRecord.checked){
-					portRecord.portRecordsData.forEach(function(index){
-						portRecord.checkArr.push(index.ID);
-					})
-				}else{
-					portRecord.checkArr = [];
-				}
-				portRecord.checked = !portRecord.checked;
-			},
-			searchData:function(){
-				$.ajax({
-					url:"countrysFind",
-					type:"GET",
-					async:true,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								portRecord.countrysData = [];
-							}else{
-								portRecord.countrysData = json.data;
-							}
-						}
-					}
-				});
-				$.ajax({
-					url:"laneRecordsFind",
-					type:"GET",
-					async:true,
-					success:function(json){
-						console.log(json);
-						if(json.data){
-							if(!json.data.length){
-								portRecord.lanesData = [];
-							}else{
-								portRecord.lanesData = json.data;
-							}
-						}
-					}
-				})
 			}
-		}
-	});
-	portRecord.portRecordSearch();
-	portRecord.searchData();
-	$(function(){
-		$(".layui-select").css("width", $(".layui-input").css("width"));
-	})
-</script>
+		});
+		portRecord.portRecordSearch();
+		portRecord.searchData();
+		$(function(){
+			$(".layui-select").css("width", $(".layui-input").css("width"));
+		})
+	</script>
+</body>
+</html>
