@@ -10,28 +10,29 @@
 	<script type="text/javascript" src="static/vue/dist/vue.js"></script>
 	<style type="text/css">
 		#app .drop-down li.active{color:#fff;background-color:#337ab7;}
+		#app .drop-down li .separate{display:inline-block;width:20px;}
 	</style>
 </head>
 <body>
 	<div id="app">
-		<alert :num="1" :labelname="labelname" :alertdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :model="searchData.CORPNAME"></alert>
+		<drop-down :num="1" :labelname="labelname" :dropdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :model="searchData.CORPNAME" :labelshow="true" :classcontrol="classControl"></drop-down>
 	</div>			
 	<script type="text/javascript">
-		Vue.component("alert", {
+		Vue.component("drop-down", {
 			template:`
-				<div id="app">
-					<div class="form-group">
-						<label v-text="labelname"></label>
-						<input class="form-control" type="text" @input="inputChange($event.target.value,num)" @click="inputClick(this,num)"  @keyup="keyChoiceLi($event,num)"  @blur="falseBlur(num)" :name="name" v-model="model" />
-						<ul class="drop-down"  v-if="num==ifshow">
-							<li class="pointer" v-for="c in alertdata" :key="c.CORPID" @click="choiceLi(c,num)" :class="{'active':c.CORPID==liclass}">
-								<span v-text="c.SNAME"></span>
-							</li>
-						</ul>
-					</div>
+				<div class="form-group">
+					<label v-text="labelname" v-if="labelshow"></label>
+					<input class="form-control" :class="classcontrol" type="text" @input="inputChange($event.target.value,num)" @click="inputClick(this,num)"  @keyup="keyChoiceLi($event,num)"  @blur="falseBlur(num)" :name="name" v-model="model" />
+					<ul class="drop-down"  v-show="num==ifshow">
+						<li class="pointer" v-for="c in dropdata" :key="c.CORPID" @click="choiceLi(c,num)" :class="{'active':c.CORPID==liclass}">
+							<span v-text="c.CORPNO"></span>
+							<span class="separate"></span>
+							<span v-text="c.SNAME"></span>
+						</li>
+					</ul>
 				</div>
 			`,
-			props:["num", "labelname", "alertdata", "liclass", "ifshow", "name", "model"],
+			props:["num", "labelname", "dropdata", "liclass", "ifshow", "name", "model", "labelshow", "classcontrol"],
 			methods:{
 				inputClick:function(obj, num){
 					console.log(obj, num);
@@ -115,87 +116,14 @@
 		var app = new Vue({
 			el:"#app",
 			data:{
-				corpsData:[{CORPID:1, SNAME:"DLJT"},{CORPID:2, SNAME:"DLGJ"},{CORPID:3, SNAME:"QDWJ"},{CORPID:4, SNAME:"GLJ"},{CORPID:5, SNAME:"JTL"}],
+				corpsData:[{CORPID:1, CORPNO:"DLJT", SNAME:"DLJT"},{CORPID:2, CORPNO:"DLGJ", SNAME:"DLGJ"},{CORPID:3, CORPNO:"QDWJ", SNAME:"QDWJ"},{CORPID:4, CORPNO:"GLJ", SNAME:"GLJ"},{CORPID:5, CORPNO:"JTL", SNAME:"JTL"}],
 				ifShow:-1,
 				searchData:[],
 				labelname:"客户",
-				liClass:0
+				liClass:0,
+				classControl:"classA"
 			}
 		});
-		app.inputClick = function(obj, num){
-			app.liClass = 0;
-			app.n = -1;
-			setTimeout(function(){
-				if(num==1){
-					app.ifShow = 1;
-				}else if(num==2){
-					app.ifShow = 2;
-				}else if(num==3){
-					app.ifShow = 3;
-				}
-			},150);
-		};
-		app.inputChange = function(val, num){
-			console.log(val, num);
-			if(num==1){
-				app.corpsData = app.getAjax("corpsFind",{SNAME:val});
-			}else if(num==2){
-				app.goodsData = app.getAjax("goodsFind",{CNAME:val});
-			}else if(num==3){
-				app.goodTypesData = app.getAjax("goodTypesFind",{CNAME:val});
-			}
-		};
-		app.keyChoiceLi = function(e, num) {
-			var downData =[];
-			if(num==1){
-				downData = app.corpsData;//
-			}
-			// console.log(downData)
-			if(!downData){
-
-			}else{
-				var length = downData.length;
-				if (e.keyCode == 40) {
-					if(app.n >= length-1){
-						app.n = -1;
-					}
-					app.n = app.n + 1;
-					app.liClass = downData[app.n].CORPID;
-					console.log(40,downData);
-				}
-				if (e.keyCode == 38) {
-					if(app.n <= 0){
-						app.n = length;
-					}
-					app.n=app.n-1;
-					app.liClass = downData[app.n].CORPID;
-					console.log(38,downData);
-				}
-				if (e.keyCode == 13) {
-					if(!downData[app.n]){
-
-					}else{
-						if(app.ifShow==1){
-							app.searchData.CORPNAME = downData[app.n].SNAME;
-							app.searchData.CORPID = downData[app.n].CORPID;
-						}
-					}
-					app.ifShow = 0;
-				}
-			}
-		};
-		app.choiceLi = function(item, num) {
-			if(num==1){
-				app.searchData.CORPNAME = item.SNAME;
-				app.searchData.CORPID = item.CORPID;
-			}
-			app.ifShow = 0;
-		};
-		app.falseBlur = function(num){
-			setTimeout(function(num){
-				app.ifShow = -1;
-			}, 120);
-		};
 	</script>
 </body>
 </html>
