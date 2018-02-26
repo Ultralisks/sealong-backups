@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>插槽</title>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+	<style type="text/css">
+
+	</style>
+</head>
+<body>
+<div id="app">
+   <!--开关组件-->
+   <switchbtn :result="result" @on-result-change="onResultChange"></switchbtn>
+   <!--外部控制-->
+   <input type="button" value="change" @click="change">
+</div>
+<script type="text/javascript">
+	//开关组件代码
+Vue.component("switchbtn",{
+    template: "<div @click='change'>{{myResult?'开':'关'}}</div>",
+    props: ["result"],
+    data: function () {
+        return {
+            myResult: this.result//①创建props属性result的副本--myResult
+        };
+    },
+    watch: {
+        result(val) {
+            this.myResult = val;//②监听外部对props属性result的变更，并同步到组件内的data属性myResult中
+        },
+        myResult(val){
+            //xxcanghai 小小沧海 博客园
+            this.$emit("on-result-change",val);//③组件内对myResult变更后向外部发送事件通知
+        }
+    },
+    methods:{
+        change(){
+            this.myResult=!this.myResult;
+        }
+    }
+
+});
+
+//调用组件
+new Vue({
+    el: "#app",
+    data:{
+        result:true//开关状态数据
+    },
+    methods:{
+        change(){
+            this.result=!this.result;
+        },
+        onResultChange(val){
+            this.result=val;//④外层调用组件方注册变更方法，将组件内的数据变更，同步到组件外的数据状态中
+        }
+    }
+});
+</script>
+</body>
+</html>

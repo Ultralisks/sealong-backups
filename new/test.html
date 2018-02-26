@@ -15,14 +15,14 @@
 </head>
 <body>
 	<div id="app">
-		<drop-down :num="1" :labelname="labelname" :dropdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :model="searchData.CORPNAME" :labelshow="true" :classcontrol="classControl"></drop-down>
+		<drop-down :num="1" :labelname="labelname" :dropdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :modelname="searchData.CORPNAME" :labelshow="true" :classcontrol="classControl"></drop-down>
 	</div>			
 	<script type="text/javascript">
 		Vue.component("drop-down", {
 			template:`
 				<div class="form-group">
 					<label v-text="labelname" v-if="labelshow"></label>
-					<input class="form-control" :class="classcontrol" type="text" @input="inputChange($event.target.value,num)" @click="inputClick(this,num)"  @keyup="keyChoiceLi($event,num)"  @blur="falseBlur(num)" :name="name" v-model="model" />
+					<input class="form-control" :class="classcontrol" type="text" @input="inputChange($event.target.value,num)" @click="inputClick(this,num)"  @keyup="keyChoiceLi($event,num)"  @blur="falseBlur(num)" :name="name" v-model="dropmodelname" />
 					<ul class="drop-down"  v-show="num==ifshow">
 						<li class="pointer" v-for="c in dropdata" :key="c.CORPID" @click="choiceLi(c,num)" :class="{'active':c.CORPID==liclass}">
 							<span v-text="c.CORPNO"></span>
@@ -32,7 +32,15 @@
 					</ul>
 				</div>
 			`,
-			props:["num", "labelname", "dropdata", "liclass", "ifshow", "name", "model", "labelshow", "classcontrol"],
+			props:["num", "labelname", "dropdata", "liclass", "ifshow", "name", "modelname", "labelshow", "classcontrol"],
+			watch: {
+				modelname(val) {
+					this.dropmodelname = val;//监听外部对props属性result的变更，并同步到组件内的data属性myResult中
+				},
+				dropmodelname(val){
+					this.$emit("onchange",this.dropmodelname);//组件内对myResult变更后向外部发送事件通知
+				}
+			},
 			methods:{
 				inputClick:function(obj, num){
 					console.log(obj, num);
@@ -51,7 +59,7 @@
 				inputChange:function(val, num){
 					console.log(val, num);
 					if(num==1){
-						app.corpsData = app.getAjax("corpsFind",{SNAME:val});
+						// app.corpsData = app.getAjax("corpsFind",{SNAME:val});
 					}else if(num==2){
 						app.goodsData = app.getAjax("goodsFind",{CNAME:val});
 					}else if(num==3){

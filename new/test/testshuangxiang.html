@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>父子通信</title>
+	<link rel="stylesheet" type="text/css" href="../static/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+	<script type="text/javascript" src="../static/js/jquery-1.12.0.min.js"></script>
+	<script type="text/javascript" src="../static/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../static/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<switchbtn :result="a" @on-result-change="onResultChange"></switchbtn>
+		<input type="button" value="change" @click="change">
+	</div>
+	<script type="text/javascript">
+		Vue.component("switchbtn", {
+			template: "<div @click='change'>{{myResult?'开':'关'}}</div>",
+			props: ["result"],
+			data: function () {
+				return {
+					myResult: this.result//创建props属性result的副本--myResult
+				};
+			},
+			watch: {
+				result(val) {
+					this.myResult = val;//监听外部对props属性result的变更，并同步到组件内的data属性myResult中
+				},
+				myResult(val){
+					this.$emit("on-result-change",val);//组件内对myResult变更后向外部发送事件通知
+				}
+			},
+			methods: {
+				change() {
+					this.myResult = !this.myResult;
+				}
+			}
+		});
+		new Vue({
+			el: "#app",
+			data: {
+				a: true
+			},
+			methods: {
+				change() {
+					this.result = !this.result;
+				},
+				onResultChange(val){
+					this.result=val;//外层调用组件方注册变更方法，将组件内的数据变更，同步到组件外的数据状态中
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ a:hover,a:active,a:focus{color:#c00;text-decoration:underline;}
 .img{width:100%;}
 .img-h{height:100%;}
 .pointer{cursor:pointer;}
-.drop-down {min-width:100%;background-color:#fff;border-radius:0 0 2px 2px;box-shadow:1px 1px 5px #1E9FFF;z-index:10;}
+.drop-down {background-color:#fff;border-radius:0 0 2px 2px;box-shadow:1px 1px 5px #1E9FFF;z-index:10;}
 .drop-down li{line-height:25px;padding:0 10px;}
 .drop-down li:hover{color:#fff;background-color:#1E9FFF;transition:2s;-moz-transition:0.2s;-webkit-transition: 0.2s;-o-transition:0.2s; /* Opera */}
 .curr{color:#fff;background-color:#009688;}
