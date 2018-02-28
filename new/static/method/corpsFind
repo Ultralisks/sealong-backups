@@ -19,7 +19,7 @@ var
   sqlText,U: UTF8Str;
   bFirst: Boolean;
   rows,rows2: ISQLDBRows;
-  COUNTRY,ENAME,CNAME,TABLE:UTF8Str;
+  COUNTRY,ENAME,CNAME,SNAME,CORPNO,TABLE:UTF8Str;
   _pid: Integer;
   qry: ISQLDBStatement;
   PageNo,PageSize,PageCount,RowCount,PageStart,PageEnd,PriorPage,NextPage,WDCODE:integer; 
@@ -29,12 +29,18 @@ begin
   // 字符串使用InputUTF8OrVoid
   if RequestParam.URIMethod =mGET then begin
   TABLE:='CORPS';  
-  CNAME:=request.InputUTF8OrVoid['CNAME']; 
+  CORPNO:=request.InputUTF8OrVoid['CORPNO'];
+  SNAME:=request.InputUTF8OrVoid['SNAME']; 
+  CNAME:=request.InputUTF8OrVoid['CNAME'];
   ENAME:=request.InputUTF8OrVoid['ENAME'];
   COUNTRY:=request.InputUTF8OrVoid['COUNTRY'];//
   WDCODE:=request.InputIntOrVoid['WDCODE'];
     //if action='search' then begin
       sqlText:='select count(*) from  '+TABLE+' where 1=1 ';
+      if CORPNO<>'' then
+        sqlText:=sqlText+ ' and CORPNO like ?';
+      if SNAME<>'' then
+        sqlText:=sqlText+ ' and SNAME like ?';
       if CNAME<>'' then
         sqlText:=sqlText+ ' and CNAME like ?';
       if WDCODE>0 then
@@ -50,6 +56,16 @@ begin
         end;
       end;
       _pid:=1;//问号后面的第几个
+      if CORPNO<>'' then begin
+        CORPNO:= '%'+CORPNO+'%';
+        qry.BindTextU(_pid, CORPNO);
+        Inc(_pid);
+      end;
+      if SNAME<>'' then begin
+        SNAME:= '%'+SNAME+'%';
+        qry.BindTextU(_pid, SNAME);
+        Inc(_pid);
+      end;
       if CNAME<>'' then begin
         CNAME:= '%'+CNAME+'%';
         qry.BindTextU(_pid, CNAME);
@@ -94,6 +110,10 @@ begin
     TABLE:='CORPS';  
       CNAME:=request.InputUTF8OrVoid['CNAME']; 
     sqlText:='select * from  '+TABLE+' where 1=1 ';
+      if CORPNO<>'' then
+        sqlText:=sqlText+ ' and CORPNO like ?';
+      if SNAME<>'' then
+        sqlText:=sqlText+ ' and SNAME like ?';
       if CNAME<>'' then
         sqlText:=sqlText+ ' and CNAME like ?';
       if WDCODE>0 then
@@ -111,6 +131,16 @@ begin
         end;
       end;
       _pid:=1;//问号后面的第几个
+      if CORPNO<>'' then begin
+        CORPNO:= '%'+CORPNO+'%';
+        qry.BindTextU(_pid, CORPNO);
+        Inc(_pid);
+      end;
+      if SNAME<>'' then begin
+        SNAME:= '%'+SNAME+'%';
+        qry.BindTextU(_pid, SNAME);
+        Inc(_pid);
+      end;
       if CNAME<>'' then begin
         CNAME:= '%'+CNAME+'%';
         qry.BindTextU(_pid, CNAME);

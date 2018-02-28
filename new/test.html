@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div id="app">
-		<drop-down :num="1" :labelname="labelname" :dropdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :modelname="searchData.CORPNAME" :labelshow="true" :classcontrol="classControl"></drop-down>
+		<drop-down :num="1" :labelname="labelname" :dropdata="corpsData" :liclass="liClass" :ifshow="ifShow" :name="searchData.CORPID" :modelname="searchData.CORPNAME" :labelshow="true" :classcontrol="classControl" @onchange="onResultChange"></drop-down>
 	</div>			
 	<script type="text/javascript">
 		Vue.component("drop-down", {
@@ -33,6 +33,11 @@
 				</div>
 			`,
 			props:["num", "labelname", "dropdata", "liclass", "ifshow", "name", "modelname", "labelshow", "classcontrol"],
+			data:function(){
+				return {
+					dropmodelname:this.modelname
+				}
+			},
 			watch: {
 				modelname(val) {
 					this.dropmodelname = val;//监听外部对props属性result的变更，并同步到组件内的data属性myResult中
@@ -130,6 +135,11 @@
 				labelname:"客户",
 				liClass:0,
 				classControl:"classA"
+			},
+			methods:{
+				onResultChange:function(val){
+					this.modelname=val;
+				},
 			}
 		});
 	</script>
