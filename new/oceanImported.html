@@ -823,13 +823,11 @@
                 console.log(app.paras);
                 app.ajaxPost(url,app.paras);
             }
-
         };
         app.post = function(){
             var url = "oceanFreightImportEdit";
             app.ajaxPost(url,app.para);
             app.postBoxs();
-
         };
         app.showConsole = function(){
            console.log("ID","ID",app.para.ID);
@@ -1205,8 +1203,8 @@
                 type:"GET",
                 data:"",
                 success:function(json){
-                    console.log(json)
-                    app.SHIPNAMEDATA = json.data
+                    console.log(json);
+                    app.SHIPNAMEDATA = json.data;
                 }
             });
             $.ajax({

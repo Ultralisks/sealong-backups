@@ -1,0 +1,303 @@
+﻿{{>header}}
+<link rel="stylesheet" href="static/css/share.css"/>
+<link href="static/layui/css/layui.css" rel="stylesheet">
+<link href="static/layui/css/chose.css" rel="stylesheet">
+<link rel="stylesheet" href="static/css/fclofitem.css"/>
+<!-- 回收站 -->
+<style>
+    .tishi{position:absolute;bottom:100px;right:30px;border:1px solid #999;border-radius:4px;padding:20px;background-color: #fff;display: none}
+    #back{float:right;}
+    #back a{color:#fff;}
+</style>
+<input style="display:none" value="{{main.session.roles}}" id="roles" />
+<input style="display:none" value="{{main.session.UserName}}" id="username" />
+<div id="ofitem">
+    <div class="ofitem_query">
+        <div class="top_1">
+            <div class="he">
+                <select id="pol_select">
+                    <option value="-1" selected>起运港</option>
+                    {{#main.data}}
+                    <option value="{{id}}">{{CName}}({{Country}})</option>
+                    {{/main.data}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="pod_select">
+                    <option value="-1" selected>目的港</option>
+                    {{#main.data}}
+                    <option value="{{id}}">{{CName}}({{Country}})</option>
+                    {{/main.data}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="corp_select">
+                    <option value="-1" selected>船公司</option>
+                    {{#main.info}}
+                    <option value="{{id}}">{{Cname}}</option>
+                    {{/main.info}}
+                </select>
+            </div>
+            <div class="he">
+                <select id="lane_select">
+                    <option value="-1" selected>航线</option>
+                    {{#main.lane}}
+                    <option value="{{id}}">{{Cname}}</option>
+                    {{/main.lane}}
+                </select>
+            </div>
+            <div class="he" style="width:25%;">
+                <input type="date" id="startdate" style="width:45%"/> 至 <input type="date" id="enddate" style="width:45%"/>
+            </div>
+            <div class="oficx" id="query" onclick="javascript:search();">查询</div>
+        </div>
+    </div>
+    <div class="ofitem_content">
+        <div class="main_content">
+            <div class="hang2">
+                <div class="ofibtn" id="new" onclick="goBack()">恢复</div>
+                <div id="back" class="ofibtn"><a href="FCLOfitem">返回</a></div>
+                 
+            </div>
+            <table class="ofitem_content_title" cellpadding='0' cellspacing='0'>
+                <thead>
+                <tr style="height:40px;">
+                    <td style="width:40px;">
+                        <input type="checkbox" name="chkAll" id="chkAll" title="全选" onclick="ChkAllClick('chkSon','chkAll')"/>
+                    </td>
+                    <td>有效期</td>
+                    <td>航线</td>
+                    <td>起运港</td>
+                    <td>目的港</td>
+                    <td>船期</td>
+                    <td>航程</td>
+                    <td>中转港</td>
+                    <td>20</td>
+                    <td>40</td>
+                    <td>40HQ</td>
+                    <td>45</td>
+                    <td>货物类型</td>
+                    <td>承运人</td>
+                    <td>备注</td>
+                    <td>删除人 删除时间</td>
+                    <td>录入人</td>
+                </tr>
+                </thead>
+                <tbody id="modify_tbl1_body">
+                </tbody>
+            </table>
+            <div id="pageLabel" style="margin-top:20px" ></div><!-- 显示分页页数 -->
+        </div>
+        <div id="fade" class="black_overlay"></div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.8.min.js"></script>
+<script type="text/javascript" src="static/js/xlsx.full.min.js"></script>
+<script src="static/layui/lay/modules/chosen.jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        
+    })
+    var roles = $("#roles").val();
+    var username = $("#username").val();
+    function goBack(){
+        $("#modify_tbl1_body tr").each(function(value){
+            if($(this).children().children(".doublek").is(":checked")){
+                var time = new Date();
+                var Time = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDay()+" "+time.getHours()+":"+time.getMinutes();
+                this_tr=$(this);
+                var this_id=$(this).children("td").eq(0).children().val();
+                console.log($(this).children("td").eq(0));
+                jQuery.ajax({
+                    url:"INPRICEMNGGENLEGITEMS?id="+this_id+"&IFDEL=F&Actived=2"+"&AuditUser="+username+"&AuditTime="+Time,//"DElRICEMNGGENLEGITEMS?id="+this_id,
+                    dataType: 'json',
+                    type: "POST",
+                    async:false,
+                    cache:false,
+                    success: function(json){
+                        if(json.result.success==false){
+                            flag=false;
+                        }else{
+                            this_tr.hide();
+                        }
+                    },
+                });
+            }
+        });
+    }
+    function ChkAllClick(sonName, cbAllId){
+        var arrSon = document.getElementsByName(sonName);
+        var cbAll = document.getElementById(cbAllId);
+        var tempState=cbAll.checked;
+        for(i=0;i<arrSon.length;i++) {
+            if(arrSon[i].checked!=tempState)
+                arrSon[i].click();
+        }
+    }
+    function search(){//查询数据
+        pagesize =10;
+
+        var pol=$("#pol_select").val();//起运港
+        if(pol == -1){
+            pol = "";
+        }
+        var pod=$("#pod_select").val();//目的港
+        if(pod == -1){
+            pod = "";
+        }
+        var carrier=$("#corp_select").val();//船公司
+        if(carrier == -1){
+            carrier = "";
+        }
+        var lane=$("#lane_select").val();//航线
+        if(lane == -1){
+            lane = "";
+        }
+        var startdate=$("#startdate").val();//有效期始
+        var enddate=$("#enddate").val();//有效期止
+        var actived=$("#actived").val();//有效/无效
+        var _url="INPRICEMNGGENLEGITEMS?action=other&IFDEL=T&IFMould=F&Actived=2";//
+        if(pol!=""){_url+="&Pol="+pol;}
+        if(pod!=""){_url+="&Pod="+pod;}
+        if(carrier!=""){_url+="&Carrier="+carrier;}
+        if(lane!=""){_url+="&Lane="+lane;}
+        if(startdate!=""){_url+="&StartTime="+startdate;}
+        if(enddate!=""){_url+="&EndTime="+enddate;}
+        if(roles == "[\"Staff\"]"){
+            _url+="&AuditUser="+username;
+            console.log(1, roles, username, _url);
+        }else{
+            _url+="&AuditUser="+username;
+            console.log(2, roles, username, _url);
+        }
+        $.ajax({
+            url:_url,
+            type:"GET",
+            dataType:"json",
+            async:false,
+            success:function(json){
+                console.log(json);
+                var data=null;
+                var html="";
+                if(json){if(json.data){data=json.data}}
+                if(data!=null && !data.fieldCount){
+                    newjson=json;//保存到全局变量
+                    //获取table的行数
+                    var page = json.data.length;//获取json长度   即是 table所有的行数
+                    var p = parseInt(Math.ceil(page / pagesize));//长度除以每页显示的行数 就是分页数
+                    var a="";
+                    //控制分页位置显示的页数
+                    if(p<=1){
+                        $("#pageLabel").hide();
+                    }else if(p>6){
+                        a+= "<a href='#' class='page''>" + 1 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + 2 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + 3 + "</a>&nbsp;&nbsp;";//显示页数
+                        a+="<input type='button' value='<<' id='_back'/>";
+                        a+= "<input type='text' id='goto' style='width:50px;text-align:center'/>";//显示页数
+                        a+="<input type='button' value='>>' id='_next'/>";
+                        a+= "<a href='#' class='page''>" + (p-2) + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + (p-1) + "</a>&nbsp;&nbsp;";//显示页数
+                        a+= "<a href='#' class='page''>" + p + "</a>&nbsp;&nbsp;";//显示页数
+                    }else{
+                        for (var i = 1; i <=p; i++) {
+                            a+= "<a href='#' class='page''>" + i + "</a>&nbsp;&nbsp;";//显示页数
+                        }
+                    }
+                    $("#pageLabel").html(a);//显示分页控制列表
+                    ( pagesize > json.data.length) ? pagesize=json.data.length :pagesize=pagesize ;
+                    pageing(0,pagesize);//读取json数据  查询完毕后显示第一页
+                    //显示分页位置
+                    $("#pageLabel").show();
+                    //改变背景色
+                    $("#pageLabel a:first").addClass("pagesize").siblings().removeClass("pagesize");
+                    $("#goto").val(1);
+                }else{
+                    html+="<tr><td colspan='15'>没有查询到数据！</td></tr>";
+                    $("#modify_tbl1_body").html(html);
+                }
+            }
+        });
+    }
+    $("#pageLabel").on("click","#_back",function(){
+        //获取 文本框的值
+        var pageNo=parseInt($.trim($("#goto").val()))-1;
+        if(pageNo<1){
+            alert("已经是第一页");
+        }else{
+            $("#goto").val(pageNo);//当前页数赋值给文本框
+            begin = (pageNo- 1) * pagesize;//json读取开始位置
+            (begin + pagesize > newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+            pageing(begin, end);
+            //改变背景色
+            $(this).addClass("pagesize").siblings().removeClass("pagesize");
+        }
+    });
+    //下一页 事件
+    $("#pageLabel").on("click","#_next",function(){
+        //获取 文本框的值
+        var pageNo=parseInt($.trim($("#goto").val()))+1;
+        if(pageNo>parseInt(Math.ceil( newjson.data.length / pagesize))){
+            alert("已经是最后一页");
+        }else{
+            $("#goto").val(pageNo);//当前页数赋值给文本框
+            begin = (pageNo- 1) * pagesize;//json读取开始位置
+            (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+            pageing(begin, end);
+            //改变背景色
+            $(this).addClass("pagesize").siblings().removeClass("pagesize");
+        }
+    });
+
+    //页数跳转
+    $("#pageLabel").on("keyup","#goto",function(){
+        var num=$(this).val();
+        begin = (num - 1) * pagesize;//json读取开始位置
+        (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+        pageing(begin, end);
+        //改变背景色
+        $(this).addClass("pagesize").siblings().removeClass("pagesize");
+    });
+    //分页开始
+    $("#pageLabel").on("click", "a", function () {
+        var num = parseInt($(this).text());
+        liu_index=num;
+        $("#goto").val(num);
+        begin = (num - 1) * pagesize;
+        (begin + pagesize >  newjson.data.length) ? end =  newjson.data.length : end=begin + pagesize;//设置结束为止判断 读取的json是否超出了json 的长度
+        pageing(begin, end);
+        //改变背景色
+        $(this).addClass("pagesize").siblings().removeClass("pagesize");
+    });
+    function pageing(bgn, ed) {
+        console.log(roles);
+        var html_page = "";//
+        var highstandard="";
+        var lowsstandard="";
+            for (var i = bgn; i < ed; i++) {
+                    html_page+="<tr style='height:40px'>"+
+                        "<td><input type='checkbox' name='chkSon' class='doublek' value='"+newjson.data[i].ID+"'/></td>"+
+                        "<td>"+newjson.data[i].INUREFROM+"/"+newjson.data[i].INURETO+"</td>"+
+                        "<td laneid='"+newjson.data[i].LANEID+"'>"+newjson.data[i].LANENAME+"</td>"+
+                        "<td polid='"+newjson.data[i].POLID+"'>"+newjson.data[i].POLNAME+"</td>"+
+                        "<td podid='"+newjson.data[i].PODID+"'>"+newjson.data[i].PODNAME+"</td>"+
+                        "<td>"+newjson.data[i].VESWEEK+"</td>"+
+                        "<td>"+newjson.data[i].VOYAGE+"</td>"+
+                        "<td transportid='"+newjson.data[i].TRANSPORTID+"'>"+newjson.data[i].TRANSPORTNAME+"</td>"+
+                        "<td>"+newjson.data[i].H20GP+"</td>"+
+                        "<td>"+newjson.data[i].H40GP+"</td>"+
+                        "<td>"+newjson.data[i].H40HQ+"</td>"+
+                        "<td>"+newjson.data[i].H45GP+"</td>"+
+                        "<td>"+newjson.data[i].CARGOTYPE+"</td>"+
+                        "<td carrierid='"+newjson.data[i].CARRIERID+"'>"+newjson.data[i].CARRIERNAME+"</td>"+
+                        "<td class='remarks'>"+newjson.data[i].REMARKS+"</td>";
+                    html_page+="<td>"+newjson.data[i].AUDITUSER+" "+newjson.data[i].AUDITTIME+"</td>"+
+                        "<td class='writer'>"+newjson.data[i].WRITER+"</td>"+
+                        "</tr>";
+                    //$("#modify_tbl1_body").empty();
+            }
+        $("#modify_tbl1_body").html(html_page);
+    };
+</script>
+{{>footer}}
